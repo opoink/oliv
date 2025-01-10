@@ -1,0 +1,57 @@
+@use './mixin';
+
+@include mixin.loop(1, 900, 100, ".fw-", "", "font-weight", "", "!important");
+@include mixin.loop(8, 40, 1, ".fs-", "", "font-size", "px", "!important");
+@include mixin.loop(1, 35, 1, ".lh-", "", "line-height", "px", "!important");
+@include mixin.loop(1, 5, 1, ".ls-", "", "letter-spacing", "px", "!important");
+
+// @include mixin.loop(1, 5, 0.1, ".fs-", "-rem", "font-size", "rem", "!important");
+// @include mixin.loop(1, 5, 0.1, ".fs-", "-em", "font-size", "rem", "!important");
+
+@media (min-width: 576px) {
+	@include mixin.loop(8, 40, 1, ".fs-sm-", "", "font-size", "px", "!important");
+	@include mixin.loop(1, 35, 1, ".lh-sm-", "", "line-height", "px", "!important");
+	@include mixin.loop(1, 900, 100, ".fw-sm-", "", "font-weight", "", "!important");
+	@include mixin.loop(1, 5, 1, ".ls-sm-", "", "letter-spacing", "px", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-sm-", "-rem", "font-size", "rem", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-sm-", "-em", "font-size", "rem", "!important");
+}
+@media (min-width: 768px) {
+	@include mixin.loop(8, 40, 1, ".fs-md-", "", "font-size", "px", "!important");
+	@include mixin.loop(1, 35, 1, ".lh-md-", "", "line-height", "px", "!important");
+	@include mixin.loop(1, 900, 100, ".fw-md-", "", "font-weight", "", "!important");
+	@include mixin.loop(1, 5, 1, ".ls-md-", "", "letter-spacing", "px", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-md-", "-rem", "font-size", "rem", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-md-", "-em", "font-size", "rem", "!important");
+}
+@media (min-width: 992px) {
+	@include mixin.loop(8, 40, 1, ".fs-lg-", "", "font-size", "px", "!important");
+	@include mixin.loop(1, 35, 1, ".lh-lg-", "", "line-height", "px", "!important");
+	@include mixin.loop(1, 900, 100, ".fw-lg-", "", "font-weight", "", "!important");
+	@include mixin.loop(1, 5, 1, ".ls-lg-", "", "letter-spacing", "px", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-lg-", "-rem", "font-size", "rem", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-lg-", "-em", "font-size", "rem", "!important");
+}
+@media (min-width: 1200px) {
+	@include mixin.loop(8, 40, 1, ".fs-xl-", "", "font-size", "px", "!important");
+	@include mixin.loop(1, 35, 1, ".lh-xl-", "", "line-height", "px", "!important");
+	@include mixin.loop(1, 900, 100, ".fw-xl-", "", "font-weight", "", "!important");
+	@include mixin.loop(1, 5, 1, ".ls-xl-", "", "letter-spacing", "px", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-xl-", "-rem", "font-size", "rem", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-xl-", "-em", "font-size", "rem", "!important");
+}
+@media (min-width: 1400px) {
+	@include mixin.loop(8, 40, 1, ".fs-xxl-", "", "font-size", "px", "!important");
+	@include mixin.loop(1, 35, 1, ".lh-xxl-", "", "line-height", "px", "!important");
+	@include mixin.loop(1, 900, 100, ".fw-xxl-", "", "font-weight", "", "!important");
+	@include mixin.loop(1, 5, 1, ".ls-xxl-", "", "letter-spacing", "px", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-xxl-", "-rem", "font-size", "rem", "!important");
+	// @include mixin.loop(1, 5, 0.1, ".fs-xxl-", "-em", "font-size", "rem", "!important");
+}
+
+.f-poppins {
+	font-family: "Poppins";
+}
+.f-roboto {
+	font-family: "Roboto";
+}

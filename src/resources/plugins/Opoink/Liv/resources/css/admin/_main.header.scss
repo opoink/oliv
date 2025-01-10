@@ -1,0 +1,30 @@
+@use './../vars';
+
+.main-header {
+	.logo-container {
+		height: 100%;
+		width: 130px;
+		float: left;
+		
+		img {
+			height: 50px;
+		}
+	}
+	.header-content {
+		height: vars.$headerHeight;
+		border-bottom: solid 1px #ddd7d7;
+
+		.action-btn {
+			height: vars.$headerHeight;
+
+			ul {
+				li {
+					a {
+						text-decoration: none;
+					}
+				}
+			}
+		}
+	}
+}
+

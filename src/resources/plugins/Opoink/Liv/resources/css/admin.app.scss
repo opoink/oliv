@@ -1,0 +1,94 @@
+@use './vars';
+
+@use './font';
+@use './admin/login';
+@use './admin/side.nav';
+@use './admin/main.header';
+@use './admin/listing';
+@use './toast';
+@use './loader';
+
+
+.btn {
+	&:focus,
+	&:active {
+		box-shadow: none !important;
+	}
+
+	&.btn-primary {
+		color: #fff;
+		background-color: vars.$primaryColor;
+		border-color: vars.$primaryColor;
+	}
+	&.btn-outline-primary {
+		color: vars.$primaryColor;
+		border-color: vars.$primaryColor;
+
+		&:hover {
+			color: #fff;
+			background-color: vars.$primaryColor;
+			border-color: vars.$primaryColor;
+		}
+	}
+}
+
+body {
+	font-family: "Roboto";
+}
+
+#content-wrapper {
+	padding-left: vars.$sideWidth;
+}
+
+.c-pointer { cursor: pointer; }
+
+.admin-side-tabs {
+	background: #f1f1f1;
+  	border: 1px solid #e3e3e3;
+
+	> ul {
+		list-style: none;
+		padding: 10px 0px;
+		margin: 0;
+
+		> li {
+			padding-left: 10px;
+			> a {
+				display: block;
+				padding: 15px 0 15px 10px;
+				text-decoration: none;
+				color: vars.$fcBlack;
+
+				&:hover{
+					background: #ece3e3;
+				}
+
+				&.active {
+					position: relative;
+					background: #ffffff;
+
+					&:before {
+						content: "";
+						display: block;
+						position: absolute;
+						top: 0px;
+						left: 0px;
+						height: 100%;
+						width: 2px;
+						background: vars.$primaryColor;
+					}
+					&:after {
+						content: "";
+						display: block;
+						position: absolute;
+						top: 0px;
+						right: -1px;
+						height: 100%;
+						width: 1px;
+						background: #fff;
+					}
+				}
+			}
+		}
+	}
+}
