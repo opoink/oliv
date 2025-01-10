@@ -1,0 +1,19 @@
+{
+    "name": "opoink/oliv",
+    "description": "opoink laravel inertia vue",
+    "type": "compoer-plugin",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "Opoink\\Oliv\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ron",
+            "email": "ron@opoink.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
