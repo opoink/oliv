@@ -1,4 +1,17 @@
 <?php
+
+define('ROOT', dirname(dirname(dirname(__DIR__))));
+define('DS', DIRECTORY_SEPARATOR);
+
+
+
+if (!function_exists('getPath')) {
+	function getPath($path){
+		$path = str_replace('/', DS, $path);
+		return ROOT . DS . $path;
+	}
+}
+
 // use \Plugins\Opoink\Liv\Models\AdminUserRolesResource;
 // use \Plugins\Opoink\Liv\Lib\Inertia;
 
@@ -96,20 +109,27 @@
 // 		}
 // 	}
 // }
-var_dump('test');
-die;
+
 if (!function_exists('getPluginsConfig')) {
 	function getPluginsConfig(){
-		return new \App\Lib\DataObject(json_decode(file_get_contents(ROOT.DS.'plugins'.DS.'config.json'), true));
+		$target = getPath('plugins/config.json');
+
+		$plugins = [
+			'plugins' => []
+		];
+		if(file_exists($target)){
+			$plugins = json_decode(file_get_contents($target), true);
+		}
+
+		return new \Opoink\Oliv\Lib\DataObject($plugins);
 	}
 }
 
-// if (!function_exists('getPluginDir')) {
-// 	function getPluginDir($plugin){
-// 		$dir = ROOT.DS.'plugins'.DS.str_replace('_', DS, $plugin);
-// 		return $dir;
-// 	}
-// }
+if (!function_exists('getPluginDir')) {
+	function getPluginDir($plugin){
+		return getPath('plugins/'.str_replace('_', DS, $plugin));
+	}
+}
 
 // if (!function_exists('inertiaRender')) {
 // 	function inertiaRender(string $component, array|\Illuminate\Contracts\Support\Arrayable $props = []){

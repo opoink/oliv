@@ -5,6 +5,7 @@
     "license": "mit",
     "autoload": {
         "psr-4": {
+			"Plugins\\": "plugins/",
             "Opoink\\Oliv\\": "src/"
         },
 		"files": ["functions.php"]
