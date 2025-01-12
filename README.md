@@ -2,9 +2,9 @@
 
 ## Installation
 - Install Laravel without a starter kit, see Laravel's [documentation](https://laravel.com/docs)
-- 	`Would you like to install a starter kit? [No starter kit]:`
-- 	`Which database will your application use? [mysql]`
-- 	`Default database updated. Would you like to run the default database migrations? (yes/no) [no]`
+-- `Would you like to install a starter kit? [No starter kit]:`
+-- `Which database will your application use? [mysql]`
+-- `Default database updated. Would you like to run the default database migrations? (yes/no) [no]`
 - Install oliv package `composer require Opoink/Oliv`
 - Let Laravel discover the Oliv package `php artisan package:discover`
 - Create a `.env` file and copy it from `.env.example` (optional) change the value of the `VITE_ADMIN_URL` of your choice.
