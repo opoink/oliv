@@ -5,8 +5,9 @@
 	- `Would you like to install a starter kit? [No starter kit]:`
 	- `Which database will your application use? [mysql]`
 	- `Default database updated. Would you like to run the default database migrations? (yes/no) [no]`
-- Install oliv package `composer require Opoink/Oliv`
-- Let Laravel discover the Oliv package `php artisan package:discover`
+- Install [inertiajs](https://inertiajs.com/) `composer require inertiajs/inertia-laravel`
+- Install [oliv](https://github.com/opoink/oliv) package `composer require Opoink/Oliv`
+	- Let Laravel discover the Oliv package `php artisan package:discover` if not discovered yet
 - Create a `.env` file and copy it from `.env.example` (optional) change the value of the `VITE_ADMIN_URL` of your choice.
 - (optional) Change the value of the `VITE_INERTIA_SSR_PORT` in `ecosystem.config.js` of your choice
 - Update database host, user, pass, name
