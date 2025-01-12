@@ -15,5 +15,13 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Opoink\\Oliv\\Providers\\AppServiceProvider"
+			],
+			"aliases": {}
+		}
+	}
 }
