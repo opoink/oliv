@@ -7,7 +7,8 @@
 	- `Default database updated. Would you like to run the default database migrations? (yes/no) [no]`
 - Install [inertiajs](https://inertiajs.com/) `composer require inertiajs/inertia-laravel`
 - Install [oliv](https://github.com/opoink/oliv) package `composer require Opoink/Oliv`
-	- Let Laravel discover the Oliv package `php artisan package:discover` if not discovered yet
+	- Let Laravel discover the Oliv package `php artisan package:discover` if not discovered yet.
+ 	- run the command `php artisan oliv:install` this will initiate all required files 
 - Create a `.env` file and copy it from `.env.example` (optional) change the value of the `VITE_ADMIN_URL` of your choice.
 - (optional) Change the value of the `VITE_INERTIA_SSR_PORT` in `ecosystem.config.js` of your choice
 - Update database host, user, pass, name
