@@ -35,31 +35,34 @@ class UpdatePlugin {
 
 
 	public function __construct(
-		protected \App\Console\Commands\PluginsUpdate $command
+		protected \Opoink\Oliv\Console\Commands\PluginsUpdate $command
 	){}
 
 
 	public function executeUpdate() {
 
+
 		$pluginsConfig = getPluginsConfig();
-		$this->compiled_config = $pluginsConfig;
+		var_dump($pluginsConfig);
+		die;
+		// $this->compiled_config = $pluginsConfig;
 
-		$allPlugins = $pluginsConfig->getPlugins();
-		foreach ($allPlugins as $plugin) {
-			$this->updatedPlugins($plugin);
-		}
+		// $allPlugins = $pluginsConfig->getPlugins();
+		// foreach ($allPlugins as $plugin) {
+		// 	$this->updatedPlugins($plugin);
+		// }
 
-		$this->saveConfigFiles();
+		// $this->saveConfigFiles();
 
-		$this->savePluginVuePages();
-		$this->saveVueGlobalComponents($this->vueGlobalComponents);
-		$this->compilePluginLayout();
-		$this->compilePluginCss();
+		// $this->savePluginVuePages();
+		// $this->saveVueGlobalComponents($this->vueGlobalComponents);
+		// $this->compilePluginLayout();
+		// $this->compilePluginCss();
 
-		$this->savePluginRoutes('plugin_web');
-		$this->savePluginRoutes('plugin_api');
+		// $this->savePluginRoutes('plugin_web');
+		// $this->savePluginRoutes('plugin_api');
 
-		$this->saveCollectedEvents();
+		// $this->saveCollectedEvents();
 	}
 
 		/**

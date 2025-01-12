@@ -42,13 +42,7 @@ class Install extends Command
 			$dirManager->copyDir($resouceDir.$ds.'routes', base_path().$ds.'routes');
 			$this->info('Routes directory copied successfully.');
 	
-			// /** copy the config dir */
-			$this->info('Copying the config directory...');
-			$dirManager->copyDir($resouceDir.$ds.'config', base_path().$ds.'config');
-			$this->info('Config directory copied successfully.');
-	
-	
-	
+
 	
 	
 	
