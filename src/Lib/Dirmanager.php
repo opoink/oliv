@@ -41,6 +41,9 @@ class Dirmanager {
 	}
 	
 	public function copyDir($src, $dst) { 
+		if(!is_dir($src)){
+			throw new \Exception("The path " . $src . " doesn't exist", 500);
+		}
 		$dir = opendir($src);
 		$this->create($dst);
 		while(false !== ( $file = readdir($dir)) ) { 

@@ -3,6 +3,7 @@
 namespace Opoink\Oliv\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Opoink\Oliv\Console\Commands\Install as InstallCommand;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        var_dump('test');
-		die;
+		if ($this->app->runningInConsole()) {
+			$this->commands([
+				InstallCommand::class,
+			]);
+		}
     }
 }
