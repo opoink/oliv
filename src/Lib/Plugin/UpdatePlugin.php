@@ -62,7 +62,7 @@ class UpdatePlugin {
 		// $this->savePluginRoutes('plugin_web');
 		// $this->savePluginRoutes('plugin_api');
 
-		// $this->saveCollectedEvents();
+		$this->saveCollectedEvents();
 	}
 
 	// /**
@@ -82,7 +82,7 @@ class UpdatePlugin {
 
 		$this->collectConfigFiles($plugin);
 		$this->collectProviders($plugin);
-		// $this->collectEvents($plugin);
+		$this->collectEvents($plugin);
 
 
 		// $pluginConfig = $pluginDir.DS.'config.json';
@@ -152,25 +152,25 @@ class UpdatePlugin {
 		}
 	}
 
-	// protected function collectEvents($plugin){
-	// 	$pluginDir = $this->getPluginDir($plugin);
+	protected function collectEvents($plugin){
+		$pluginDir = getPluginDir($plugin);
 		
-	// 	$eventDir =  $pluginDir . DS . 'EventListeners';
-	// 	if(is_dir($eventDir)){
-	// 		$eventList = $eventDir . DS . 'EventList.php';
-	// 		if(file_exists($eventList)){
-	// 			$eventList = include($eventList);
+		$eventDir =  $pluginDir . DS . 'EventListeners';
+		if(is_dir($eventDir)){
+			$eventList = $eventDir . DS . 'EventList.php';
+			if(file_exists($eventList)){
+				$eventList = include($eventList);
 
-	// 			foreach ($eventList as $event) {
-	// 				$eventName = $event['name'];
-	// 				if(!isset($this->plugin_events[$eventName])){
-	// 					$this->plugin_events[$eventName] = [];
-	// 				}
-	// 				$this->plugin_events[$eventName][] = $event;
-	// 			}
-	// 		}
-	// 	}
-	// }
+				foreach ($eventList as $event) {
+					$eventName = $event['name'];
+					if(!isset($this->plugin_events[$eventName])){
+						$this->plugin_events[$eventName] = [];
+					}
+					$this->plugin_events[$eventName][] = $event;
+				}
+			}
+		}
+	}
 
 	/**
 	 * @param $plugin string 
@@ -361,18 +361,18 @@ class UpdatePlugin {
 	// 	$w->write();
 	// }
 
-	// protected function saveCollectedEvents(){
-	// 	$cacheKey = \Plugins\Opoink\Liv\Lib\Event::CACHE_KEY;
+	protected function saveCollectedEvents(){
+		$cacheKey = \Plugins\Opoink\Liv\Lib\Event::CACHE_KEY;
 
-	// 	Cache::forget($cacheKey);
+		Cache::forget($cacheKey);
 
-	// 	foreach ($this->plugin_events as &$event) {
-	// 		usort($event,function($a, $b) {
-	// 			return $a['sort_order'] - $b['sort_order'];
-	// 		});
-	// 	}
+		foreach ($this->plugin_events as &$event) {
+			usort($event,function($a, $b) {
+				return $a['sort_order'] - $b['sort_order'];
+			});
+		}
 
-	// 	Cache::forever($cacheKey, $this->plugin_events);
-	// }
+		Cache::forever($cacheKey, $this->plugin_events);
+	}
 }
 ?>

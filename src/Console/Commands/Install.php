@@ -44,6 +44,8 @@ class Install extends Command
 			$dirManager->copyDir($resouceDir.$ds.'routes', base_path().$ds.'routes');
 			$this->info('Routes directory copied successfully.');
 
+			$this->addValueToEnv('SESSION_DRIVER', 'file');
+			$this->addValueToEnv('CACHE_STORE', 'file');
 			$this->addValueToEnv('VITE_ADMIN_URL', '"admin_abc123"');
 			$this->addValueToEnv('VITE_INERTIA_SSR_PORT', '13714');
 	
