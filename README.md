@@ -1,11 +1,10 @@
 ## Getting Started
 
 ## Installation
-- Install Laravel without a starter kit, see Laravel's [documentation](https://laravel.com/docs)
+- Install Laravel 11.31.x and above without a starter kit, see Laravel's [documentation](https://laravel.com/docs)
 	- `Would you like to install a starter kit? [No starter kit]:`
 	- `Which database will your application use? [mysql]`
 	- `Default database updated. Would you like to run the default database migrations? (yes/no) [no]`
-- Install [inertiajs](https://inertiajs.com/) `composer require inertiajs/inertia-laravel`
 - Install [oliv](https://github.com/opoink/oliv) package `composer require opoink/oliv`
 	- Let Laravel discover the Oliv package `php artisan package:discover` if not discovered yet
  	- run the command `php artisan oliv:install` this will initiate all required files 
