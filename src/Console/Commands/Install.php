@@ -19,6 +19,8 @@ class Install extends Command
 	 */
 	protected $description = 'Install Oliv';
 
+	protected $isDumpAutoload = false;
+
 	/**
 	 * Execute the console command.
 	 */
@@ -119,8 +121,12 @@ class Install extends Command
 			
 			$this->addDependencyToPackageJson('build:ssr', 'vite build && vite build --ssr', 'scripts');
 	
-	
 			$this->info('Oliv installed successfully.');
+
+			if($this->isDumpAutoload == 'no'){
+				$this->warn('Please run composer dump-autoload manually.');
+			}
+			$this->warn('Please npm install manually.');
 		} catch (\Exception $e) {
 			$this->error($e->getMessage());
 		}
@@ -141,7 +147,12 @@ class Install extends Command
 		file_put_contents(base_path('composer.json'), json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
 		$this->info('Running composer dump-autoload...');
-		exec('composer dump-autoload');
+
+		$this->isDumpAutoload = $this->choice('Do you want to run composer dump-autoload?', ['yes', 'no'], 'yes');
+		if($this->isDumpAutoload == 'yes'){
+			$this->info('Running composer dump-autoload...');
+			exec('composer dump-autoload');
+		}
 
 		$this->info('Plugins added to composer autoload successfully.');
 	}
