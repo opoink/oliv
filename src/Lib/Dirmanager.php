@@ -40,7 +40,7 @@ class Dirmanager {
 		return rmdir($dirPath);
 	}
 	
-	public function copyDir($src, $dst) { 
+	public function copyDir($src, $dst, $copyCallback = null) { 
 		if(!is_dir($src)){
 			throw new \Exception("The path " . $src . " doesn't exist", 500);
 		}
@@ -49,10 +49,13 @@ class Dirmanager {
 		while(false !== ( $file = readdir($dir)) ) { 
 			if (( $file != '.' ) && ( $file != '..' )) { 
 				if ( is_dir($src . '/' . $file) ) { 
-					$this->copyDir($src . '/' . $file,$dst . '/' . $file); 
+					$this->copyDir($src . '/' . $file,$dst . '/' . $file, $copyCallback); 
 				} 
 				else { 
 					copy($src . '/' . $file,$dst . '/' . $file); 
+					if($copyCallback){
+						$copyCallback($src . '/' . $file,$dst . '/' . $file);
+					}
 				} 
 			} 
 		} 

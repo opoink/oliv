@@ -53,24 +53,15 @@ class UpdatePlugin {
 
 		$this->saveConfigFiles();
 		$this->saveProviders();
-
-		// $this->savePluginVuePages();
-		// $this->saveVueGlobalComponents($this->vueGlobalComponents);
-		// $this->compilePluginLayout();
-		// $this->compilePluginCss();
-
-		// $this->savePluginRoutes('plugin_web');
+		$this->compilePluginLayout();
+		$this->compilePluginCss();
+		$this->savePluginVuePages();
+		$this->saveVueGlobalComponents($this->vueGlobalComponents);
+		$this->savePluginRoutes('plugin_web');
 		// $this->savePluginRoutes('plugin_api');
 
 		$this->saveCollectedEvents();
 	}
-
-	// /**
-	//  * @param $plugin string 
-	//  */
-	// protected function getPluginDir($plugin){
-	// 	return getPluginDir($plugin);
-	// }
 
 	/**
 	 * @param $plugin string 
@@ -85,30 +76,30 @@ class UpdatePlugin {
 		$this->collectEvents($plugin);
 
 
-		// $pluginConfig = $pluginDir.DS.'config.json';
-		// if(file_exists($pluginConfig) && is_file($pluginConfig) ){
-		// 	$this->plugins_config[] = json_decode(file_get_contents($pluginConfig), true);
-		// }
+		$pluginConfig = $pluginDir.DS.'config.json';
+		if(file_exists($pluginConfig) && is_file($pluginConfig) ){
+			$this->plugins_config[] = json_decode(file_get_contents($pluginConfig), true);
+		}
 
-		// $pluginCss = $pluginDir.DS.'resources'.DS.'css'.DS;
-		// $pluginCss = str_replace(DS, '/', $pluginCss);
-		// if(file_exists($pluginCss.'admin.app.scss') && is_file($pluginCss.'admin.app.scss') ){
-		// 	$adminAppScssCount = count($this->plugins_admin_css) + 1;
-		// 	$this->plugins_admin_css[] = "@use '".$pluginCss.'admin.app'."' as adminaapp".$adminAppScssCount.";";
-		// }
-		// if(file_exists($pluginCss.'client.app.scss') && is_file($pluginCss.'client.app.scss') ){
-		// 	$clientAppScssCount = count($this->plugins_client_css) + 1;
-		// 	$this->plugins_client_css[] = "@use '".$pluginCss.'client.app'."' as clientapp".$clientAppScssCount.";";
-		// }
+		$pluginCss = $pluginDir.DS.'resources'.DS.'css'.DS;
+		$pluginCss = str_replace(DS, '/', $pluginCss);
+		if(file_exists($pluginCss.'admin.app.scss') && is_file($pluginCss.'admin.app.scss') ){
+			$adminAppScssCount = count($this->plugins_admin_css) + 1;
+			$this->plugins_admin_css[] = "@use '".$pluginCss.'admin.app'."' as adminaapp".$adminAppScssCount.";";
+		}
+		if(file_exists($pluginCss.'client.app.scss') && is_file($pluginCss.'client.app.scss') ){
+			$clientAppScssCount = count($this->plugins_client_css) + 1;
+			$this->plugins_client_css[] = "@use '".$pluginCss.'client.app'."' as clientapp".$clientAppScssCount.";";
+		}
 
-		// $pluginResource = '../../plugins/' . str_replace('_', '/', $plugin) . '/resources/js';
-		// $this->vuePages[] = $pluginResource.'/Pages/**/*.vue';
+		$pluginResource = '../../plugins/' . str_replace('_', '/', $plugin) . '/resources/js';
+		$this->vuePages[] = $pluginResource.'/Pages/**/*.vue';
 
-		// $this->vueGlobalComponents[] = $pluginDir.DS.'resources'.DS.'js'.DS.'GlobalComponents'.DS;
+		$this->vueGlobalComponents[] = $pluginDir.DS.'resources'.DS.'js'.DS.'GlobalComponents'.DS;
 
-		// $this->pluginRoutes($plugin);
+		$this->pluginRoutes($plugin);
 
-		// $this->command->info('End updating plugin: ' . $plugin);
+		$this->command->info('End updating plugin: ' . $plugin);
 	}
 
 	protected function collectConfigFiles($plugin){
@@ -175,24 +166,23 @@ class UpdatePlugin {
 	/**
 	 * @param $plugin string 
 	 */
-	// protected function pluginRoutes($plugin){
-	// 	$pluginDir = $this->getPluginDir($plugin);
+	protected function pluginRoutes($plugin){
+		$pluginDir = getPluginDir($plugin);
 
-	// 	$targetDir = $pluginDir.DS.'routes'.DS;
+		$targetDir = $pluginDir.DS.'routes'.DS;
 
-	// 	$web = $targetDir.'web.php';
-	// 	$api = $targetDir.'api.php';
+		$web = $targetDir.'web.php';
+		// $api = $targetDir.'api.php';
 
-	// 	if(file_exists($web) && is_file($web)){
-	// 		$this->command->info('Web routes: ' . $web);
-	// 		$this->plugin_web[] = $web;
-	// 	}
-	// 	if(file_exists($api) && is_file($api)){
-	// 		$this->command->info('API routes: ' . $api);
-	// 		$this->plugin_api[] = $api;
-	// 	}
-
-	// }
+		if(file_exists($web) && is_file($web)){
+			$this->command->info('Web routes: ' . $web);
+			$this->plugin_web[] = $web;
+		}
+		// if(file_exists($api) && is_file($api)){
+		// 	$this->command->info('API routes: ' . $api);
+		// 	$this->plugin_api[] = $api;
+		// }
+	}
 
 	protected function saveConfigFiles(){
 		$data = '<?php' . PHP_EOL;
@@ -234,132 +224,131 @@ class UpdatePlugin {
 		// $this->command->info('Compiling plugin routes');
 
 		// if(count($this->$routes)){
-			// foreach ($this->$routes as &$value) {
-			// 	$value = str_replace(ROOT, '', $value);
-			// 	$value = str_replace(DS, '/', $value);
-			// 	$value = 'include(ROOT."'.$value.'")';
-			// }
+			foreach ($this->$routes as &$value) {
+				$value = str_replace(ROOT, '', $value);
+				$value = str_replace(DS, '/', $value);
+				$value = 'require_once(getPath("'.$value.'"))';
+			}
 			$data = '<?php' . PHP_EOL;
 			$data .= implode(";" . PHP_EOL, $this->$routes) .';' . PHP_EOL;
 			$data .= '?>';
-
-			// $w = new FileWriter();
-
-			// $w->setDirPath(ROOT.DS.'routes');
-			// $w->setData($data);
-			// $w->setFilename($routes);
-			// $w->setFileextension('php');
-			// $w->write();
+			
+			$w = new FileWriter();
+			
+			$w->setDirPath(getPath('routes'));
+			$w->setData($data);
+			$w->setFilename($routes);
+			$w->setFileextension('php');
+			$w->write();
 		// }
 	}
 
-	// protected function savePluginVuePages(){
+	protected function savePluginVuePages(){
 		
-	// 	$this->command->info('Compiling plugin pages');
+		$this->command->info('Compiling plugin pages');
 
-	// 	$data = "const PluginPages = import.meta.glob([" . PHP_EOL;
-	// 		$data .= "\t'" . implode("'," . PHP_EOL . "\t'", $this->vuePages) . "'" . PHP_EOL;
-	// 	$data .= "]);" . PHP_EOL;
-	// 	$data .= "export default PluginPages;";
+		$data = "const PluginPages = import.meta.glob([" . PHP_EOL;
+			$data .= "\t'" . implode("'," . PHP_EOL . "\t'", $this->vuePages) . "'" . PHP_EOL;
+		$data .= "]);" . PHP_EOL;
+		$data .= "export default PluginPages;";
 
-	// 	$w = new FileWriter();
-
-	// 	$w->setDirPath(ROOT.DS.'resources'.DS.'js');
-	// 	$w->setData($data);
-	// 	$w->setFilename('plugin.pages');
-	// 	$w->setFileextension('js');
-	// 	$w->write();
-	// }
-
-	// protected function saveVueGlobalComponents($tartgetDir){
+		$w = new FileWriter();
 		
-	// 	$globalComponents = $this->getVueGlobalComponents($tartgetDir);
+		$w->setDirPath(getPath('resources/js'));
+		$w->setData($data);
+		$w->setFilename('plugin.pages');
+		$w->setFileextension('js');
+		$w->write();
+	}
 
-	// 	$data = "";
-	// 	$names = [];
-	// 	foreach ($globalComponents as $globalComponent) {
-	// 		$name = getGlobalComponentName($globalComponent);
-	// 		$names[] = $name;
-	// 		$data .= 'import '.$name.' from "'.$globalComponent.'";' . PHP_EOL;
-	// 	}
+	protected function saveVueGlobalComponents($tartgetDir){
+		
+		$globalComponents = $this->getVueGlobalComponents($tartgetDir);
 
-	// 	$data .= PHP_EOL . PHP_EOL . PHP_EOL;
+		$data = "";
+		$names = [];
+		foreach ($globalComponents as $globalComponent) {
+			$name = getGlobalComponentName($globalComponent);
+			$names[] = $name;
+			$data .= 'import '.$name.' from "'.$globalComponent.'";' . PHP_EOL;
+		}
 
-	// 	$data .= 'const RegVueGlobalComponents = function(app){' . PHP_EOL;
-	// 		foreach ($names as $name) {
-	// 			$data .= "\tapp.component('".$name."', ".$name.");" . PHP_EOL;
-	// 			// $data .= "\t'" . 'app.component("'.$name.'", '.$name.');' . PHP_EOL;
-	// 		}
-	// 	$data .= '}' . PHP_EOL;
+		$data .= PHP_EOL . PHP_EOL . PHP_EOL;
 
-	// 	$data .= "export {RegVueGlobalComponents}";
+		$data .= 'const RegVueGlobalComponents = function(app){' . PHP_EOL;
+			foreach ($names as $name) {
+				$data .= "\tapp.component('".$name."', ".$name.");" . PHP_EOL;
+				// $data .= "\t'" . 'app.component("'.$name.'", '.$name.');' . PHP_EOL;
+			}
+		$data .= '}' . PHP_EOL;
 
-	// 	$w = new FileWriter();
-	// 	$w->setDirPath(ROOT.DS.'resources'.DS.'js');
-	// 	$w->setData($data);
-	// 	$w->setFilename('vue.global.components');
-	// 	$w->setFileextension('js');
-	// 	$w->write();
-	// }
+		$data .= "export {RegVueGlobalComponents}";
+		
+		$w = new FileWriter();
+		$w->setDirPath(getPath('resources/js'));
+		$w->setData($data);
+		$w->setFilename('vue.global.components');
+		$w->setFileextension('js');
+		$w->write();
+	}
 
-	// protected function getVueGlobalComponents($tartgetDir, &$vueComponents=[]){
-	// 	foreach ($tartgetDir as $targetPath) {
-	// 		if($targetPath == '.' || $targetPath == '..'){
-	// 			continue;
-	// 		}
-	// 		if(is_dir($targetPath)){
-	// 			$files = glob($targetPath . '*', GLOB_MARK);
-	// 			$this->getVueGlobalComponents($files, $vueComponents);
-	// 		}
-	// 		elseif (is_file($targetPath)){
-	// 			$ext = strtolower(substr($targetPath, strrpos($targetPath, '.') + 1));
-	// 			if($ext == 'vue'){
-	// 				$vueComponents[] = str_replace("\\", "/", $targetPath);
-	// 			}
-	// 		}
-	// 	}
-	// 	return $vueComponents;
-	// }
+	protected function getVueGlobalComponents($tartgetDir, &$vueComponents=[]){
+		foreach ($tartgetDir as $targetPath) {
+			if($targetPath == '.' || $targetPath == '..'){
+				continue;
+			}
+			if(is_dir($targetPath)){
+				$files = glob($targetPath . '*', GLOB_MARK);
+				$this->getVueGlobalComponents($files, $vueComponents);
+			}
+			elseif (is_file($targetPath)){
+				$ext = strtolower(substr($targetPath, strrpos($targetPath, '.') + 1));
+				if($ext == 'vue'){
+					$vueComponents[] = str_replace("\\", "/", $targetPath);
+				}
+			}
+		}
+		return $vueComponents;
+	}
 
 	
 
-	// protected function compilePluginLayout(){
-	// 	$this->command->info('Compiling plugin layouts');
-	// 	$newCompiledConfig = json_encode($this->plugins_config, JSON_PRETTY_PRINT);
+	protected function compilePluginLayout(){
+		$this->command->info('Compiling plugin layouts');
+		$newCompiledConfig = json_encode($this->plugins_config, JSON_PRETTY_PRINT);
 
-	// 	$w = new FileWriter();
+		$w = new FileWriter();
+		$w->setDirPath(getPath('plugins'));
+		$w->setData($newCompiledConfig);
+		$w->setFilename('compiled.plugins.config');
+		$w->setFileextension('json');
+		$w->write();
+	}
 
-	// 	$w->setDirPath(ROOT.DS.'plugins');
-	// 	$w->setData($newCompiledConfig);
-	// 	$w->setFilename('compiled.plugins.config');
-	// 	$w->setFileextension('json');
-	// 	$w->write();
-	// }
-
-	// protected function compilePluginCss(){
-	// 	$plugins_admin_css = '';
-	// 	if(count($this->plugins_admin_css)){
-	// 		$plugins_admin_css = implode("\n", $this->plugins_admin_css);
-	// 	}
-	// 	$w = new FileWriter();
-	// 	$w->setDirPath(ROOT.DS.'resources'.DS.'css');
-	// 	$w->setData($plugins_admin_css);
-	// 	$w->setFilename('admin.app');
-	// 	$w->setFileextension('scss');
-	// 	$w->write();
+	protected function compilePluginCss(){
+		$plugins_admin_css = '';
+		if(count($this->plugins_admin_css)){
+			$plugins_admin_css = implode("\n", $this->plugins_admin_css);
+		}
+		$w = new FileWriter();
+		$w->setDirPath(getPath('resources/css'));
+		$w->setData($plugins_admin_css);
+		$w->setFilename('admin.app');
+		$w->setFileextension('scss');
+		$w->write();
 
 		
-	// 	$plugins_client_css = '';
-	// 	if(count($this->plugins_client_css)){
-	// 		$plugins_client_css = implode("\n", $this->plugins_client_css);
-	// 	}
-	// 	$w = new FileWriter();
-	// 	$w->setDirPath(ROOT.DS.'resources'.DS.'css');
-	// 	$w->setData($plugins_client_css);
-	// 	$w->setFilename('client.app');
-	// 	$w->setFileextension('scss');
-	// 	$w->write();
-	// }
+		$plugins_client_css = '';
+		if(count($this->plugins_client_css)){
+			$plugins_client_css = implode("\n", $this->plugins_client_css);
+		}
+		$w = new FileWriter();
+		$w->setDirPath(getPath('resources/css'));
+		$w->setData($plugins_client_css);
+		$w->setFilename('client.app');
+		$w->setFileextension('scss');
+		$w->write();
+	}
 
 	protected function saveCollectedEvents(){
 		$cacheKey = \Plugins\Opoink\Liv\Lib\Event::CACHE_KEY;
