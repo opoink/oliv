@@ -1,5 +1,5 @@
 <?php
-namespace App\Console\Commands;
+namespace Opoink\Oliv\Console\Commands;
  
 use Illuminate\Database\Console\Migrations\RollbackCommand as LaravelRollbackCommand;
 

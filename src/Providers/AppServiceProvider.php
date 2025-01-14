@@ -3,10 +3,13 @@
 namespace Opoink\Oliv\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
+
 use Opoink\Oliv\Console\Commands\Install as InstallCommand;
-// use Opoink\Oliv\Console\Commands\MigrateCommand;
+use Opoink\Oliv\Console\Commands\MigrateCommand;
 use Opoink\Oliv\Console\Commands\PluginsUpdate;
-// use Opoink\Oliv\Console\Commands\RollbackCommand;
+use Opoink\Oliv\Console\Commands\RollbackCommand;
 use Illuminate\Support\Facades\Blade;
 use Tightenco\Ziggy\Ziggy;
 
@@ -25,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
+		Config::set('database.connections.mysql.engine', 'InnoDB');
+
 		$this->publishes([
 			__DIR__.'/../config/oliv.php' => config_path('oliv.php'),
 		]);
@@ -33,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
 			$this->commands([
 				InstallCommand::class,
 				PluginsUpdate::class,
+				MigrateCommand::class,
+				RollbackCommand::class,
 			]);
 		}
 

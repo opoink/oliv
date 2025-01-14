@@ -87,6 +87,12 @@ class Install extends Command
 			});
 			$this->info('Public directory copied successfully.');
 
+			$this->info('Copying the vite plugins directory...');
+			$dirManager->copyDir($resouceDir.$ds.'viteplugins', base_path().$ds.'viteplugins', function($data){
+				$this->info($data);
+			});
+			$this->info('Vite plugins directory copied successfully.');
+
 			/** add dependency to package json */
 			$this->addDependencyToPackageJson('@inertiajs/vue3', '^2.0.0');
 			$this->addDependencyToPackageJson('@tinymce/tinymce-vue', '^6.1.0');
@@ -126,7 +132,7 @@ class Install extends Command
 			if($this->isDumpAutoload == 'no'){
 				$this->warn('Please run composer dump-autoload manually.');
 			}
-			$this->warn('Please npm install manually.');
+			$this->warn('Please run npm install manually.');
 		} catch (\Exception $e) {
 			$this->error($e->getMessage());
 		}

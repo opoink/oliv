@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cms_pages', function (Blueprint $table) {
             $table->id();
 			$table->string('name', 255);
-			$table->string('identifier', 255)->unique();
+			$table->string('identifier', 255);
 			$table->longText('content');
 			$table->string('meta_title', 255);
 			$table->string('meta_keywords', 255);

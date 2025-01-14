@@ -203,7 +203,11 @@ class UpdatePlugin {
 			$providers = include($providersPath);
 		}
 		
-		$providers = array_merge($providers, $this->service_providers);
+		foreach ($this->service_providers as $provider) {
+			if(!in_array($provider, $providers)){
+				$providers[] = $provider;
+			}
+		}
 
 		$data = '<?php' . PHP_EOL;
 		$data .= 'return ' . var_export($providers, true) . PHP_EOL;
