@@ -3,7 +3,7 @@
 ## Installation
 - Requirements
 	- PHP 8.3 and up
-	- Node v23.5.0
+	- Node v18.17.0, v23.5.0
 	- MySQL: this package is created using MySQL version 9.1.0 - MySQL Community Server - GPL
 - Install Laravel 11.31.x and above without a starter kit, see Laravel's [documentation](https://laravel.com/docs)
 	- `Would you like to install a starter kit? [No starter kit]:`
