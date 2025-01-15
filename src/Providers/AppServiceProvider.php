@@ -31,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 		Config::set('database.connections.mysql.engine', 'InnoDB');
 
+		$this->registerMiddlewareToGroup();
+
 		$this->publishes([
 			__DIR__.'/../config/oliv.php' => config_path('oliv.php'),
 		]);
@@ -72,5 +74,9 @@ class AppServiceProvider extends ServiceProvider
 			$routes = $ziggy->toArray();
 			return "<script type=\"text/javascript\">const Ziggy = ". json_encode($routes) .";</script>";
 		});
+	}
+
+	protected function registerMiddlewareToGroup(){
+		$this->app->make('router')->pushMiddlewareToGroup('web', \Opoink\Oliv\Middleware\HandleInertiaRequests::class);
 	}
 }

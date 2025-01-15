@@ -9,7 +9,7 @@ use Plugins\Opoink\Cms\Lib\Cms;
 class BlockController extends Controller {
 
 	public function __construct(
-		protected \App\Lib\Writer $writer
+		protected \Opoink\Oliv\Lib\Writer $writer
 	){}
 
 	/**
@@ -22,7 +22,7 @@ class BlockController extends Controller {
 		$qry = CmsBlock::select('*');
 		if(is_array($request->filters)){
 			foreach ($request->filters as $filter) {
-				$urlParams = new \App\Lib\DataObject($filter);
+				$urlParams = new \Opoink\Oliv\Lib\DataObject($filter);
 
 				$key = $urlParams->getKey();
 				if(!empty($key)){

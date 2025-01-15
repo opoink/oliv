@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Opoink\Oliv\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,7 +39,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-
 		$data = [
 			'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
@@ -86,7 +85,5 @@ class HandleInertiaRequests extends Middleware
 		}
 
 		return array_merge(parent::share($request), $data);
-
-
     }
 }

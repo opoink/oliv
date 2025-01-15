@@ -28,7 +28,7 @@ class Event {
 
 		if(isset($events[$eventName])){
 			foreach ($events[$eventName] as $event) {
-				$dataObject = new \App\Lib\DataObject($data);
+				$dataObject = new \Opoink\Oliv\Lib\DataObject($data);
 
 				$listener = app($event['listener']);
 				$listener->handle($dataObject);

@@ -8,7 +8,7 @@ namespace Plugins\Opoink\Cms\Lib;
 class Cms {
 
 	public function __construct(
-		protected \App\Lib\Writer $writer
+		protected \Opoink\Oliv\Lib\Writer $writer
 	) {}
 
 	/**

@@ -3,7 +3,7 @@ namespace Plugins\Opoink\Cms\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Lib\Writer;
+use Opoink\Oliv\Lib\Writer;
 use Plugins\Opoink\Cms\Models\CmsPages;
 use Plugins\Opoink\Cms\Lib\Cms;
 
