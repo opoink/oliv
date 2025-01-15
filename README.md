@@ -1,6 +1,10 @@
 ## Getting Started
 
 ## Installation
+- Requirements
+	- PHP 8.3 and up
+	- Node v23.5.0
+	- MySQL: this package is created using MySQL version 9.1.0 - MySQL Community Server - GPL
 - Install Laravel 11.31.x and above without a starter kit, see Laravel's [documentation](https://laravel.com/docs)
 	- `Would you like to install a starter kit? [No starter kit]:`
 	- `Which database will your application use? [mysql]`
@@ -8,13 +12,12 @@
 - Install [oliv](https://github.com/opoink/oliv) package `composer require opoink/oliv`
 	- Let Laravel discover the Oliv package `php artisan package:discover` if not discovered yet
  	- run the command `php artisan oliv:install` this will initiate all required files 
-- Create a `.env` file and copy it from `.env.example` (optional) change the value of the `VITE_ADMIN_URL` of your choice
+- (optional) change the value of the `VITE_ADMIN_URL` of your choice
 - (optional) Change the value of the `VITE_INERTIA_SSR_PORT` in `ecosystem.config.js` of your choice
 - Update database host, user, pass, name
 - create file `plugins/config.json` you can copy it from `plugins/config.sample.json`
 - run the command `php artisan oliv:plugins-update` this will compile and update all plugins set at the config.json file
 - Optional `php artisan migrate` to migrate database
-- run command `php composer.phar upgrade` or `composer upgrade`
 - run command `npm install` or `npm i`
 
 ## Run laravel

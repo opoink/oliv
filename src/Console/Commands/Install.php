@@ -43,58 +43,54 @@ class Install extends Command
 
 			/** copy the plugins dir */
 			$this->info('Copying the plugins directory...');
-			$dirManager->copyDir($resouceDir.$ds.'plugins', base_path().$ds.'plugins', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'plugins', base_path().$ds.'plugins');
 			$this->info('Plugin directory copied successfully.');
 	
 			/** copy the routes dir */
 			$this->info('Copying the routes directory...');
-			$dirManager->copyDir($resouceDir.$ds.'routes', base_path().$ds.'routes', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'routes', base_path().$ds.'routes');
 			$this->info('Routes directory copied successfully.');
 	
 			/** copy the routes dir */
 			$this->info('Copying the app directory...');
-			$dirManager->copyDir($resouceDir.$ds.'app', base_path().$ds.'app', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'app', base_path().$ds.'app');
 			$this->info('App directory copied successfully.');
 	
 			/** copy the routes dir */
 			$this->info('Copying the resources directory...');
-			$dirManager->copyDir($resouceDir.$ds.'resources', base_path().$ds.'resources', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'resources', base_path().$ds.'resources');
 			$this->info('Resources directory copied successfully.');
 
 			/** copy the routes dir */
 			$this->info('Copying the config directory...');
-			$dirManager->copyDir($resouceDir.$ds.'config', base_path().$ds.'config', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'config', base_path().$ds.'config');
 			$this->info('Config directory copied successfully.');
 
 			/** copy the vite.config.js*/
 			$this->info('Copying the vite.config.js...');
+			if(file_exists(base_path().$ds.'vite.config.js')){
+				copy(base_path().$ds.'vite.config.js', base_path().$ds.'vite.config.js.bak');
+			}
 			copy($resouceDir.$ds.'vite.config.js', base_path().$ds.'vite.config.js');
 			$this->info('vite.config.js copied successfully.');
 
+			$this->info('Copying the ecosystem.config.js...');
+			if(file_exists(base_path().$ds.'ecosystem.config.js')){
+				copy(base_path().$ds.'ecosystem.config.js', base_path().$ds.'ecosystem.config.js.bak');
+			}
+			copy($resouceDir.$ds.'ecosystem.config.js', base_path().$ds.'ecosystem.config.js');
+			$this->info('ecosystem.config.js copied successfully.');
+
 			$this->info('Copying the public directory...');
-			$dirManager->copyDir($resouceDir.$ds.'public', base_path().$ds.'public', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'public', base_path().$ds.'public');
 			$this->info('Public directory copied successfully.');
 
 			$this->info('Copying the vite plugins directory...');
-			$dirManager->copyDir($resouceDir.$ds.'viteplugins', base_path().$ds.'viteplugins', function($data){
-				$this->info($data);
-			});
+			$dirManager->copyDir($resouceDir.$ds.'viteplugins', base_path().$ds.'viteplugins');
 			$this->info('Vite plugins directory copied successfully.');
 
 			/** add dependency to package json */
-			$this->addDependencyToPackageJson('@inertiajs/vue3', '^2.0.0');
+			$this->addDependencyToPackageJson('@inertiajs/vue3', '2.0.0');
 			$this->addDependencyToPackageJson('@tinymce/tinymce-vue', '^6.1.0');
 			$this->addDependencyToPackageJson('@vue/server-renderer', '^3.4.19');
 			$this->addDependencyToPackageJson('grapesjs', '^0.22.4');
@@ -129,6 +125,8 @@ class Install extends Command
 	
 			$this->info('Oliv installed successfully.');
 
+			$this->warn('Please update the file vite.config.js with your configuration from vite.config.js.bak.');
+			$this->warn('Please update the file ecosystem.config.js with your configuration from ecosystem.config.js.bak.');
 			if($this->isDumpAutoload == 'no'){
 				$this->warn('Please run composer dump-autoload manually.');
 			}

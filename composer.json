@@ -1,7 +1,7 @@
 {
     "name": "opoink/oliv",
     "description": "opoink laravel inertia vue",
-    "type": "compoer-plugin",
+    "type": "composer-plugin",
     "license": "mit",
     "autoload": {
         "psr-4": {
