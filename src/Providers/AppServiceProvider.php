@@ -11,7 +11,7 @@ use Opoink\Oliv\Console\Commands\MigrateCommand;
 use Opoink\Oliv\Console\Commands\PluginsUpdate;
 use Opoink\Oliv\Console\Commands\RollbackCommand;
 use Illuminate\Support\Facades\Blade;
-use Tightenco\Ziggy\Ziggy;
+use Tighten\Ziggy\Ziggy;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -26,7 +26,7 @@
 		@else
 			@olivroutes
 		@endif
-		<script src="{{asset('/assets/tightenco.ziggy.1.8.2.js')}}"></script>
+		<script src="{{asset('/assets/tightenco.ziggy.2.4.2.js')}}"></script>
 		
 		<?php 
 		/** 

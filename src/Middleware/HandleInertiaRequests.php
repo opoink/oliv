@@ -1,12 +1,9 @@
 <?php
-
 namespace Opoink\Oliv\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Inertia\Inertia;
-use Tightenco\Ziggy\Ziggy;
-use \App\Models\AdminUserRolesResource;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -56,20 +53,6 @@ class HandleInertiaRequests extends Middleware
 				$adminUser['roles_resource'] = "*";
 			}
 			else {
-				// if (!session()->has('roles_resource')) {
-				// 	$resources =  AdminUserRolesResource::where('admin_user_role_id', $adminUser['admin_user_role_id'])->get();
-				// 	$roles_resource = [];
-				// 	foreach ($resources as $resource) {
-				// 		$roles_resource[$resource->resource] = $resource->resource;
-				// 	}
-				// 	session()->put('roles_resource', $roles_resource);
-				// 	session()->save();
-				// }
-				// else {
-				// 	$roles_resource = session()->get('roles_resource');
-				// }
-				// $adminUser['roles_resource'] = $roles_resource;
-
 				$adminUser['roles_resource'] = getRolesResource($adminUser['admin_user_role_id']);
 			}
 		}
