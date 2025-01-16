@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
 				foreach ($routes['routes'] as $keyroute => $valueroute) {
 					if(isset($valueroute['uri'])){
 						$uri = explode('/', $valueroute['uri']);
-						if($uri[0] != config('app.vite_admin_url')){
+						if($uri[0] != config('oliv.vite_admin_url')){
 							$newRoutes[$keyroute] = $valueroute;
 						}
 					}
