@@ -16,11 +16,11 @@
 		@endif
 
 		<?php 
-		/** 
-		 * this is ziggy routes, because we dont want to expose admin url at public area  
-		 */ 
+			/** 
+			 * this is ziggy routes, because we dont want to expose admin url at public area  
+			 * @routes
+			 */ 
 		?>
-		
 		@if(isAdminRoute())
 			@olivroutesadmin
 		@else
@@ -28,18 +28,11 @@
 		@endif
 		<script src="{{asset('/assets/tightenco.ziggy.2.4.2.js')}}"></script>
 		
-		<?php 
-		/** 
-		 * @routes
-		 */ 
-		?>
-		
 		@vite('resources/js/app.js')
 		@inertiaHead
 	</head>
 	<body>
 		@inertia
-
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	</body>
 </html>
