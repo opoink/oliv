@@ -1,6 +1,6 @@
 <script setup>
-	
 	import { Head, Link, useForm } from '@inertiajs/vue3';
+	import { route } from 'ziggy-js';
 
 	const props = defineProps({
 		canResetPassword: {

@@ -1,6 +1,5 @@
 import './bootstrap';
 
-
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -11,7 +10,6 @@ import { RegVueGlobalComponents } from './vue.global.components';
 
 createInertiaApp({
 	title: (title) => `${title}`,
-	// resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, PluginPages),
 	resolve: name => {
 		let pluginName = `../../plugins/${name}.vue`;
 		if(typeof PluginPages[pluginName] == 'undefined'){

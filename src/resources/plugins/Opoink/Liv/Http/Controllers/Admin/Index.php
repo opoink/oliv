@@ -1,5 +1,5 @@
 <?php
-namespace Plugins\Opoink\Liv\Http\Controllers;
+namespace Plugins\Opoink\Liv\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

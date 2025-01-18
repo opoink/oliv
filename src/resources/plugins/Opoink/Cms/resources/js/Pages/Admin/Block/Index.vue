@@ -7,6 +7,7 @@
 	import ModalConfirmmation from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ModalConfirmmation.vue';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
+	import { route } from 'ziggy-js';
 
 	
 	const confirmModalOptionElId = 'cms-block-delete-confirm';

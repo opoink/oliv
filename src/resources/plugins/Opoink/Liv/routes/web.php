@@ -15,10 +15,13 @@ use Plugins\Opoink\Liv\Http\Controllers\Admin\Login;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+if(config('oliv.vite_oliv_welcome_page')){
+	Route::get('/', \Plugins\Opoink\Liv\Http\Controllers\Client\Index::class)->name('client.index');
+}
 
 Route::middleware(['adminauth'])->group(function () use ($router) {
 	Route::group(['prefix' => getAdminUrl()], function () use ($router) {
-		Route::get('/', \Plugins\Opoink\Liv\Http\Controllers\Index::class)->name('admin.index');
+		Route::get('/', \Plugins\Opoink\Liv\Http\Controllers\Admin\Index::class)->name('admin.index');
 		
 		Route::get('/logout', [Login::class, 'adminLogout'])->name('admin.logout');
 

@@ -2,6 +2,7 @@
 	import { Head, Link, useForm } from '@inertiajs/vue3';
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
+	import { route } from 'ziggy-js';
 
 	const props = defineProps(['propsdata']);
 

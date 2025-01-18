@@ -4,6 +4,7 @@
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
+	import { route } from 'ziggy-js';
 
 	
 	import Editor from '@@Plugins@@/Opoink/Cms/resources/js/Components/Editor.vue';

@@ -34,10 +34,11 @@ class Install extends Command
 		$resouceDir = base_path('vendor'.$ds.'opoink'.$ds.'oliv'.$ds.'src'.$ds.'resources');
 
 		try {
-			$this->addValueToEnv('SESSION_DRIVER', 'file');
-			$this->addValueToEnv('CACHE_STORE', 'file');
+			$this->addValueToEnv('SESSION_DRIVER', 'file', true);
+			$this->addValueToEnv('CACHE_STORE', 'file', true);
 			$this->addValueToEnv('VITE_ADMIN_URL', '"admin_abc123"');
 			$this->addValueToEnv('VITE_INERTIA_SSR_PORT', '13714');
+			$this->addValueToEnv('VITE_OLIV_WELCOME_PAGE', 'true');
 
 			$this->addPluginsToComposer();
 
@@ -161,26 +162,28 @@ class Install extends Command
 		$this->info('Plugins added to composer autoload successfully.');
 	}
 
-	protected function addValueToEnv($key, $value){
+	protected function addValueToEnv($key, $value, $forceUpdate=false){
 		$this->info('Adding '.$key.' to .env file...');
 		$envFile = base_path('.env');
 		$env = file_get_contents($envFile);
 
 		$env = explode("\n", $env);
 
-		$founded = false;
+		$found = false;
 		
 		foreach ($env as $k => $v) {
 			$keyVal = explode('=', $v);
 			if(isset($keyVal[0]) && $keyVal[0] == $key){
-				$keyVal[1] = $value;
-				$founded = true;
+				if($forceUpdate){
+					$keyVal[1] = $value;
+				}
+				$found = true;
 			}
 
 			$newEnv[] = implode('=', $keyVal);
 		}
 
-		if(!$founded){
+		if(!$found){
 			$newEnv[] = $key.'='.$value;
 		}
 		

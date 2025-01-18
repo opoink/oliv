@@ -2,7 +2,8 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import vueComponentInjectorPlugin from './viteplugins/vue.component.injector.plugin';
-import transformFileImport from './viteplugins/import.plugin'
+import transformFileImport from './viteplugins/import.plugin';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
@@ -29,4 +30,10 @@ export default defineConfig({
             },
         }),
     ],
+	resolve: {
+		alias: {
+			'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
+			'Plugins': path.resolve('plugins'),
+		},
+	}
 });

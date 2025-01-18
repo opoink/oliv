@@ -13,7 +13,6 @@ createServer(page =>
 		page,
 		render: renderToString,
 		title: (title) => `${title}`,
-		// resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
 		resolve: name => {
 			let pluginName = `../../plugins/${name}.vue`;
 			if(typeof PluginPages[pluginName] == 'undefined'){
