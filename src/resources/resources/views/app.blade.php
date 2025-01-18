@@ -26,7 +26,6 @@
 		@else
 			@olivroutes
 		@endif
-		<script src="{{asset('/assets/tightenco.ziggy.2.4.2.js')}}"></script>
 		
 		@vite('resources/js/app.js')
 		@inertiaHead
