@@ -1,10 +1,15 @@
 <script setup lang="ts">
 	import '@@Plugins@@/Opoink/Liv/resources/css/client/oliv-welcome-page.scss';
+	import { Head } from '@inertiajs/vue3';
 
 	const props = defineProps(['propsdata']);
 </script>
 
 <template>
+	<Head>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	</Head>
+
 	<div id="oliv-welcome-page">
 		<img id="background" class="position-absolute start-0 top-0 laravel-background" src="https://laravel.com/assets/img/welcome/background.svg" alt="Laravel background">
 		<div class="container">
