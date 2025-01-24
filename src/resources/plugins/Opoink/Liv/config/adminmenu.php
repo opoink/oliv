@@ -40,7 +40,7 @@ return [
 		]
 	],
 	'settings' => [
-		'route' => 'admin.index',
+		'route' => 'admin.settings.index',
 		'label' => 'Settings',
 		'fa_icon' => 'fa-solid fa-gears',
 		'child' => []

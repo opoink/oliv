@@ -39,6 +39,10 @@ Route::middleware(['adminauth'])->group(function () use ($router) {
 			Route::post('/admins/roles/save', [AdminsRoles::class, 'saveAction'])->name('admin.users.admins.roles.saveaction');
 			Route::delete('/admins/roles/delete/{id}', [AdminsRoles::class, 'deleteAction'])->name('admin.users.admins.roles.delete');
 		});
+
+		Route::group(['prefix' => 'settings'], function () use ($router) {
+			Route::get('/', \Plugins\Opoink\Liv\Http\Controllers\Admin\Settings\Settings::class)->name('admin.settings.index');
+		});
 	});
 });
 
