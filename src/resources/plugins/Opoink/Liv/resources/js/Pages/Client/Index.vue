@@ -7,6 +7,8 @@
 
 <template>
 	<Head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	</Head>
 
@@ -15,17 +17,17 @@
 		<div class="container">
 			<div class="row mb-5">
 				<div class="col-12">
-					<div class="oliv-logo">
+					<div class="oliv-logo mb-3">
 						<img src="./../../../images/oliv-logo-2.png" alt="">
 					</div>
 					<div class="welcome-message">
-						<h1 class="text-center h3 mb-3">Welcome to Opoink Laravel Inertia Vue.</h1>
-						<p class="text-center">Remove this welcome page by changing the env VITE_OLIV_WELCOME_PAGE to false</p>
+						<h1 class="text-center mb-3 fs-16 fs-sm-24 fw-600">Welcome to Opoink Laravel Inertia Vue.</h1>
+						<p class="text-center mb-0">Remove this welcome page by changing the env VITE_OLIV_WELCOME_PAGE to false</p>
 					</div>
 				</div>
 			</div>
 			<div class="row mb-5">
-				<div class="col-6">
+				<div class="col-12 col-md-6">
 					<div class="card mb-3">
 						<div class="card-body">
 							<img class="w-100" src="./../../../images/dashboard.png" alt="">
@@ -33,7 +35,7 @@
 					</div>
 
 				</div>
-				<div class="col-6">
+				<div class="col-12 col-md-6">
 					<div class="card mb-3">
 						<div class="card-body">
 							<a class="title d-flex align-items-center text-decoration-none text-dark mb-3" href="https://laravel.com/" target="_blank">
