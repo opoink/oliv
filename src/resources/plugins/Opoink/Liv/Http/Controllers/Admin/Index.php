@@ -14,7 +14,7 @@ class Index extends Controller {
 	 */
 	public function __invoke(Request $request)
 	{
-		return inertiaRender('Opoink/Liv/resources/js/Pages/Admin/Index', [
+		return inertiaRender('AdminIndex', [
 		]);
 	}
 }

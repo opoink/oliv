@@ -111,8 +111,15 @@ if (!function_exists('isRoleAllowed')) {
 	}
 }
 
+$pluginsConfig = null;
 if (!function_exists('getPluginsConfig')) {
 	function getPluginsConfig(){
+		global $pluginsConfig;
+
+		if($pluginsConfig){
+			return $pluginsConfig;
+		}
+
 		$target = getPath('plugins/config.json');
 
 		$plugins = [
@@ -122,7 +129,8 @@ if (!function_exists('getPluginsConfig')) {
 			$plugins = json_decode(file_get_contents($target), true);
 		}
 
-		return new \Opoink\Oliv\Lib\DataObject($plugins);
+		$pluginsConfig = new \Opoink\Oliv\Lib\DataObject($plugins);
+		return $pluginsConfig;
 	}
 }
 

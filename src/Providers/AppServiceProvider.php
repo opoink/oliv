@@ -78,5 +78,6 @@ class AppServiceProvider extends ServiceProvider
 
 	protected function registerMiddlewareToGroup(){
 		$this->app->make('router')->pushMiddlewareToGroup('web', \Opoink\Oliv\Middleware\HandleInertiaRequests::class);
+		$this->app->make('router')->pushMiddlewareToGroup('web', \Opoink\Oliv\Middleware\PageLayout::class);
 	}
 }

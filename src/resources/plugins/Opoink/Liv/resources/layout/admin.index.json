@@ -1,13 +1,16 @@
-[
-	{
+{
+	"Head": {
 		"import": "import { Head } from '@inertiajs/vue3'",
-		"node_name": "Head",
 		"attr": {
 			"title": "Dashboard"
 		}
 	},
-	{
+	"Default": {
 		"import": "import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue'",
-		"node_name": "Default"
+		"children": {
+			"AdminIndex": {
+				"import": "import AdminIndex from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/Pages/AdminIndex.vue'"
+			}
+		}
 	}
-]
+}

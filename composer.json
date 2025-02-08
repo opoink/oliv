@@ -26,8 +26,7 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Opoink\\Oliv\\Providers\\AppServiceProvider",
-				"Opoink\\Oliv\\Providers\\PageLayoutServiceProvider"
+				"Opoink\\Oliv\\Providers\\AppServiceProvider"
 			],
 			"aliases": {}
 		}

@@ -31,7 +31,10 @@ class UpdatePlugin {
 	/**
 	 * vue pages
 	 */
-	protected $vuePages = ['./Pages/**/*.vue'];
+	protected $vuePages = [
+		'./Pages/**/*.vue',
+		'../../storage/framework/vue/pages/**/*.vue'
+	];
 
 
 	public function __construct(

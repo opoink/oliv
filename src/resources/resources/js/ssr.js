@@ -17,6 +17,10 @@ createServer(page =>
 			let pluginName = `../../plugins/${name}.vue`;
 			if(typeof PluginPages[pluginName] == 'undefined'){
 				pluginName = `./Pages/${name}.vue`;
+
+				if(typeof PluginPages[pluginName] == 'undefined'){
+					pluginName = `../../storage/framework/vue/pages/${name}.vue`;
+				}
 			}
 			let page = resolvePageComponent(pluginName, PluginPages);
 			return page;
