@@ -43,7 +43,6 @@ class HandleInertiaRequests extends Middleware
             ],
         ];
 
-
 		$adminUser = auth()->guard('admin')->user();
 		if($adminUser){
 			unset($adminUser->password);

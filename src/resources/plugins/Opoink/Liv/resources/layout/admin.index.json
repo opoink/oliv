@@ -1,0 +1,13 @@
+[
+	{
+		"import": "import { Head } from '@inertiajs/vue3'",
+		"node_name": "Head",
+		"attr": {
+			"title": "Dashboard"
+		}
+	},
+	{
+		"import": "import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue'",
+		"node_name": "Default"
+	}
+]
