@@ -41,7 +41,7 @@ class Model extends \Illuminate\Database\Eloquent\Model {
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			throw new \Exception($e->getMessage(), $e->getCode());
+			throw new \Exception($e->getMessage(), 500);
 		}
 
 		return $saved;
