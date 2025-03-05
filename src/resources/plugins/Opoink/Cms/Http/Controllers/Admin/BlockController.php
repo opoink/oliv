@@ -25,6 +25,11 @@ class BlockController extends Controller {
 				$urlParams = new \Opoink\Oliv\Lib\DataObject($filter);
 
 				$key = $urlParams->getKey();
+
+				if(!in_array($key, $columns)){
+					continue;
+				}
+				
 				if(!empty($key)){
 					$value = $urlParams->getValue();
 					$values = $urlParams->getValues();
