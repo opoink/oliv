@@ -14,7 +14,12 @@
 
 			<div class="clearfix my-4">
 				<nav class="float-end" aria-label="Page navigation">
-					<ul class="pagination mb-0">
+					<ul class="pagination mb-0" v-if="props.propsdata.listing.paginator.links">
+						<li class="page-item" v-for="link in props.propsdata.listing.paginator.links">
+							<Link class="page-link" :href="link.url" v-html="link.label"></Link>
+						</li>
+					</ul>
+					<ul class="pagination mb-0" v-else>
 						<li class="page-item" v-if="props.propsdata.listing.paginator.prev_page_url">
 							<Link class="page-link" :href="props.propsdata.listing.paginator.prev_page_url" v-html="'Prev'"></Link>
 						</li>
@@ -53,7 +58,12 @@
 
 			<div class="clearfix my-4">
 				<nav class="float-end" aria-label="Page navigation">
-					<ul class="pagination mb-0">
+					<ul class="pagination mb-0" v-if="props.propsdata.listing.paginator.links">
+						<li class="page-item" v-for="link in props.propsdata.listing.paginator.links">
+							<Link class="page-link" :href="link.url" v-html="link.label"></Link>
+						</li>
+					</ul>
+					<ul class="pagination mb-0" v-else>
 						<li class="page-item" v-if="props.propsdata.listing.paginator.prev_page_url">
 							<Link class="page-link" :href="props.propsdata.listing.paginator.prev_page_url" v-html="'Prev'"></Link>
 						</li>
