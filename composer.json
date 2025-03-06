@@ -1,27 +1,28 @@
 {
-    "name": "opoink/oliv",
-    "description": "opoink laravel inertia vue",
-    "type": "library",
-    "license": "mit",
-    "autoload": {
-        "psr-4": {
-            "Opoink\\Oliv\\": "src/"
-        },
+	"name": "opoink/oliv",
+	"description": "opoink laravel inertia vue",
+	"type": "library",
+	"license": "mit",
+	"autoload": {
+		"psr-4": {
+			"Opoink\\Oliv\\": "src/"
+		},
 		"files": ["functions.php"]
-    },
-    "authors": [
-        {
-            "name": "Ron",
-            "email": "ron@opoink.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "laravel/framework": "^11.31",
-        "inertiajs/inertia-laravel": "^2.0",
-        "tightenco/ziggy": "^2.4.2",
-        "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+	},
+	"authors": [
+		{
+			"name": "Ron",
+			"email": "ron@opoink.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"require": {
+		"laravel/framework": "^11.31",
+		"inertiajs/inertia-laravel": "^2.0",
+		"tightenco/ziggy": "^2.4.2",
+		"laravel/sanctum": "^4.0",
+		"laravel/tinker": "^2.9",
+		"phpmailer/phpmailer": "^6.9.2"
 	},
 	"extra": {
 		"laravel": {
