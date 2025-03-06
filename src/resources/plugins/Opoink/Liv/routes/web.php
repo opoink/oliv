@@ -53,6 +53,7 @@ Route::group(['prefix' => getAdminUrl()], function () use ($router) {
 	Route::get('/login', Login::class)->name('admin.login');
 	Route::post('/login', [Login::class, 'authUser'])->name('admin.login.action');
 
-	Route::get('/forgot-password', Login::class)->name('admin.forgot-password');
+	Route::get('/forgot-password', [Login::class, 'forgotPassword'])->name('admin.forgot-password');
+	Route::post('/forgot-password/send/code', [Login::class, 'forgotPasswordCode'])->name('admin.forgot-password.send.code');
 });
 ?>

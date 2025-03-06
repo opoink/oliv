@@ -24,6 +24,9 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
+			$table->string('forgot_password_code')->nullable();
+			$table->timestamp('forgot_password_code_expire')->nullable();
+
 			
 			$table->index('admin_user_role_id');
 			$table->foreign('admin_user_role_id')->references('id')->on('admin_user_roles')->onDelete('set null');
