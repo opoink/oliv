@@ -1,6 +1,10 @@
 <script setup>
-	import { Head, Link, useForm } from '@inertiajs/vue3';
+	import { Head, Link, useForm, router } from '@inertiajs/vue3';
 	import { route } from 'ziggy-js';
+	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
+	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
+	import Loader from '@@Plugins@@/Opoink/Liv/resources/js/Components/Loader.vue';
+	import Toast from '@@Plugins@@/Opoink/Liv/resources/js/Components/Toast.vue';
 
 	const props = defineProps({
 		canResetPassword: {
@@ -16,22 +20,27 @@
 	});
 
 	const submitResetPasswordCode = () => {
+		
+		loader.setLoader(true);
 		axios({
 			method: 'post',
 			url: route('admin.forgot-password.send.code'),
 			data: form.data()
 		})
 		.then(response => {
-			console.log(response.data);
+			loader.setLoader(false);
+			toast.add(response.data.message, 'success');
+			router.visit(route('admin.reset-password'));
 		})
 		.catch(error => {
+			loader.setLoader(false);
 			form.errors = error.response.data.errors;
 		});
 	};
 </script>
 
 <template>
-	<Head title="Log in" />
+	<Head title="Forgot Password" />
 	<div id="login-page">
 		<div class="login-box-wrapper d-flex align-items-center justify-content-center">
 			<div class="login-box">
@@ -41,7 +50,7 @@
 							<img class="logo" src="../../../../images/oliv-logo-2.png" title="logo" >
 						</div>
 						<h1 class="h5 fw-400 text-center mb-4">
-							Welcome, please sign-in
+							Forgot Password
 						</h1>
 
 						<form @submit.prevent="submit">
@@ -65,4 +74,7 @@
 			</div>
 		</div>
 	</div>
+
+	<Loader />
+	<Toast />
 </template>

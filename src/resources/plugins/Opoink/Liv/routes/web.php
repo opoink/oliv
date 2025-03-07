@@ -55,5 +55,7 @@ Route::group(['prefix' => getAdminUrl()], function () use ($router) {
 
 	Route::get('/forgot-password', [Login::class, 'forgotPassword'])->name('admin.forgot-password');
 	Route::post('/forgot-password/send/code', [Login::class, 'forgotPasswordCode'])->name('admin.forgot-password.send.code');
+	Route::get('/reset-password', [Login::class, 'resetPassword'])->name('admin.reset-password');
+	Route::post('/reset-password/save', [Login::class, 'resetPasswordSave'])->name('admin.reset-password.actionsave');
 });
 ?>

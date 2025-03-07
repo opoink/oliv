@@ -39,6 +39,15 @@ class Install extends Command
 			$this->addValueToEnv('VITE_ADMIN_URL', '"admin_abc123"');
 			$this->addValueToEnv('VITE_INERTIA_SSR_PORT', '13714');
 			$this->addValueToEnv('VITE_OLIV_WELCOME_PAGE', 'true');
+			$this->addValueToEnv('VITE_ADMIN_APP_NAME', '"Oliv Admin"');
+
+			$this->addValueToEnv('PHPMAILER_SMTPDEBUG', '0');
+			$this->addValueToEnv('PHPMAILER_HOST', '"smtp.example.com"');
+			$this->addValueToEnv('PHPMAILER_SMTPAUTH', 'true');
+			$this->addValueToEnv('PHPMAILER_USERNAME', '"user@example.com"');
+			$this->addValueToEnv('PHPMAILER_PASSWORD', '"secret"');
+			$this->addValueToEnv('PHPMAILER_SMTPSECURE', '"ssl"');
+			$this->addValueToEnv('PHPMAILER_PORT', '465');
 
 			$this->addPluginsToComposer();
 
