@@ -1,21 +1,119 @@
 <script setup>
-	import { Head, Link, router } from '@inertiajs/vue3';
-	import { onMounted, ref } from 'vue';
+	import { Head, Link, router, useForm } from '@inertiajs/vue3';
+	import { onBeforeMount, onMounted, ref } from 'vue';
 	import moment from "moment";
 	
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import Listing from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/Listing.vue';
 	import ModalConfirmmation from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ModalConfirmmation.vue';
+	import ListingThSort from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ListingThSort.vue';
 
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
 	import { route } from 'ziggy-js';
 
-	const props = defineProps(['propsdata']);
+	const props = defineProps(['propsdata', 'errors']);
 
 	const confirmModalOptionElId = 'userDeleteConfirm';
 	const confirmModalContenData = ref(null);
 	const confirmModal = ref(null);
+
+	const isShowFilter = ref(false);
+	const showFilters = function(){
+		if(isShowFilter.value){
+			isShowFilter.value = false;
+		}
+		else {
+			isShowFilter.value = true;
+		}
+	}
+	const filterForm = useForm({
+		id: {
+			from: '',
+			to: ''
+		},
+		firstname: '',
+		lastname: '',
+		email: '',
+		admin_user_role_id: '',
+		created_at: '',
+		updated_at: '',
+	});
+	const sortOrder = ref({
+		key: '',
+		value: 'desc'
+	});
+
+	const applyFilters = function(){
+		let filters = [];
+		
+		let idValues = {}
+		if(filterForm.id.from){
+			idValues['from'] = filterForm.id.from
+		}
+		if(filterForm.id.to){
+			idValues['to'] = filterForm.id.to
+		}
+
+		if(typeof idValues.from != 'undefined' || typeof idValues.to != 'undefined'){
+			filters.push({
+				key: 'id',
+				values: idValues
+			});
+		}
+		if(filterForm.firstname){
+			filters.push({key: 'firstname', value: filterForm.firstname});
+		}
+		if(filterForm.lastname){
+			filters.push({key: 'lastname', value: filterForm.lastname});
+		}
+		if(filterForm.email){
+			filters.push({key: 'email', value: filterForm.email});
+		}
+		if(filterForm.admin_user_role_id){
+			filters.push({key: 'admin_user_role_id', value: filterForm.admin_user_role_id});
+		}
+		if(filterForm.created_at){
+			filters.push({key: 'created_at', value: filterForm.created_at});
+		}
+		if(filterForm.updated_at){
+			filters.push({key: 'updated_at', value: filterForm.updated_at});
+		}
+
+		let queryParams = {
+			sort_order: sortOrder.value,
+			filters: filters
+		};
+
+		router.visit( route('admin.users.admins.index', queryParams) );
+	}
+
+	const removeFilter = function(){
+		setTimeout(() => {
+			applyFilters();
+		}, 100);
+	}
+
+	const setSortOrder = function(key){
+		sortOrder.value.key = key;
+		if(sortOrder.value.value == 'asc'){
+			sortOrder.value.value = 'desc';
+		}
+		else {
+			sortOrder.value.value = 'asc';
+		}
+		applyFilters();
+	}
+
+	onBeforeMount(() => {
+		try {
+			Object.keys(props.errors).forEach(function(key) {
+				toast.add(props.errors[key], 'danger');
+			});
+		} catch (error) {
+			console.log(error)
+		}
+	});
 
 	onMounted(() => {
 		confirmModal.value = new bootstrap.Modal(document.getElementById(confirmModalOptionElId), {
@@ -23,6 +121,21 @@
 			keyboard: true,
 			focus: true
 		});
+
+		if(props.propsdata.sort_order){
+			sortOrder.value = props.propsdata.sort_order;
+		}
+
+		if(props.propsdata.filters){
+			props.propsdata.filters.forEach(filter => {
+				if(typeof filter.value != 'undefined'){
+					filterForm[filter.key] = filter.value;
+				}
+				if(typeof filter.values != 'undefined'){
+					filterForm[filter.key] = filter.values;
+				}
+			});
+		}
 	});
 
 	const deleteItem = (data) => {
@@ -44,10 +157,10 @@
 			loader.setLoader(false);
 		})
 		.catch(error => {
+			loader.setLoader(false);
 			error.response.data.errors.forEach(error => {
 				toast.add(error, 'danger');
 			});
-			loader.setLoader(false)
 		});
 	}
 
@@ -79,14 +192,122 @@
 				</div>
 			</div>
 
+			<div class="row filter-section mb-5">
+				<div class="col-12">
+					<div class="row">
+						<div class="col-6 col-6 d-flex align-items-center">
+							<div>
+								<span class="fw-bold me-3 d-block w-100">Filters: </span>
+							</div>
+							<div class="fs-12">
+								<span class="d-block py-1" v-if="filterForm.id.from || filterForm.id.to">
+									<span class="text-muted">ID: </span>{{filterForm.id.from}} - {{filterForm.id.to}}
+									<span class="ms-2 c-pointer">
+										<i class="fa-solid fa-times-circle" @click="filterForm.id.from = ''; filterForm.id.to = ''; removeFilter();"></i>
+									</span>
+								</span>
+								<span class="d-block py-1" v-if="filterForm.firstname">
+									<span class="text-muted">First Name: </span>{{filterForm.firstname}}
+									<span class="ms-2 c-pointer">
+										<i class="fa-solid fa-times-circle" @click="filterForm.firstname = ''; removeFilter();"></i>
+									</span>
+								</span>
+								<span class="d-block py-1" v-if="filterForm.lastname">
+									<span class="text-muted">Last Name: </span>{{filterForm.lastname}}
+									<span class="ms-2 c-pointer">
+										<i class="fa-solid fa-times-circle" @click="filterForm.lastname = ''; removeFilter();"></i>
+									</span>
+								</span>
+								<span class="d-block py-1" v-if="filterForm.email">
+									<span class="text-muted">Email: </span>{{filterForm.email}}
+									<span class="ms-2 c-pointer">
+										<i class="fa-solid fa-times-circle" @click="filterForm.email = ''; removeFilter();"></i>
+									</span>
+								</span>
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="text-end py-3">
+								<div class="btn-group">
+									<button type="button" class="btn btn-outline-secondary" @click="showFilters()">
+										Filters
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 dropdown-divider" v-show="isShowFilter"></div>
+				<div class="col-12" v-show="isShowFilter">
+					<div class="filter-fields p-2">
+						<div class="row">
+							<div class="col-3">
+								<label class="form-label fw-bold mb-0">ID</label>
+								<div class="mb-3 row">
+									<label for="filter-fields-id-from" class="col-sm-2 col-form-label">From</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="filter-fields-id-from" name="id_from" v-model="filterForm.id.from">
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<label for="filter-fields-id-to" class="col-sm-2 col-form-label">To</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="filter-fields-id-to" name="id_to" v-model="filterForm.id.to">
+									</div>
+								</div>
+							</div>
+							<div class="col-3">
+								<div class="mb-3">
+									<label for="filter-fields-firstname" class="form-label fw-bold mb-0">First Name</label>
+									<input type="text" class="form-control" id="filter-fields-firstname" name="firstname" v-model="filterForm.firstname">
+								</div>
+							</div>
+							<div class="col-3">
+								<div class="mb-3">
+									<label for="filter-fields-lastname" class="form-label fw-bold mb-0">Last Name</label>
+									<input type="text" class="form-control" id="filter-fields-lastname" name="lastname" v-model="filterForm.lastname">
+								</div>
+							</div>
+							<div class="col-3">
+								<div class="mb-3">
+									<label for="filter-fields-email" class="form-label fw-bold mb-0">Email</label>
+									<input type="text" class="form-control" id="filter-fields-email" name="email" v-model="filterForm.email">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 text-end">
+								<div class="mb-3">
+									<button class="btn btn-outline-primary" @click="applyFilters()">Apply Filters</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<Listing :propsdata="propsdata" :action="1">
-				<template #th_id>ID</template>
-				<template #th_firstname>Firstname</template>
-				<template #th_lastname>Lastname</template>
-				<template #th_email>E-Mail</template>
-				<template #th_admin_user_role_id>User Role</template>
-				<template #th_created_at>Created At</template>
-				<template #th_updated_at>Updated At</template>
+				<template #th_id>
+					<ListingThSort :sortorder="sortOrder" :column_name="'id'" @click="setSortOrder('id')">ID</ListingThSort>
+				</template>
+				<template #th_firstname>
+					<ListingThSort :sortorder="sortOrder" :column_name="'firstname'" @click="setSortOrder('firstname')">First Name</ListingThSort>
+				</template>
+				<template #th_lastname>
+					<ListingThSort :sortorder="sortOrder" :column_name="'lastname'" @click="setSortOrder('lastname')">Last Name</ListingThSort>
+				</template>
+				<template #th_email>
+					<ListingThSort :sortorder="sortOrder" :column_name="'email'" @click="setSortOrder('email')">Email</ListingThSort>
+				</template>
+				<template #th_admin_user_role_id>
+					User Role
+				</template>
+				<template #th_created_at>
+					<ListingThSort :sortorder="sortOrder" :column_name="'created_at'" @click="setSortOrder('created_at')">Created At</ListingThSort>
+				</template>
+				<template #th_updated_at>
+					<ListingThSort :sortorder="sortOrder" :column_name="'updated_at'" @click="setSortOrder('updated_at')">Updated At</ListingThSort>
+				</template>
 
 
 				<template #id="{ item }">

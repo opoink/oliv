@@ -21,7 +21,68 @@ class Admins extends Controller {
 		// $cursor_name = 'admins';
 		$per_page = 15;
 
-		$paginator = AdminUser::cursorPaginate($per_page);
+		$qry = AdminUser::select('*');
+		if(is_array($request->filters)){
+			foreach ($request->filters as $filter) {
+				$urlParams = new \Opoink\Oliv\Lib\DataObject($filter);
+				$key = $urlParams->getKey();
+
+				if(!in_array($key, $columns)){
+					continue;
+				}
+
+				if(!empty($key)){
+					$value = $urlParams->getValue();
+					$values = $urlParams->getValues();
+					$condition = $urlParams->getCondition();
+
+					if(!$condition) {
+						$condition = 'LIKE';
+					}
+					if($value && !$values){
+						if($condition == 'LIKE'){
+							$value = '%'.$value.'%';
+						}
+						$qry->where($key, $condition, $value);
+					}
+					elseif($values && !$value){
+						$from = (int)$urlParams->getData('values/from');
+						$to = (int)$urlParams->getData('values/to');
+
+						if($from && $to){
+							$qry->whereBetween($key, [$from, $to]);
+						}
+						elseif($from && !$to){
+							$qry->where($key, ">=", $from);
+						}
+						elseif(!$from && $to){
+							$qry->where($key, "<=", $to);
+						}
+					}
+				}
+			}
+		}
+
+		$sortOrder = [
+			'key' => 'id',
+			'value' => 'desc'
+		];
+		if($request->sort_order){
+			if(in_array($request->sort_order['key'], $columns) && in_array($request->sort_order['value'], ['asc', 'desc'])){
+				$qry->orderBy($request->sort_order['key'], $request->sort_order['value']);
+				$sortOrder = $request->sort_order;
+			}
+			else {
+				$qry->orderBy('id', 'desc');
+			}
+		}
+		else {
+			$qry->orderBy('id', 'desc');
+		}
+
+
+		$paginator = $qry->paginate($per_page);
+		$paginator->appends($request->input())->links();
 
 		/**
 		 * to get the role info
@@ -32,6 +93,8 @@ class Admins extends Controller {
 
 		return inertiaRender('Opoink/Liv/resources/js/Pages/Admin/Users/Admins/Index', [
 			'propsdata' => [
+				'sort_order' => $sortOrder,
+				'filters' => $request->filters,
 				'listing' => [
 					'columns' => $columns,
 					// 'cursor_name' => $cursor_name,
@@ -74,7 +137,7 @@ class Admins extends Controller {
 
 		if(!$isRoleAllowed){
 			return redirect()->route('admin.users.admins.index')->withErrors([
-				'You do not have permission to add or edit an admin user.'
+				'You need permission to add or edit an admin user.'
 			]);
 		}
 
@@ -115,17 +178,17 @@ class Admins extends Controller {
 			if($id){
 				$admin = AdminUser::find($id);
 				if(!$admin){
-					return redirect()->route('admin.users.admins.index')->withErrors([
-						'Admin user with ID '.$id.' not found'
-					]);
+					return response()->json([
+						'message' => 'Admin user with ID '.$id.' not found'
+					], 422);
 				}
 				else {
 					if($admin->email != $request->input('email')){
 						$isEmailExist = AdminUser::where('email', $request->input('email'))->first();
 						if($isEmailExist){
-							return redirect()->route('admin.users.admins.edit', ['id' => $id])->withErrors([
-								'The email ' . $request->input('email') . ' was already used by another admin user'
-							]);
+							return response()->json([
+								'message' => 'The email ' . $request->input('email') . ' was already used by another admin user'
+							], 422);
 						}
 					}
 	
@@ -142,22 +205,37 @@ class Admins extends Controller {
 				$adminUser->save();
 	
 				$id = $adminUser->id;
+
+				$admin = AdminUser::find($id);
 			}
 	
-			return redirect()->route('admin.users.admins.edit', ['id' => $id])->withSuccess([
-				'Admin user successfully saved.'
-			]);
+			return response()->json([
+				'message' => 'Admin user successfully saved.',
+				'data' => $admin
+			], 200);
 		}
 		else {
-			return redirect()->route('admin.users.admins.index')->withErrors([
-				'You do not have permission to add or edit an admin user.'
-			]);
+			return response()->json([
+				'message' => 'You need permission to add or edit an admin user.'
+			], 422);
 		}
 	}
 
 	public function deleteAction(Request $request, $id=null)
 	{
 		$adminUser = AdminUser::find($id);
+
+		$isRoleAllowed = isRoleAllowed('delete_admin_users');
+		if(!$isRoleAllowed){
+			// return redirect()->route('admin.users.admins.index')->withErrors([
+			// 	'You need permission to delete an admin user.'
+			// ]);
+			return response()->json([
+				'errors' => [
+					'You need permission to delete an admin user.'
+				]
+			], 422);
+		}
 
 		if($adminUser){
 			$adminUser->delete();
@@ -170,7 +248,7 @@ class Admins extends Controller {
 				'errors' => [
 					'Admin user with ID '.$id.' not found'
 				]
-			], 406);	
+			], 422);	
 		}
 	}
 }
