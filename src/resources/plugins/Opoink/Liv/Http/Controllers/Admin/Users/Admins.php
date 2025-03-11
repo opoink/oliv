@@ -207,7 +207,7 @@ class Admins extends Controller {
 				$adminUser->firstname = $request->input('firstname');
 				$adminUser->lastname = $request->input('lastname');
 				$adminUser->email = $request->input('email');
-				$adminUser->password = $request->input('password');
+				$adminUser->password = $data['password'];
 				$adminUser->admin_user_role_id = $request->input('admin_user_role_id');
 				$adminUser->save();
 	
