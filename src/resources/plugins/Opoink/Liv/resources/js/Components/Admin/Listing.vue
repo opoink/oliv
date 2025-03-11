@@ -16,7 +16,9 @@
 				<nav class="float-end" aria-label="Page navigation">
 					<ul class="pagination mb-0" v-if="props.propsdata.listing.paginator.links">
 						<li class="page-item" v-for="link in props.propsdata.listing.paginator.links" :class="{'active' : link.active}">
-							<Link class="page-link" :href="link.url" v-html="link.label"></Link>
+							<template v-if="link.url">
+								<Link class="page-link" :href="link.url" v-html="link.label"></Link>
+							</template>
 						</li>
 					</ul>
 					<ul class="pagination mb-0" v-else>
@@ -60,7 +62,9 @@
 				<nav class="float-end" aria-label="Page navigation">
 					<ul class="pagination mb-0" v-if="props.propsdata.listing.paginator.links">
 						<li class="page-item" v-for="link in props.propsdata.listing.paginator.links" :class="{'active' : link.active}">
-							<Link class="page-link" :href="link.url" v-html="link.label"></Link>
+							<template v-if="link.url">
+								<Link class="page-link" :href="link.url" v-html="link.label"></Link>
+							</template>
 						</li>
 					</ul>
 					<ul class="pagination mb-0" v-else>

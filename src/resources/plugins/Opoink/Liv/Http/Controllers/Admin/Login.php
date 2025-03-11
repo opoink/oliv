@@ -43,6 +43,7 @@ class Login extends Controller {
 	}
 
 	public function adminLogout(){
+		session()->flush();
 		auth()->guard('admin')->logout();
 		return redirect()->route('admin.login');
 	}

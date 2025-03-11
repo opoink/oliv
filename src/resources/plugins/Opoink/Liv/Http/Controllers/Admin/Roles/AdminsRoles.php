@@ -17,6 +17,13 @@ class AdminsRoles extends Controller {
 	 */
 	public function __invoke(Request $request)
 	{
+		$isRoleAllowed = isRoleAllowed('oliv_roles');
+		if(!$isRoleAllowed){
+			return redirect()->route('admin.index')->withErrors([
+				'You need permission to view admin roles.'
+			]);
+		}
+
 		$columns = ['id', 'role_name', 'created_at', 'updated_at'];
 		// // $cursor_name = 'admins';
 		$per_page = 15;

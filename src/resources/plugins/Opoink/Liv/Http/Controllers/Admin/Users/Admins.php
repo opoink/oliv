@@ -17,6 +17,13 @@ class Admins extends Controller {
 	 */
 	public function __invoke(Request $request)
 	{
+		$isRoleAllowed = isRoleAllowed('view_admin_users');
+		if(!$isRoleAllowed){
+			return redirect()->route('admin.index')->withErrors([
+				'You need permission to view admin users.'
+			]);
+		}
+
 		$columns = ['id', 'firstname', 'lastname', 'email', 'admin_user_role_id', 'created_at', 'updated_at'];
 		// $cursor_name = 'admins';
 		$per_page = 15;
