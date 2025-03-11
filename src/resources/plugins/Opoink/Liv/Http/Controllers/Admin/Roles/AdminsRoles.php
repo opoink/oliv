@@ -89,9 +89,9 @@ class AdminsRoles extends Controller {
 		if($id){
 			$role = AdminsRolesModel::find($id);
 			if(!$role){
-				return redirect()->route('admin.users.admins.roles.index')->withErrors([
-					'Role user with ID '.$id.' not found'
-				]);
+				return response()->json([
+					'message' => 'Role user with ID '.$id.' not found'
+				], 422);
 			}
 			else {
 				AdminsRolesModel::where('id', $id)->update($data);
@@ -115,9 +115,10 @@ class AdminsRoles extends Controller {
 
 		}
 
-		return redirect()->route('admin.users.admins.roles.edit', ['id' => $id])->withSuccess([
-			'Role user successfully saved.'
-		]);
+		return response()->json([
+			'message' => 'Role user successfully saved.',
+			'data' => $role
+		], 200);
 	}
 
 	public function deleteAction(Request $request, $id=null)

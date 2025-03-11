@@ -1,8 +1,10 @@
 <script setup>
-	import { Head, Link, useForm } from '@inertiajs/vue3';
+	import { Head, Link, useForm, router } from '@inertiajs/vue3';
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
 	import { route } from 'ziggy-js';
+	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
+	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
 
 	const props = defineProps(['propsdata']);
 
@@ -13,7 +15,37 @@
 	});
 
 	const submit = () => {
-		form.post(route('admin.users.admins.roles.saveaction'), {});
+		// form.post(route('admin.users.admins.roles.saveaction'), {});
+
+		loader.setLoader(true);
+		axios({
+			method: 'post',
+			url: route('admin.users.admins.roles.saveaction'),
+			data: form.data()
+		})
+		.then(response => {
+			toast.add(response.data.message, 'success');
+			loader.setLoader(false);
+			router.visit( route('admin.users.admins.roles.edit', {id: response.data.data.id}) );
+		})
+		.catch(error => {
+			loader.setLoader(false);
+			console.log('error error error', error)
+			if(typeof error.response.data.errors != 'undefined'){
+				form.setError(error.response.data.errors);
+			}
+			else if(typeof error.response.data.message == 'string'){
+				toast.add(error.response.data.message, 'danger');
+			}
+			// if(typeof error.response != 'undefined'){
+			// 	if(typeof error.response.data.message == 'string'){		
+			// 		toast.add(error.response.data.message, 'danger');
+			// 	}
+			// 	else {
+			// 		adminFormData.form.setError(error.response.data.errors);
+			// 	}
+			// }
+		});
 	};
 
 	adminSideTabs.setDefaultTab('role-information').setQueryParam('active-tab');
@@ -73,9 +105,11 @@
 								</div>
 								<div class="col-9 mt-0">
 									<input type="text" id="formdata-role_name" class="form-control" name="role_name" v-model="form.role_name">
-									<small class="text-sm text-danger" v-if="form.errors.role_name">
-										{{form.errors.role_name}}
-									</small>
+									<template v-if="form.errors.role_name">
+										<small class="text-sm text-danger" v-for="error in form.errors.role_name">
+											{{error}}
+										</small>
+									</template>
 								</div>
 							</div>
 
