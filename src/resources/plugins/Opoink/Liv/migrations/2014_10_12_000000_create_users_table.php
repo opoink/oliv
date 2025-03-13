@@ -25,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-		$table->dropColumn('firstname');
-		$table->dropColumn('midlename');
-		$table->dropColumn('lastname');
+		// Schema::dropIfExists('users');
     }
 };

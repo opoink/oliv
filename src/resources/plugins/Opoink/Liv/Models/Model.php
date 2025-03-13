@@ -17,6 +17,14 @@ class Model extends \Illuminate\Database\Eloquent\Model {
 		return static::withoutEvents(fn () => $this->save($options));
 	}
 
+	public function beforeSave(){
+
+	}
+
+	public function afterSave(){
+		
+	}
+
 	/**
 	 * Save the model to the database.
 	 *
@@ -30,9 +38,13 @@ class Model extends \Illuminate\Database\Eloquent\Model {
 		try {
 			$eventName = 'db_' . $this->table . '_save_';
 
+			$this->beforeSave();
+
 			Event::dispatch($eventName . 'before', ['model' => $this]);
 			$saved = parent::save($options);
 			Event::dispatch($eventName . 'after', ['model' => $this]);
+
+			$this->fterSave();
 
 			DB::commit();
 			Event::dispatch($eventName . 'commit_after', ['model' => $this]);
