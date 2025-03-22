@@ -6,6 +6,7 @@ return [
 		'fa_icon' => 'fa-solid fa-file-code',
 		'is_active_menu_url' => '/cms',
 		'is_active_menu_name' => 'cms',
+		'role_resource' => 'cms',
 		'child' => [
 			'col_0' => [
 				'content' => [
@@ -13,11 +14,13 @@ return [
 					'links' => [
 						[
 							'route' => 'admin.cms.block.index',
-							'label' => 'Blocks'
+							'label' => 'Blocks',
+							'role_resource' => 'cms_block'
 						],
 						[
 							'route' => 'admin.cms.pages.index',
-							'label' => 'Pages'
+							'label' => 'Pages',
+							'role_resource' => 'cms_pages'
 						]
 					],
 				]
