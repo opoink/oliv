@@ -4,6 +4,7 @@ return [
 		'route' => 'admin.index',
 		'label' => 'Dashboard',
 		'fa_icon' => 'fa-solid fa-house',
+		'role_resource' => 'oliv_dashboard',
 		'child' => []
 	],
 	'users' => [
@@ -12,6 +13,7 @@ return [
 		'fa_icon' => 'fa-solid fa-users',
 		'is_active_menu_url' => '/users',
 		'is_active_menu_name' => 'users',
+		'role_resource' => 'oliv_users',
 		'child' => [
 			'col_0' => [
 				'users' => [
@@ -19,11 +21,13 @@ return [
 					'links' => [
 						[
 							'route' => 'admin.users.admins.index',
-							'label' => 'Admin Users'
+							'label' => 'Admin Users',
+							'role_resource' => 'view_admin_users'
 						],
 						[
 							'route' => 'admin.users.admins.index',
-							'label' => 'Client Users'
+							'label' => 'Client Users',
+							'role_resource' => 'view_client_users'
 						]
 					],
 				],
@@ -32,7 +36,8 @@ return [
 					'links' => [
 						[
 							'route' => 'admin.users.admins.roles.index',
-							'label' => 'Admin Roles'
+							'label' => 'Admin Roles',
+							'role_resource' => 'oliv_roles'
 						]
 					],
 				]
@@ -43,6 +48,7 @@ return [
 		'route' => 'admin.settings.index',
 		'label' => 'Settings',
 		'fa_icon' => 'fa-solid fa-gears',
+		'role_resource' => 'oliv_settings',
 		'child' => []
 	],
 ];

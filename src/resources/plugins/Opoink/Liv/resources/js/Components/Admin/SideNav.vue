@@ -1,6 +1,7 @@
 <script setup>
 	import { Link, usePage } from '@inertiajs/vue3';
 	import { adminSideNav } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.nav';
+	import { isRoleAllowed } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js'
 
 	/** component import on build rollup will be injected here */
 </script>
@@ -50,6 +51,15 @@
 				document.addEventListener("wheel", (event) => {
 					this.moveObject(event, element);
 				});
+			},
+			isAllowed(menu){
+				if(typeof menu.role_resource != 'undefined'){
+					return isRoleAllowed(menu.role_resource)
+				}
+				else {
+					/** if the page.props.auth.admin.roles_resource is * means all resource */
+					return this.page.props.auth.admin.roles_resource === '*';
+				}
 			}
 		},
 		mounted(){
@@ -65,7 +75,7 @@
 		<ul id="side-nav-items" data-v-ref="side-nav-items">
 			<template v-for="lv1 in $page.props.adminmenu">
 				<template v-if="lv1.route">
-					<li>
+					<li v-if="isAllowed(lv1)">
 						<Link class="menu-action" :href="lv1.route != null ? route(lv1.route) : '#'">
 							<span class="icon">
 								<i :class="lv1.fa_icon"></i>
@@ -75,7 +85,10 @@
 					</li>
 				</template>
 				<template v-if="!lv1.route">
-					<li v-bind:class="{'active' : adminSideNav.isMenuActive($page.url.startsWith($getAdminUrl(lv1.is_active_menu_url)), lv1.is_active_menu_name)}">
+					<li 
+						v-bind:class="{'active' : adminSideNav.isMenuActive($page.url.startsWith($getAdminUrl(lv1.is_active_menu_url)), lv1.is_active_menu_name)}"
+						v-if="isAllowed(lv1)"
+					>
 						<a href="javascript:void(0)" class="menu-action" @click.prevent="adminSideNav.showActiveMenu(lv1.is_active_menu_name)">
 							<span class="icon">
 								<i :class="lv1.fa_icon"></i>
@@ -95,9 +108,11 @@
 										<div class="links-wrapper" v-for="row in col">
 											<p class="link-title">{{row.title}}</p>
 											<ul>
-												<li v-for="link in row.links">
-													<Link :href="route(link.route)">{{link.label}}</Link>
-												</li>
+												<template v-for="link in row.links">
+													<li v-if="isAllowed(link)">
+														<Link :href="route(link.route)">{{link.label}}</Link>
+													</li>
+												</template>
 											</ul>
 										</div>
 									</div>
