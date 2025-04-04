@@ -1,6 +1,6 @@
 <?php
 return [
-	['value' => 'oliv_dashboard', 'label' => 'OLIV Users'],
+	['value' => 'oliv_dashboard', 'label' => 'OLIV Dashboard'],
 	['value' => 'oliv_users', 'label' => 'OLIV Users'],
 	['value' => 'view_admin_users', 'label' => 'OLIV View Admin Users'],
 	['value' => 'add_edit_admin_users', 'label' => 'OLIV Add Edit Admin Users'],
