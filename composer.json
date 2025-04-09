@@ -17,7 +17,6 @@
 	],
 	"minimum-stability": "dev",
 	"require": {
-		"laravel/framework": "^11",
 		"inertiajs/inertia-laravel": "^2.0",
 		"tightenco/ziggy": "^2.4.2",
 		"laravel/sanctum": "^4.0",
