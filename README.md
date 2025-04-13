@@ -71,7 +71,7 @@ Note: run `php artisan oliv:plugins-update` every time a new Global Component fi
 	<?php
 		namespace Plugins\<VendorName>\<PluginName>\EventListeners;
 		class MyEventListener {
-			public function handle(\Opoink\Oliv\Liv\DataObject $data){
+			public function handle(\Opoink\Oliv\Lib\DataObject $data){
 				...
 				$myData = $data->getData('my_data');
 				...
