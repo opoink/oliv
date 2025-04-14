@@ -15,6 +15,9 @@ class Event {
 
 	protected $events = null;
 
+	/**
+	 * @return array
+	 */
 	public function getEvents(){
 		if(!$this->events){
 			$this->events = Cache::get(self::CACHE_KEY);

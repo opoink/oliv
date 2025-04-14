@@ -39,6 +39,7 @@ class Install extends Command
 			$this->addValueToEnv('VITE_ADMIN_URL', '"admin_abc123"');
 			$this->addValueToEnv('VITE_INERTIA_SSR_PORT', '13714');
 			$this->addValueToEnv('VITE_OLIV_WELCOME_PAGE', 'true');
+			$this->addValueToEnv('VITE_OLIV_THEME', 'default');
 			$this->addValueToEnv('VITE_ADMIN_APP_NAME', '"Oliv Admin"');
 
 			$this->addValueToEnv('PHPMAILER_SMTPDEBUG', '0');
@@ -124,12 +125,15 @@ class Install extends Command
 			$this->addDependencyToPackageJson('moment', '^2.30.1');
 			$this->addDependencyToPackageJson('sortablejs', '^1.15.6');
 			$this->addDependencyToPackageJson('tinymce', '^7.6.0');
+			$this->addDependencyToPackageJson('dotenv', '^16.5.0');
 
 			$this->addDependencyToPackageJson('@vitejs/plugin-vue', '^5.2.1', 'devDependencies');
 			$this->addDependencyToPackageJson('axios', '^1.7.9', 'devDependencies');
 			$this->addDependencyToPackageJson('laravel-vite-plugin', '^1.1.1', 'devDependencies');
 			$this->addDependencyToPackageJson('sass', '^1.83.0', 'devDependencies');
 			$this->addDependencyToPackageJson('vite', '^6.0.5', 'devDependencies');
+
+			
 			
 			$this->addDependencyToPackageJson('build:ssr', 'vite build && vite build --ssr', 'scripts');
 	
