@@ -10,6 +10,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+use Plugins\Opoink\Liv\Lib\Facades\Event;
+
 class Login extends Controller {
 
 	public function __construct(
@@ -25,21 +27,32 @@ class Login extends Controller {
 	}
 
 	public function authUser(Request $request){
-		$this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+		Event::dispatch('Plugins_Opoink_Liv_Lib_Facades_Event_Login_authUser', [
+			'request' => $request
+		]);
 
-        if(auth()->guard('admin')->attempt(['email' => $request->input('email'),  'password' => $request->input('password')])){
-            $user = auth()->guard('admin')->user();
-            return redirect()->route('admin.index')->withSuccess([
+		if(auth()->guard('admin')->user()){
+			return redirect()->route('admin.index')->withSuccess([
 				'Welcome back.'
 			]);
-        }else {
-            return redirect()->route('admin.login')->withErrors([
-				'Whoops! invalid email and password.'
+		}
+		else {
+			$this->validate($request, [
+				'email' => 'required|email',
+				'password' => 'required',
 			]);
-        }
+	
+			if(auth()->guard('admin')->attempt(['email' => $request->input('email'),  'password' => $request->input('password')])){
+				$user = auth()->guard('admin')->user();
+				return redirect()->route('admin.index')->withSuccess([
+					'Welcome back.'
+				]);
+			}else {
+				return redirect()->route('admin.login')->withErrors([
+					'Whoops! invalid email and password.'
+				]);
+			}
+		}
 	}
 
 	public function adminLogout(){

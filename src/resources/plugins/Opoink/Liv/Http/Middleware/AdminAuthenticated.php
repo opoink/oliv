@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Plugins\Opoink\Liv\Lib\Facades\Event;
 
 
 /**
@@ -20,6 +21,8 @@ class AdminAuthenticated
 	 */
 	public function handle(Request $request, Closure $next): Response
 	{
+		Event::dispatch('Plugins_Opoink_Liv_Http_Middleware_AdminAuthenticated_handle_before', []);
+
 		if (Auth::guard('admin')->user()) {
 			return $next($request);
 		}

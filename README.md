@@ -84,6 +84,8 @@ Note: run `php artisan oliv:plugins-update` every time a new Global Component fi
    - `db_<TableName>_save_after` This event is triggered only for specific database tables after the save but not yet committed, therefore, when an event handler throws an exception it will rollback.
    - `db_<TableName>_save_commit_after` This event is triggered only for specific database tables after the save, therefore, when an event handler throws an exception it will not rollback.
    - `db_model_commit_after` This event is triggered on model save regardless of the table name.
+   - `Plugins_Opoink_Liv_Lib_Facades_Event_Login_authUser` This event is dispatched during the login method, allowing you to override and customize the login process according to your specific requirements..
+   - `Plugins_Opoink_Liv_Http_Middleware_AdminAuthenticated_handle_before` This event is triggered to check whether the user is logged in. The listener can override the default authentication check, allowing for custom login validation logic.
   
 Note: We are not using the default Laravel event listeners and dispatchers; instead, we are using custom events.
 
