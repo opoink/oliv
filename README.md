@@ -89,7 +89,14 @@ Note: run `php artisan oliv:plugins-update` every time a new Global Component fi
   
 Note: We are not using the default Laravel event listeners and dispatchers; instead, we are using custom events.
 
+## Theme
+All VueJS components, SCSS styles, and images can be customized by creating a theme.
+To create a theme, simply create a new directory at `theme/theme_name` from the root of your Laravel installation.
 
+The `theme_name` can be configured via your `.env` file at `VITE_OLIV_THEME` the default theme name is `default`
+
+To override a specific file, follow the same file path structure as the original plugin. For example, if you want to change the content of the login page, copy the file from
+`root_rirectory/plugins/Opoink/Liv/resources/js/Pages/Admin/Users/Login.vue` to `root_rirectory/theme/default/Opoink/Liv/resources/js/Pages/Admin/Users/Login.vue`
 
 ## Learning Laravel
 
