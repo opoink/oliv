@@ -21,13 +21,18 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+		/** 
+		 * default is \Plugins\Opoink\Liv\Models\AdminUser::class 
+		 */
+		$authModel = str_replace('_', '\\', config('oliv.auth_admin_user'));
+
 		Config::set('auth.guards.admin', [
 			'driver' => 'session',
 			'provider' => 'admins',
 		]);
 		Config::set('auth.providers.admins', [
 			'driver' => 'eloquent',
-			'model' => \Plugins\Opoink\Liv\Models\AdminUser::class,
+			'model' => $authModel,
 		]);
 
 		Route::aliasMiddleware('adminauth', \Plugins\Opoink\Liv\Http\Middleware\AdminAuthenticated::class);

@@ -37,6 +37,7 @@ class Install extends Command
 			$this->addValueToEnv('SESSION_DRIVER', 'file', true);
 			$this->addValueToEnv('CACHE_STORE', 'file', true);
 			$this->addValueToEnv('VITE_ADMIN_URL', '"admin_abc123"');
+			$this->addValueToEnv('OLIV_AUTH_ADMIN_USER_MODEL', '""');
 			$this->addValueToEnv('VITE_INERTIA_SSR_PORT', '13714');
 			$this->addValueToEnv('VITE_OLIV_WELCOME_PAGE', 'true');
 			$this->addValueToEnv('VITE_OLIV_THEME', 'default');
