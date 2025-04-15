@@ -137,6 +137,15 @@ To override the default authentication:
 	```
  3. If the primary key of your model is not `id`, you will need to update the VueJS components that reference `id` to use your model’s actual primary key.
  4. In your `.env` file, set the `OLIV_AUTH_ADMIN_USER_MODEL` variable: `OLIV_AUTH_ADMIN_USER_MODEL="Plugins_<VendorName>_<PluginName>_Models_MyModelAuthenticatable"` Note: the backslashes in the model class path should be replaced with underscores. For example: `Plugins\<VendorName>\<PluginName>\Models\MyModelAuthenticatable` should be written as `Plugins_<VendorName>_<PluginName>_Models_MyModelAuthenticatable`
+ 5. Add the following entry to your database `admin` table if it does not already exist.
+    - admin_type
+    - admin_user_role_id
+    - forgot_password_code
+    - forgot_password_code_expire
+    - firstname
+    - lastname
+    - email
+6. Finally, if your table already contains admin users, choose one and set its `admin_type` value to `super_admin`.
 
 ## Learning Laravel
 
