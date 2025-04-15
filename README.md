@@ -98,6 +98,46 @@ The `theme_name` can be configured via your `.env` file at `VITE_OLIV_THEME` the
 To override a specific file, follow the same file path structure as the original plugin. For example, if you want to change the content of the login page, copy the file from
 `root_rirectory/plugins/Opoink/Liv/resources/js/Pages/Admin/Users/Login.vue` to `root_rirectory/theme/default/Opoink/Liv/resources/js/Pages/Admin/Users/Login.vue`
 
+## Admin auth
+By default, OLIV comes with built-in admin authentication using Laravel's admin guard. However, if your application requires a different authentication method, you can override the default behavior.
+
+To override the default authentication:
+1. Create an event listener to intercept the login authentication process.
+	```php
+	<?php
+		return [
+			[ 
+				'name' => 'Plugins_Opoink_Liv_Lib_Facades_Event_Login_authUser', // event name
+				'listener' => \Plugins\<VendorName\>\<PluginName>\EventListeners\MyEventListener::class, // event handler class
+				'sort_order' => 1
+			] 
+		]
+	?>
+	```
+2. In your event listener, implement your custom logic for validating the user.
+	```php
+	<?php
+		namespace Plugins\<VendorName>\<PluginName>\EventListeners;
+		class MyEventListener {
+			public function handle(\Opoink\Oliv\Lib\DataObject $data){
+				$request = $data->getData('request');
+			
+			        $username = $request->input('email');
+			        $password = $request->input('password');
+			
+			        $isValid = /** your validation login */;
+			
+			        if($isValid){
+ 					$myModelAuthenticatable = new \Plugins\<VendorName>\<PluginName>\Models\MyModelAuthenticatable()
+			            	auth()->guard('admin')->login($myModelAuthenticatable);
+			        }
+			}
+		}
+	?>
+	```
+ 3. If the primary key of your model is not `id`, you will need to update the VueJS components that reference `id` to use your model’s actual primary key.
+ 4. In your `.env` file, set the `OLIV_AUTH_ADMIN_USER_MODEL` variable: `OLIV_AUTH_ADMIN_USER_MODEL="Plugins_<VendorName>_<PluginName>_Models_MyModelAuthenticatable"` Note: the backslashes in the model class path should be replaced with underscores. For example: `Plugins\<VendorName>\<PluginName>\Models\MyModelAuthenticatable` should be written as `Plugins_<VendorName>_<PluginName>_Models_MyModelAuthenticatable`
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
