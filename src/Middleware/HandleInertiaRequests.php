@@ -63,6 +63,7 @@ class HandleInertiaRequests extends Middleware
 
 		/** add only for admin routes */
 		if(isAdminRoute()){
+			$data['admin_url'] = getAdminUrl();
 			$data['adminmenu'] = config('plugins.adminmenu');
 		}
 

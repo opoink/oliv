@@ -58,8 +58,14 @@ const isRoleAllowed = function(resource) {
 	}
 }
 
+const getAdminUrl = function(path=''){
+	let page = usePage();
+	return '/' + page.props.admin_url + path;
+}
+
 export {
 	debounce,
 	bytesToSize,
-	isRoleAllowed
+	isRoleAllowed,
+	getAdminUrl
 }
