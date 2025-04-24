@@ -39,8 +39,8 @@ export default function transformFileImport() {
 			}
 
 			
-			let tmpSrc = src.split('@@Plugins@@').join(ROOT+'plugins');
-			src = tmpSrc;
+			// let tmpSrc = src.split('@@Plugins@@').join(ROOT+'plugins');
+			// src = tmpSrc;
 			return {
 				code: src,
 				map: null, // provide source map if available

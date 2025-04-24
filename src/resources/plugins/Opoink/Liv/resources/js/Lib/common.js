@@ -58,9 +58,43 @@ const isRoleAllowed = function(resource) {
 	}
 }
 
-const getAdminUrl = function(path=''){
+const getAdminUrl = function(path='/', paramsObj=null){
 	let page = usePage();
-	return '/' + page.props.admin_url + path;
+	return getUrl('/' + page.props.admin_url + path, paramsObj);
+}
+
+const getUrl = function(path='/', paramsObj=null){
+	let paramsStr = '';
+	if(paramsObj){
+		paramsStr = '?' + http_build_query(paramsObj);
+	}
+	return path + paramsStr;
+}
+
+const http_build_query = function (obj, num_prefix, temp_key) {
+	var output_string = []
+	Object.keys(obj).forEach(function (val) {
+		var key = val;
+
+		num_prefix && !isNaN(key) ? key = num_prefix + key : ''
+
+		// var key = encodeURIComponent(key.replace(/[!'()*]/g, escape));
+		var key = encodeURIComponent(key.replace(/[!'()*]/g));
+		temp_key ? key = temp_key + '[' + key + ']' : ''
+
+		if (typeof obj[val] === 'object') {
+			var query = http_build_query(obj[val], null, key)
+			output_string.push(query)
+		}
+
+		else {
+			obj[val] = obj[val] + '';
+			// var value = encodeURIComponent(obj[val].replace(/[!'()*]/g, escape));
+			var value = encodeURIComponent(obj[val].replace(/[!'()*]/g));
+			output_string.push(key + '=' + value)
+		}
+	});
+	return output_string.join('&')
 }
 
 export {

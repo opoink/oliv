@@ -127,6 +127,7 @@ class Install extends Command
 			$this->addDependencyToPackageJson('sortablejs', '^1.15.6');
 			$this->addDependencyToPackageJson('tinymce', '^7.6.0');
 			$this->addDependencyToPackageJson('dotenv', '^16.5.0');
+			$this->addDependencyToPackageJson('vuejs3-datepicker', '^1.1.3');
 
 			$this->addDependencyToPackageJson('@vitejs/plugin-vue', '^5.2.1', 'devDependencies');
 			$this->addDependencyToPackageJson('axios', '^1.7.9', 'devDependencies');
