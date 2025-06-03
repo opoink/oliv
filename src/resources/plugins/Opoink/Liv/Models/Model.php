@@ -44,7 +44,7 @@ class Model extends \Illuminate\Database\Eloquent\Model {
 			$saved = parent::save($options);
 			Event::dispatch($eventName . 'after', ['model' => $this]);
 
-			$this->fterSave();
+			$this->afterSave();
 
 			DB::commit();
 			Event::dispatch($eventName . 'commit_after', ['model' => $this]);
