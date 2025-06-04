@@ -13,7 +13,7 @@ export default function transformFileImport() {
 	return {
 		name: 'transform-file-import',
 
-		transform(src, id) {
+		async transform(src, id) {
 
 			let newSrc = '';
 			try {
@@ -22,9 +22,9 @@ export default function transformFileImport() {
 				if(paths.length == 2){
 					let themeFilePath = ROOT + 'theme/' + env.VITE_OLIV_THEME + '/' + paths[1];
 	
-					let isExist = existsSync(themeFilePath);
+					let isExist = await existsSync(themeFilePath);
 					if(isExist){
-						newSrc = readFileSync( themeFilePath, 'utf8');
+						newSrc = await readFileSync( themeFilePath, 'utf8');
 					}
 				}
 			} catch (error) {
