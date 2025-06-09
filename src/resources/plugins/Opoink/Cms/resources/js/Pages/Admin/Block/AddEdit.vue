@@ -1,98 +1,190 @@
 <script setup>
-	import { Head, Link, useForm } from '@inertiajs/vue3';
+	import { Head, Link, useForm, router } from '@inertiajs/vue3';
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
 	import { route } from 'ziggy-js';
-
-	
+	import { onBeforeMount, onMounted, ref } from 'vue';
 	import Editor from '@@Plugins@@/Opoink/Cms/resources/js/Components/Editor.vue';
-</script>
-<script>
-	export default {
-		data() {
-			return {
-				form: useForm({
-					id: this.propsdata.cms_block ? this.propsdata.cms_block.id : '',
-					name: this.propsdata.cms_block ? this.propsdata.cms_block.name : '',
-					identifier: this.propsdata.cms_block ? this.propsdata.cms_block.identifier : '',
-					content: this.propsdata.cms_block ? this.propsdata.cms_block.content : '',
-				}),
-				componentName: ''
-			}
-		},
-		props: ['propsdata'],
-		methods: {
-			submit() {
-				console.log(this.form.data());
-				if(!this.form.content.length){
-					toast.add('Content is required', 'danger');
-				}
-				else {
-					this.form.content = JSON.parse(this.form.content);
 
-					loader.setLoader(true);
-					axios({
-						method: 'post',
-						url: route('admin.cms.block.saveaction'),
-						data: {
-							id: this.form.id,
-							name: this.form.name,
-							identifier: this.form.identifier,
-							content: this.form.content,
-						}
-					})
-					.then(response => {
-						toast.add(response.data.message, 'success');
-						loader.setLoader(false);
-						if(!this.isEdit()){
-							this.$inertia.visit( route('admin.cms.block.edit', {id: response.data.data.id}) );
-						}
-					})
-					.catch(error => {
-						if(Array.isArray(error.response.data.errors)){
-							error.response.data.errors.forEach(error => {
-								toast.add(error, 'danger');
+
+
+	const props = defineProps([
+		'propsdata'
+	]);
+
+	const form = useForm({
+		id: props.propsdata.cms_block ? props.propsdata.cms_block.id : '',
+		name: props.propsdata.cms_block ? props.propsdata.cms_block.name : '',
+		identifier: props.propsdata.cms_block ? props.propsdata.cms_block.identifier : '',
+		content: props.propsdata.cms_block ? props.propsdata.cms_block.content : '',
+	});
+
+	const editorRef = ref(null);
+
+	onBeforeMount(() => {
+		adminSideTabs.setDefaultTab('block-content').setQueryParam('active-tab');
+	});
+
+	onMounted(() => {
+		if(props.propsdata.cms_block){
+			let identifier = props.propsdata.cms_block.identifier;
+			identifier = identifier.split('-');
+
+			for (let i = 0; i < identifier.length; i++) {
+				identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
+			}
+			identifier = identifier.join('');
+		}
+	});
+
+	const isEdit = function(){
+		return parseInt(form.id) > 0;
+	}
+
+	const getContent = function(data){
+		console.log(data);
+	}
+
+	const submit = function(){
+		editorRef.value.emitContent();
+		setTimeout(() => {
+			if(!form.content.length){
+				toast.add('Content is required', 'danger');
+			}
+			else {
+				form.content = JSON.parse(form.content);
+				loader.setLoader(true);
+				axios({
+					method: 'post',
+					url: route('admin.cms.block.saveaction'),
+					data: {
+						id: form.id,
+						name: form.name,
+						identifier: form.identifier,
+						content: form.content,
+					}
+				})
+				.then(response => {
+					toast.add(response.data.message, 'success');
+					loader.setLoader(false);
+					if(!isEdit()){
+						router.visit( route('admin.cms.block.edit', {id: response.data.data.id}) );
+					}
+				})
+				.catch(error => {
+					if(Array.isArray(error.response.data.errors)){
+						error.response.data.errors.forEach(error => {
+							toast.add(error, 'danger');
+						});
+					}
+					else {
+						if(typeof error.response.data.errors.identifier != 'undefined'){
+							error.response.data.errors.identifier.forEach(error => {
+								form.setError('identifier', error);
 							});
 						}
-						else {
-							if(typeof error.response.data.errors.identifier != 'undefined'){
-								error.response.data.errors.identifier.forEach(error => {
-									this.form.setError('identifier', error);
-								});
-							}
-							if(typeof error.response.data.errors.name != 'undefined'){
-								error.response.data.errors.name.forEach(error => {
-									this.form.setError('name', error);
-								});
-							}
+						if(typeof error.response.data.errors.name != 'undefined'){
+							error.response.data.errors.name.forEach(error => {
+								form.setError('name', error);
+							});
 						}
-						loader.setLoader(false)
-					});
-				}
-			},
-			isEdit(){
-				return parseInt(this.form.id) > 0;
+					}
+					loader.setLoader(false)
+				});
 			}
-		},
-		beforeMount: function(){
-			adminSideTabs.setDefaultTab('block-content').setQueryParam('active-tab');
-		},
-		mounted: function(){
-			if(this.propsdata.cms_block){
-				let identifier = this.propsdata.cms_block.identifier;
-				identifier = identifier.split('-');
-
-				for (let i = 0; i < identifier.length; i++) {
-					identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
-				}
-				identifier = identifier.join('');
-
-				this.componentName = identifier;
-			}
-		}
+		}, 100)
 	}
+
+
+	// export default {
+		// data() {
+		// 	return {
+		// 		form: useForm({
+		// 			id: this.propsdata.cms_block ? this.propsdata.cms_block.id : '',
+		// 			name: this.propsdata.cms_block ? this.propsdata.cms_block.name : '',
+		// 			identifier: this.propsdata.cms_block ? this.propsdata.cms_block.identifier : '',
+		// 			content: this.propsdata.cms_block ? this.propsdata.cms_block.content : '',
+		// 		}),
+		// 		componentName: ''
+		// 	}
+		// },
+		// props: ['propsdata'],
+		// methods: {
+		// 	submit() {
+		// 		console.log(this.$refs.editorRef.emitContent());
+
+		// 		// if(!this.form.content.length){
+		// 		// 	toast.add('Content is required', 'danger');
+		// 		// }
+		// 		// else {
+		// 		// 	this.form.content = JSON.parse(this.form.content);
+
+		// 		// 	loader.setLoader(true);
+		// 		// 	axios({
+		// 		// 		method: 'post',
+		// 		// 		url: route('admin.cms.block.saveaction'),
+		// 		// 		data: {
+		// 		// 			id: this.form.id,
+		// 		// 			name: this.form.name,
+		// 		// 			identifier: this.form.identifier,
+		// 		// 			content: this.form.content,
+		// 		// 		}
+		// 		// 	})
+		// 		// 	.then(response => {
+		// 		// 		toast.add(response.data.message, 'success');
+		// 		// 		loader.setLoader(false);
+		// 		// 		if(!this.isEdit()){
+		// 		// 			this.$inertia.visit( route('admin.cms.block.edit', {id: response.data.data.id}) );
+		// 		// 		}
+		// 		// 	})
+		// 		// 	.catch(error => {
+		// 		// 		if(Array.isArray(error.response.data.errors)){
+		// 		// 			error.response.data.errors.forEach(error => {
+		// 		// 				toast.add(error, 'danger');
+		// 		// 			});
+		// 		// 		}
+		// 		// 		else {
+		// 		// 			if(typeof error.response.data.errors.identifier != 'undefined'){
+		// 		// 				error.response.data.errors.identifier.forEach(error => {
+		// 		// 					this.form.setError('identifier', error);
+		// 		// 				});
+		// 		// 			}
+		// 		// 			if(typeof error.response.data.errors.name != 'undefined'){
+		// 		// 				error.response.data.errors.name.forEach(error => {
+		// 		// 					this.form.setError('name', error);
+		// 		// 				});
+		// 		// 			}
+		// 		// 		}
+		// 		// 		loader.setLoader(false)
+		// 		// 	});
+		// 		// }
+		// 	},
+		// 	isEdit(){
+		// 		return parseInt(this.form.id) > 0;
+		// 	},
+		// 	getContent(data){
+		// 		crossOriginIsolated.log(data);
+		// 	}
+		// },
+		// beforeMount: function(){
+		// 	adminSideTabs.setDefaultTab('block-content').setQueryParam('active-tab');
+		// },
+		// mounted: function(){
+		// 	if(this.propsdata.cms_block){
+		// 		let identifier = this.propsdata.cms_block.identifier;
+		// 		identifier = identifier.split('-');
+
+		// 		for (let i = 0; i < identifier.length; i++) {
+		// 			identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
+		// 		}
+		// 		identifier = identifier.join('');
+
+		// 		this.componentName = identifier;
+		// 	}
+		// }
+	// }
 </script>
 
 
@@ -136,7 +228,7 @@
 							</div>
 						</div>
 						<div class="col-9">
-							<div class="row mb-3" v-if="propsdata.cms_block">
+							<!-- <div class="row mb-3" v-if="propsdata.cms_block">
 								<div class="col-12">
 									<p class="mb-0">Use the block by importing it on your Vue Component template</p>
 									<p class="mb-0">
@@ -147,7 +239,7 @@
 										</code>
 									</p>
 								</div>
-							</div>
+							</div> -->
 
 							<input type="hidden" class="form-control" name="id" v-model="form.id">
 
@@ -181,7 +273,7 @@
 							<div class="row mb-3">
 								<div class="">
 									<label for="formdata-content" class="form-label d-block">Content</label>
-									<Editor :selector="'cms-block-editor'" :grapjsvalue="form.grapjsvalue" v-model="form.content"  />
+									<Editor :selector="'cms-block-editor'" :grapjsvalue="form.grapjsvalue" v-model="form.content" ref="editorRef"  />
 									<small class="text-sm text-danger" v-if="form.errors.content">
 										{{form.errors.content}}
 									</small>

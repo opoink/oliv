@@ -135,15 +135,18 @@ class PagesController extends Controller {
 					}
 				}
 
-				if(!empty($identifier)){
-					$cms = app(Cms::class);
-					$cms->saveComponent($identifier, $request->input('content'), 'Pages');
+				// if(!empty($identifier)){
+					/**
+					 * The CMS content should be as VueJS component
+					 */
+					// $cms = app(Cms::class);
+					// $cms->saveComponent($identifier, $request->input('content'), 'Pages');
 
 					return response()->json([
 						'message' => 'CMS page ' . $request->input('name') . ' successfully saved.',
 						'data' => $model
 					], 200);
-				}
+				// }
 				
 			} catch (\Exception $e) {
 				return response()->json([

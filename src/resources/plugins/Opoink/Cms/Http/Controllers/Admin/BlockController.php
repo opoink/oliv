@@ -146,19 +146,30 @@ class BlockController extends Controller {
 				$identifier = preg_replace('/[^A-Za-z0-9\-]/', '', $identifier);
 				$identifier = strtolower($identifier);
 
-				$model = new CmsBlock;
-				$model->name = $request->input('name');
-				$model->identifier = $identifier;
-				$model->content = json_encode($request->input('content'));
-				$model->save();
-	
-				$id = $model->id;
+				if(!$this->isIdentifierExist($identifier)){
+					$model = new CmsBlock;
+					$model->name = $request->input('name');
+					$model->identifier = $identifier;
+					$model->content = json_encode($request->input('content'));
+					$model->save();
+		
+					$id = $model->id;
+				}
+				else {
+					return response()->json([
+						'errors' => ['The identifier already exists.']
+					], 406);
+				}
 			}
 
-			if(!empty($identifier)){
-				$cms = app(Cms::class);
-				$cms->saveComponent($identifier, $request->input('content'), 'Blocks');
-			}
+			
+			/**
+			 * The CMS content should be as VueJS component
+			 */
+			// if(!empty($identifier)){
+			// 	$cms = app(Cms::class);
+			// 	$cms->saveComponent($identifier, $request->input('content'), 'Blocks');
+			// }
 			
 			return response()->json([
 				'message' => 'CMS block successfully saved.',
@@ -172,6 +183,13 @@ class BlockController extends Controller {
 				]
 			], 406);
 		}
+	}
+
+	
+
+	public function isIdentifierExist($identifier){
+		$model = new CmsBlock;
+		return $model->where('identifier', $identifier)->first();
 	}
 
 	public function deleteAction(Request $request, $id=null){

@@ -1,100 +1,187 @@
 <script setup>
-	import { Head, Link, useForm } from '@inertiajs/vue3';
+	import { Head, Link, useForm, router } from '@inertiajs/vue3';
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
-	import { route } from 'ziggy-js';
+	import { onBeforeMount, onMounted, ref } from 'vue';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js'
 
 	
 	import Editor from '@@Plugins@@/Opoink/Cms/resources/js/Components/Editor.vue';
+
+	const props = defineProps([
+		'propsdata'
+	]);
+	
+	const form = useForm({
+		id: props.propsdata.cms_page ? props.propsdata.cms_page.id : '',
+		name: props.propsdata.cms_page ? props.propsdata.cms_page.name : '',
+		identifier: props.propsdata.cms_page ? props.propsdata.cms_page.identifier : '',
+		meta_title: props.propsdata.cms_page ? props.propsdata.cms_page.meta_title : '',
+		meta_keywords: props.propsdata.cms_page ? props.propsdata.cms_page.meta_keywords : '',
+		meta_description: props.propsdata.cms_page ? props.propsdata.cms_page.meta_description : '',
+		content: props.propsdata.cms_page ? props.propsdata.cms_page.content : '',
+	});
+
+	const editorRef = ref(null);
+
+	onBeforeMount(() => {
+		adminSideTabs.setDefaultTab('tab-page-content').setQueryParam('active-tab');
+	});
+
+	onMounted(() => {
+		if(props.propsdata.cms_page){
+			let identifier = props.propsdata.cms_page.identifier;
+			identifier = identifier.split('-');
+
+			for (let i = 0; i < identifier.length; i++) {
+				identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
+			}
+			identifier = identifier.join('');
+		}
+	});
+
+	const submit = function() {
+		editorRef.value.emitContent();
+		let content = JSON.parse(form.content);
+		if(!content.content || !content.content.length){
+			toast.add('Content is required', 'danger');
+		}
+		else {
+
+			console.log(getAdminUrl('/cms/save'));
+
+			// loader.setLoader(true);
+			// axios({
+			// 	method: 'post',
+			// 	url: getAdminUrl('/cms/save'),
+			// 	data: {
+			// 		id: form.id,
+			// 		name: form.name,
+			// 		identifier: form.identifier,
+			// 		meta_title: form.meta_title,
+			// 		meta_keywords: form.meta_keywords,
+			// 		meta_description: form.meta_description,
+			// 		content: content.content,
+			// 	}
+			// })
+			// .then(response => {
+			// 	toast.add(response.data.message, 'success');
+			// 	loader.setLoader(false);
+			// 	if(!isEdit()){
+			// 		router.visit( getAdminUrl('/cms/pages/edit/' + response.data.data.id) );
+			// 	}
+			// })
+			// .catch(error => {
+			// 	let errors = error.response.data.errors;
+			// 	if(Array.isArray(errors)){
+			// 		errors.forEach(error => {
+			// 			toast.add(error, 'danger');
+			// 		});
+			// 	}
+			// 	else {
+			// 		Object.keys(errors).forEach((key) => {
+			// 			errors[key].forEach(error => {
+			// 				this.form.setError(key, error);
+			// 			});
+			// 		});
+			// 	}
+			// 	loader.setLoader(false)
+			// });
+		}
+	}
+
+	const isEdit = function(){
+		return parseInt(form.id) > 0;
+	}
 </script>
 
 <script>
 	export default {
-		data() {
-			return {
-				form: useForm({
-					id: this.propsdata.cms_page ? this.propsdata.cms_page.id : '',
-					name: this.propsdata.cms_page ? this.propsdata.cms_page.name : '',
-					identifier: this.propsdata.cms_page ? this.propsdata.cms_page.identifier : '',
-					meta_title: this.propsdata.cms_page ? this.propsdata.cms_page.meta_title : '',
-					meta_keywords: this.propsdata.cms_page ? this.propsdata.cms_page.meta_keywords : '',
-					meta_description: this.propsdata.cms_page ? this.propsdata.cms_page.meta_description : '',
-					content: this.propsdata.cms_page ? this.propsdata.cms_page.content : '',
-				}),
-				componentName: ''
-			}
-		},
-		props: ['propsdata'],
-		beforeMount: function(){
-			adminSideTabs.setDefaultTab('tab-page-content').setQueryParam('active-tab');
-		},
-		methods: {
-			submit() {
-				if(!this.form.content.length){
-					toast.add('Content is required', 'danger');
-				}
-				else {
-					this.form.content = JSON.parse(this.form.content);
+		// data() {
+		// 	return {
+		// 		form: useForm({
+		// 			id: this.propsdata.cms_page ? this.propsdata.cms_page.id : '',
+		// 			name: this.propsdata.cms_page ? this.propsdata.cms_page.name : '',
+		// 			identifier: this.propsdata.cms_page ? this.propsdata.cms_page.identifier : '',
+		// 			meta_title: this.propsdata.cms_page ? this.propsdata.cms_page.meta_title : '',
+		// 			meta_keywords: this.propsdata.cms_page ? this.propsdata.cms_page.meta_keywords : '',
+		// 			meta_description: this.propsdata.cms_page ? this.propsdata.cms_page.meta_description : '',
+		// 			content: this.propsdata.cms_page ? this.propsdata.cms_page.content : '',
+		// 		}),
+		// 		componentName: ''
+		// 	}
+		// },
+		// props: ['propsdata'],
+		// beforeMount: function(){
+		// 	adminSideTabs.setDefaultTab('tab-page-content').setQueryParam('active-tab');
+		// },
+		// methods: {
+		// 	submit() {
+		// 		if(!this.form.content.length){
+		// 			toast.add('Content is required', 'danger');
+		// 		}
+		// 		else {
+		// 			this.form.content = JSON.parse(this.form.content);
 	
-					loader.setLoader(true);
-					axios({
-						method: 'post',
-						url: route('admin.cms.pages.saveaction'),
-						data: {
-							id: this.form.id,
-							name: this.form.name,
-							identifier: this.form.identifier,
-							meta_title: this.form.meta_title,
-							meta_keywords: this.form.meta_keywords,
-							meta_description: this.form.meta_description,
-							content: this.form.content,
-						}
-					})
-					.then(response => {
-						toast.add(response.data.message, 'success');
-						loader.setLoader(false);
-						if(!this.isEdit()){
-							this.$inertia.visit( route('admin.cms.pages.edit', {id: response.data.data.id}) );
-						}
-					})
-					.catch(error => {
-						console.log('error error', error);
-						let errors = error.response.data.errors;
-						if(Array.isArray(errors)){
-							errors.forEach(error => {
-								toast.add(error, 'danger');
-							});
-						}
-						else {
-							Object.keys(errors).forEach((key) => {
-								errors[key].forEach(error => {
-									this.form.setError(key, error);
-								});
-							});
-						}
-						loader.setLoader(false)
-					});
-				}
-			},
-			isEdit(){
-				return parseInt(this.form.id) > 0;
-			}
-		},
-		mounted: function(){
-			if(this.propsdata.cms_page){
-				let identifier = this.propsdata.cms_page.identifier;
-				identifier = identifier.split('-');
+		// 			loader.setLoader(true);
+		// 			axios({
+		// 				method: 'post',
+		// 				url: route('admin.cms.pages.saveaction'),
+		// 				data: {
+		// 					id: this.form.id,
+		// 					name: this.form.name,
+		// 					identifier: this.form.identifier,
+		// 					meta_title: this.form.meta_title,
+		// 					meta_keywords: this.form.meta_keywords,
+		// 					meta_description: this.form.meta_description,
+		// 					content: this.form.content,
+		// 				}
+		// 			})
+		// 			.then(response => {
+		// 				toast.add(response.data.message, 'success');
+		// 				loader.setLoader(false);
+		// 				if(!this.isEdit()){
+		// 					this.$inertia.visit( route('admin.cms.pages.edit', {id: response.data.data.id}) );
+		// 				}
+		// 			})
+		// 			.catch(error => {
+		// 				console.log('error error', error);
+		// 				let errors = error.response.data.errors;
+		// 				if(Array.isArray(errors)){
+		// 					errors.forEach(error => {
+		// 						toast.add(error, 'danger');
+		// 					});
+		// 				}
+		// 				else {
+		// 					Object.keys(errors).forEach((key) => {
+		// 						errors[key].forEach(error => {
+		// 							this.form.setError(key, error);
+		// 						});
+		// 					});
+		// 				}
+		// 				loader.setLoader(false)
+		// 			});
+		// 		}
+		// 	},
+		// 	isEdit(){
+		// 		return parseInt(this.form.id) > 0;
+		// 	}
+		// },
+		// mounted: function(){
+		// 	if(this.propsdata.cms_page){
+		// 		let identifier = this.propsdata.cms_page.identifier;
+		// 		identifier = identifier.split('-');
 
-				for (let i = 0; i < identifier.length; i++) {
-					identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
-				}
-				identifier = identifier.join('');
+		// 		for (let i = 0; i < identifier.length; i++) {
+		// 			identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
+		// 		}
+		// 		identifier = identifier.join('');
 
-				this.componentName = identifier;
-			}
-		}
+		// 		this.componentName = identifier;
+		// 	}
+		// }
 	}
 </script>
 
@@ -140,7 +227,7 @@
 
 
 						<div class="col-9">
-							<div class="row mb-3" v-if="propsdata.cms_page">
+							<!-- <div class="row mb-3" v-if="propsdata.cms_page">
 								<div class="col-12">
 									<p class="mb-0">Use the page by importing it on your Vue Component template</p>
 									<p class="mb-0">
@@ -151,7 +238,7 @@
 										</code>
 									</p>
 								</div>
-							</div>
+							</div> -->
 
 							<input type="hidden" class="form-control" name="id" v-model="form.id">
 
@@ -216,7 +303,7 @@
 							<div class="row mb-3">
 								<div class="">
 									<label for="formdata-content" class="form-label d-block">Content</label>
-									<Editor :selector="'cms-block-editor'" :grapjsvalue="form.grapjsvalue" v-model="form.content"  />
+									<Editor :selector="'cms-block-editor'" :grapjsvalue="form.grapjsvalue" v-model="form.content" ref="editorRef"  />
 									<small class="text-sm text-danger" v-if="form.errors.content">
 										{{form.errors.content}}
 									</small>
