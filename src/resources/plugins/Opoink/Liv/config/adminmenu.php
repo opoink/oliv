@@ -1,7 +1,7 @@
 <?php
 return [
 	'dashboard' => [
-		'route' => 'admin.index',
+		'route' => '/',
 		'label' => 'Dashboard',
 		'fa_icon' => 'fa-solid fa-house',
 		'role_resource' => 'oliv_dashboard',
@@ -20,12 +20,12 @@ return [
 					'title' => 'Users',
 					'links' => [
 						[
-							'route' => 'admin.users.admins.index',
+							'route' => '/users/admins',
 							'label' => 'Admin Users',
 							'role_resource' => 'view_admin_users'
 						],
 						[
-							'route' => 'admin.users.admins.index',
+							'route' => '/admins',
 							'label' => 'Client Users',
 							'role_resource' => 'view_client_users'
 						]
@@ -35,7 +35,7 @@ return [
 					'title' => 'Roles',
 					'links' => [
 						[
-							'route' => 'admin.users.admins.roles.index',
+							'route' => '/users/admins/roles',
 							'label' => 'Admin Roles',
 							'role_resource' => 'oliv_roles'
 						]
@@ -45,7 +45,7 @@ return [
 		]
 	],
 	'settings' => [
-		'route' => 'admin.settings.index',
+		'route' => '/settings',
 		'label' => 'Settings',
 		'fa_icon' => 'fa-solid fa-gears',
 		'role_resource' => 'oliv_settings',

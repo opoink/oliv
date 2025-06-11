@@ -3,7 +3,7 @@ namespace Opoink\Oliv\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Tighten\Ziggy\Ziggy;
+// use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -37,10 +37,10 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
 		$data = [
-			'ziggy' => fn () => [
-                ...(new Ziggy)->toArray(),
-                'location' => $request->url(),
-            ],
+			// 'ziggy' => fn () => [
+            //     ...(new Ziggy)->toArray(),
+            //     'location' => $request->url(),
+            // ],
         ];
 
 		$adminUser = auth()->guard('admin')->user();

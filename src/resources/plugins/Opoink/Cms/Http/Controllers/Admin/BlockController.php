@@ -161,15 +161,6 @@ class BlockController extends Controller {
 					], 406);
 				}
 			}
-
-			
-			/**
-			 * The CMS content should be as VueJS component
-			 */
-			// if(!empty($identifier)){
-			// 	$cms = app(Cms::class);
-			// 	$cms->saveComponent($identifier, $request->input('content'), 'Blocks');
-			// }
 			
 			return response()->json([
 				'message' => 'CMS block successfully saved.',

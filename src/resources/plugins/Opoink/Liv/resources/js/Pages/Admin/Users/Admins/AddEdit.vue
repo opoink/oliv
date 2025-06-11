@@ -2,11 +2,11 @@
 	import { Head, Link, router } from '@inertiajs/vue3';
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
-	import { route } from 'ziggy-js';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { FormData } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/form.data';
 	import { onBeforeMount, onMounted, reactive, ref } from 'vue';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 
 	const props = defineProps(['propsdata']);
@@ -32,13 +32,6 @@
 	});
 
 	const submit = () => {
-		// loader.setLoader(true);
-		// form.post(route('admin.users.admins.saveaction'), {
-		// 	onFinish: () => form.reset('password'),
-		// });
-
-		console.log(adminFormData.form.data());
-
 		loader.setLoader(true);
 		axios({
 			method: 'post',
@@ -64,7 +57,7 @@
 		});
 	};
 
-	adminSideTabs.setDefaultTab('admin-information').setQueryParam('active-tab');
+	adminSideTabs.setActiveTab('admin-information');
 
 </script>
 
@@ -77,7 +70,7 @@
 			<div class="row">
 				<div class="col-6 offset-6">
 					<div class="text-end pt-5 pb-3">
-						<Link :href="route('admin.users.admins.index')">
+						<Link :href="getAdminUrl('/users/admins')">
 							<button class="btn btn-outline-primary">
 								<i class="fa-solid fa-left-long"></i><span class="ms-3">Back</span> 
 							</button>
@@ -96,13 +89,14 @@
 							<div class="admin-side-tabs">
 								<ul>
 									<li>
-										<Link 
+										<a 
 											href="#" 
 											class="admin-side-tab-item"
-											:class="{'active' : adminSideTabs.isActiveTab('admin-information', route())}"
+											:class="{'active' : adminSideTabs.isActiveTab == 'admin-information'}"
+											@click.prevent="adminSideTabs.setActiveTab('admin-information')"
 										>
 											Admin Information
-										</Link>
+										</a>
 									</li>
 								</ul>
 							</div>

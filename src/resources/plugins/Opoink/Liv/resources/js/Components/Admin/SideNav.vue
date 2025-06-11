@@ -1,7 +1,7 @@
 <script setup>
 	import { Link, usePage } from '@inertiajs/vue3';
 	import { adminSideNav } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.nav';
-	import { isRoleAllowed } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js'
+	import { isRoleAllowed, getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	/** component import on build rollup will be injected here */
 </script>
@@ -76,7 +76,7 @@
 			<template v-for="lv1 in $page.props.adminmenu">
 				<template v-if="lv1.route">
 					<li v-if="isAllowed(lv1)">
-						<Link class="menu-action" :href="lv1.route != null ? route(lv1.route) : '#'">
+						<Link class="menu-action" :href="lv1.route != null ? getAdminUrl(lv1.route) : '#'">
 							<span class="icon">
 								<i :class="lv1.fa_icon"></i>
 							</span>
@@ -110,7 +110,7 @@
 											<ul>
 												<template v-for="link in row.links">
 													<li v-if="isAllowed(link)">
-														<Link :href="route(link.route)">{{link.label}}</Link>
+														<Link :href="getAdminUrl(link.route)">{{link.label}}</Link>
 													</li>
 												</template>
 											</ul>

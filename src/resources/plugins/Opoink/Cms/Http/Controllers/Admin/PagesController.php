@@ -96,13 +96,6 @@ class PagesController extends Controller {
 					}
 					else {
 						$identifier = $model->identifier;
-						// CmsPages::where('id', $id)->update([
-						// 	'name' => $request->input('name'),
-						// 	'content' => json_encode($request->input('content')),
-						// 	'meta_title' => $request->input('meta_title'),
-						// 	'meta_keywords' => $request->input('meta_keywords'),
-						// 	'meta_description' => $request->input('meta_description'),
-						// ]);
 						
 						$model->name = $request->input('name');
 						$model->content = json_encode($request->input('content'));
@@ -135,18 +128,10 @@ class PagesController extends Controller {
 					}
 				}
 
-				// if(!empty($identifier)){
-					/**
-					 * The CMS content should be as VueJS component
-					 */
-					// $cms = app(Cms::class);
-					// $cms->saveComponent($identifier, $request->input('content'), 'Pages');
-
-					return response()->json([
-						'message' => 'CMS page ' . $request->input('name') . ' successfully saved.',
-						'data' => $model
-					], 200);
-				// }
+				return response()->json([
+					'message' => 'CMS page ' . $request->input('name') . ' successfully saved.',
+					'data' => $model
+				], 200);
 				
 			} catch (\Exception $e) {
 				return response()->json([
@@ -163,9 +148,6 @@ class PagesController extends Controller {
 
 	public function isIdentifierExist($identifier){
 		$model = new CmsPages;
-		$model->where('identifier', '=', $identifier);
-		$model->get();
-
-		return $model->first() != null;
+		return $model->where('identifier', $identifier)->first();
 	}
 }

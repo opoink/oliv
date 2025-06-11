@@ -4,7 +4,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import Filters from './Plugins/filters';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/index';
+// import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/index';
 import PluginPages from './plugin.pages';
 import { RegVueGlobalComponents } from './vue.global.components';
 
@@ -25,7 +25,7 @@ createInertiaApp({
 	setup({ el, App, props, plugin }) {	
 		const app = createApp({ render: () => h(App, props) })
 		app.use(plugin);
-		app.use(ZiggyVue, Ziggy);
+		// app.use(ZiggyVue, Ziggy);
 		app.use(Filters);
 		RegVueGlobalComponents(app);
 		app.mount(el);

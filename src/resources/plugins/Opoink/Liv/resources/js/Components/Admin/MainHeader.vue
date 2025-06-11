@@ -1,6 +1,7 @@
 <script setup>
 	import { Link } from '@inertiajs/vue3';
 	import { usePage } from '@inertiajs/vue3';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	const $page = usePage();
 </script>
@@ -22,12 +23,12 @@
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right" data-v-ref="main-header-profile-dropdown">
 									<li>
-										<Link :href="route('admin.users.admins.edit', {id: $page.props.auth.admin.id})">
+										<Link :href="getAdminUrl('/admins/edit/' + $page.props.auth.admin.id)">
 											<button class="dropdown-item" type="button">Edit Profile</button>
 										</Link>
 									</li>
 									<li>
-										<Link :href="route('admin.logout')">
+										<Link :href="getAdminUrl('/logout')">
 											<button class="dropdown-item" type="button">Logout</button>
 										</Link>
 									</li>

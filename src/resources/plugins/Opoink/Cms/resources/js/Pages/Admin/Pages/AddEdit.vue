@@ -5,7 +5,7 @@
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
 	import { onBeforeMount, onMounted, ref } from 'vue';
-	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js'
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	
 	import Editor from '@@Plugins@@/Opoink/Cms/resources/js/Components/Editor.vue';
@@ -44,52 +44,50 @@
 
 	const submit = function() {
 		editorRef.value.emitContent();
-		let content = JSON.parse(form.content);
-		if(!content.content || !content.content.length){
-			toast.add('Content is required', 'danger');
-		}
-		else {
-
-			console.log(getAdminUrl('/cms/save'));
-
-			// loader.setLoader(true);
-			// axios({
-			// 	method: 'post',
-			// 	url: getAdminUrl('/cms/save'),
-			// 	data: {
-			// 		id: form.id,
-			// 		name: form.name,
-			// 		identifier: form.identifier,
-			// 		meta_title: form.meta_title,
-			// 		meta_keywords: form.meta_keywords,
-			// 		meta_description: form.meta_description,
-			// 		content: content.content,
-			// 	}
-			// })
-			// .then(response => {
-			// 	toast.add(response.data.message, 'success');
-			// 	loader.setLoader(false);
-			// 	if(!isEdit()){
-			// 		router.visit( getAdminUrl('/cms/pages/edit/' + response.data.data.id) );
-			// 	}
-			// })
-			// .catch(error => {
-			// 	let errors = error.response.data.errors;
-			// 	if(Array.isArray(errors)){
-			// 		errors.forEach(error => {
-			// 			toast.add(error, 'danger');
-			// 		});
-			// 	}
-			// 	else {
-			// 		Object.keys(errors).forEach((key) => {
-			// 			errors[key].forEach(error => {
-			// 				this.form.setError(key, error);
-			// 			});
-			// 		});
-			// 	}
-			// 	loader.setLoader(false)
-			// });
-		}
+		setTimeout(() => {
+			if(!form.content.length){
+				toast.add('Content is required', 'danger');
+			}
+			else {
+				loader.setLoader(true);
+				axios({
+					method: 'post',
+					url: getAdminUrl('/cms/save'),
+					data: {
+						id: form.id,
+						name: form.name,
+						identifier: form.identifier,
+						meta_title: form.meta_title,
+						meta_keywords: form.meta_keywords,
+						meta_description: form.meta_description,
+						content: content.content,
+					}
+				})
+				.then(response => {
+					toast.add(response.data.message, 'success');
+					loader.setLoader(false);
+					if(!isEdit()){
+						router.visit( getAdminUrl('/cms/pages/edit/' + response.data.data.id) );
+					}
+				})
+				.catch(error => {
+					let errors = error.response.data.errors;
+					if(Array.isArray(errors)){
+						errors.forEach(error => {
+							toast.add(error, 'danger');
+						});
+					}
+					else {
+						Object.keys(errors).forEach((key) => {
+							errors[key].forEach(error => {
+								this.form.setError(key, error);
+							});
+						});
+					}
+					loader.setLoader(false)
+				});
+			}
+		});
 	}
 
 	const isEdit = function(){
@@ -199,7 +197,7 @@
 							</button>
 						</Link>
 						<button class="btn btn-primary ms-3" :disabled="form.processing" @click="submit()">
-							<i class="fa-solid fa-save"></i><span class="ms-3">Save</span> 
+							<i class="fa-solid fa-save"></i><span class="ms-3">Save ss</span> 
 						</button>
 					</div>
 				</div>

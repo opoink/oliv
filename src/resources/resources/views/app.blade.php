@@ -32,11 +32,6 @@
 			 * @routes
 			 */ 
 		?>
-		@if(isAdminRoute())
-			@olivroutesadmin
-		@else
-			@olivroutes
-		@endif
 		
 		@vite('resources/js/app.js')
 		@inertiaHead

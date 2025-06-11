@@ -10,7 +10,7 @@
 
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
-	import { route } from 'ziggy-js';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	const props = defineProps(['propsdata', 'errors']);
 
@@ -85,7 +85,7 @@
 			filters: filters
 		};
 
-		router.visit( route('admin.users.admins.index', queryParams) );
+		router.visit( getAdminUrl('/users/admins', queryParams) );
 	}
 
 	const removeFilter = function(){
@@ -141,7 +141,6 @@
 	const deleteItem = (data) => {
 		confirmModalContenData.value = data;
 		confirmModal.value.show();
-		console.log('deleteItem deleteItem', data);
 	}
 	function deleteOnConfirm(){
 		loader.setLoader(true);
@@ -149,7 +148,7 @@
 
 		axios({
 			method: 'delete',
-			url: route('admin.users.admins.delete', {id: confirmModalContenData.value.id}),
+			url: getAdminUrl('/users/admins/delete/' + confirmModalContenData.value.id),
 		})
 		.then(response => {
 			toast.add(response.data.message, 'success');
@@ -183,7 +182,7 @@
 			<div class="row">
 				<div class="col-6 offset-6">
 					<div class="text-end pt-5 pb-3">
-						<Link :href="route('admin.users.admins.add')">
+						<Link :href="getAdminUrl('/users/admins/add')">
 							<button class="btn btn-primary">
 								<i class="fa-solid fa-user-pen"></i><span class="ms-3">Create New Admin</span> 
 							</button>
@@ -343,7 +342,7 @@
 						</button>
 						<ul class="dropdown-menu">
 							<li>
-								<Link class="dropdown-item" :href="route('admin.users.admins.edit', {id: item.id})" v-bind:data-id="item.id">
+								<Link class="dropdown-item" :href="getAdminUrl('/users/admins/edit/' + item.id)" v-bind:data-id="item.id">
 									<i class="fa-solid fa-pencil"></i> <span>Edit</span>
 								</Link>
 							</li>

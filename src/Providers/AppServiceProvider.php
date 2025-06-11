@@ -46,35 +46,35 @@ class AppServiceProvider extends ServiceProvider
 			]);
 		}
 
-		if (!$this->app->runningInConsole()) {
-			$this->olivRoutes();
-		}
+		// if (!$this->app->runningInConsole()) {
+		// 	$this->olivRoutes();
+		// }
     }
 
-	protected function olivRoutes(){
-		Blade::directive('olivroutes', function ($expression) {
-			$ziggy = new Ziggy($expression);
-			$routes = $ziggy->toArray();
-			if(isset($routes['routes'])){
-				$newRoutes = [];
-				foreach ($routes['routes'] as $keyroute => $valueroute) {
-					if(isset($valueroute['uri'])){
-						$uri = explode('/', $valueroute['uri']);
-						if($uri[0] != config('oliv.vite_admin_url')){
-							$newRoutes[$keyroute] = $valueroute;
-						}
-					}
-				}
-				$routes['routes'] = $newRoutes;
-			}
-			return "<script type=\"text/javascript\">const Ziggy = ". json_encode($routes) .";</script>";
-		});
-		Blade::directive('olivroutesadmin', function ($expression) {
-			$ziggy = new Ziggy($expression);
-			$routes = $ziggy->toArray();
-			return "<script type=\"text/javascript\">const Ziggy = ". json_encode($routes) .";</script>";
-		});
-	}
+	// protected function olivRoutes(){
+	// 	Blade::directive('olivroutes', function ($expression) {
+	// 		$ziggy = new Ziggy($expression);
+	// 		$routes = $ziggy->toArray();
+	// 		if(isset($routes['routes'])){
+	// 			$newRoutes = [];
+	// 			foreach ($routes['routes'] as $keyroute => $valueroute) {
+	// 				if(isset($valueroute['uri'])){
+	// 					$uri = explode('/', $valueroute['uri']);
+	// 					if($uri[0] != config('oliv.vite_admin_url')){
+	// 						$newRoutes[$keyroute] = $valueroute;
+	// 					}
+	// 				}
+	// 			}
+	// 			$routes['routes'] = $newRoutes;
+	// 		}
+	// 		return "<script type=\"text/javascript\">const Ziggy = ". json_encode($routes) .";</script>";
+	// 	});
+	// 	Blade::directive('olivroutesadmin', function ($expression) {
+	// 		$ziggy = new Ziggy($expression);
+	// 		$routes = $ziggy->toArray();
+	// 		return "<script type=\"text/javascript\">const Ziggy = ". json_encode($routes) .";</script>";
+	// 	});
+	// }
 
 	protected function registerMiddlewareToGroup(){
 		$this->app->make('router')->pushMiddlewareToGroup('web', \Opoink\Oliv\Middleware\HandleInertiaRequests::class);
