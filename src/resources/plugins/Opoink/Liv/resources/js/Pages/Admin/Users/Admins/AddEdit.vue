@@ -35,13 +35,13 @@
 		loader.setLoader(true);
 		axios({
 			method: 'post',
-			url: route('admin.users.admins.saveaction'),
+			url: getAdminUrl('/users/admins/save'),
 			data: adminFormData.form.data()
 		})
 		.then(response => {
 			toast.add(response.data.message, 'success');
 			loader.setLoader(false);
-			router.visit( route('admin.users.admins.edit', {id: response.data.data.id}) );
+			router.visit( getAdminUrl('/users/admins/edit/'+response.data.data.id) );
 		})
 		.catch(error => {
 			loader.setLoader(false);

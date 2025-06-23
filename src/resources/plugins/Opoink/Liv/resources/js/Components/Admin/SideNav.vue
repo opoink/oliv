@@ -110,7 +110,9 @@
 											<ul>
 												<template v-for="link in row.links">
 													<li v-if="isAllowed(link)">
-														<Link :href="getAdminUrl(link.route)">{{link.label}}</Link>
+														<Link :href="getAdminUrl(link.route)" v-bind:class="{'active' : $page.url == getAdminUrl(link.route)}">
+															{{link.label}}
+														</Link>
 													</li>
 												</template>
 											</ul>

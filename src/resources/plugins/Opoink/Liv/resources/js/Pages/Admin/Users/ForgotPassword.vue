@@ -1,10 +1,10 @@
 <script setup>
 	import { Head, Link, useForm, router } from '@inertiajs/vue3';
-	import { route } from 'ziggy-js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import Loader from '@@Plugins@@/Opoink/Liv/resources/js/Components/Loader.vue';
 	import Toast from '@@Plugins@@/Opoink/Liv/resources/js/Components/Toast.vue';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	const props = defineProps({
 		canResetPassword: {
@@ -24,13 +24,13 @@
 		loader.setLoader(true);
 		axios({
 			method: 'post',
-			url: route('admin.forgot-password.send.code'),
+			url: getAdminUrl('/forgot-password/send/code'),
 			data: form.data()
 		})
 		.then(response => {
 			loader.setLoader(false);
 			toast.add(response.data.message, 'success');
-			router.visit(route('admin.reset-password'));
+			router.visit(getAdminUrl('/reset-password'));
 		})
 		.catch(error => {
 			loader.setLoader(false);
@@ -63,7 +63,7 @@
 							</div>
 
 							<div class="d-flex align-items-center justify-content-end mt-4">
-								<Link class="btn btn-link" :href="route('admin.login')">
+								<Link class="btn btn-link" :href="getAdminUrl('/login')">
 									Login
 								</Link >
 								<button class="btn btn-primary" @click="submitResetPasswordCode()">Reset Password</button>

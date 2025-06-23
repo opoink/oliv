@@ -1,12 +1,12 @@
 <script setup>
 	import { Head, Link, router } from '@inertiajs/vue3';
-	import { route } from 'ziggy-js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import Loader from '@@Plugins@@/Opoink/Liv/resources/js/Components/Loader.vue';
 	import Toast from '@@Plugins@@/Opoink/Liv/resources/js/Components/Toast.vue';
 	import { FormData } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/form.data';
 	import { reactive, onBeforeMount } from 'vue';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 
 	// const form = useForm({
@@ -31,13 +31,13 @@
 		resetPasswordFormData.form.clearErrors();
 		axios({
 			method: 'post',
-			url: route('admin.reset-password.actionsave'),
+			url: getAdminUrl('/reset-password/save'),
 			data: resetPasswordFormData.form.data()
 		})
 		.then(response => {
 			loader.setLoader(false);
 			toast.add(response.data.message, 'success');
-			router.visit(route('admin.index'));
+			router.visit(getAdminUrl('/'));
 		})
 		.catch(error => {
 			loader.setLoader(false);
@@ -110,7 +110,7 @@
 							</div>
 
 							<div class="d-flex align-items-center justify-content-end mt-4">
-								<Link class="btn btn-link" :href="route('admin.login')">
+								<Link class="btn btn-link" :href="getAdminUrl('/login')">
 									Login
 								</Link >
 								<button class="btn btn-primary" @click="submitResetPassword()">Reset Password</button>

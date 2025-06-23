@@ -2,9 +2,9 @@
 	import { Head, Link, useForm, router } from '@inertiajs/vue3';
 	import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue';
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
-	import { route } from 'ziggy-js';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	const props = defineProps(['propsdata']);
 
@@ -15,22 +15,19 @@
 	});
 
 	const submit = () => {
-		// form.post(route('admin.users.admins.roles.saveaction'), {});
-
 		loader.setLoader(true);
 		axios({
 			method: 'post',
-			url: route('admin.users.admins.roles.saveaction'),
+			url: getAdminUrl('/users/admins/roles/save'),
 			data: form.data()
 		})
 		.then(response => {
 			toast.add(response.data.message, 'success');
 			loader.setLoader(false);
-			router.visit( route('admin.users.admins.roles.edit', {id: response.data.data.id}) );
+			router.visit( getAdminUrl('/users/admins/roles/edit/' + response.data.data.id) );
 		})
 		.catch(error => {
 			loader.setLoader(false);
-			console.log('error error error', error)
 			if(typeof error.response.data.errors != 'undefined'){
 				form.setError(error.response.data.errors);
 			}
@@ -48,7 +45,7 @@
 		});
 	};
 
-	adminSideTabs.setDefaultTab('role-information').setQueryParam('active-tab');
+	adminSideTabs.setActiveTab('role-information');
 </script>
 
 <template>
@@ -65,7 +62,7 @@
 			<div class="row">
 				<div class="col-6 offset-6">
 					<div class="text-end pt-5 pb-3">
-						<Link :href="route('admin.users.admins.roles.index')">
+						<Link :href="getAdminUrl('/users/admins/roles')">
 							<button class="btn btn-outline-primary">
 								<i class="fa-solid fa-left-long"></i><span class="ms-3">Back</span> 
 							</button>
@@ -87,7 +84,7 @@
 										<Link 
 											href="#" 
 											class="admin-side-tab-item"
-											:class="{'active' : adminSideTabs.isActiveTab('role-information', route())}"
+											:class="{'active' : adminSideTabs.isActiveTab == 'role-information'}"
 										>
 											Role Information
 										</Link>

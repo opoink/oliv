@@ -25,7 +25,7 @@ return [
 							'role_resource' => 'view_admin_users'
 						],
 						[
-							'route' => '/admins',
+							'route' => '/users/admins',
 							'label' => 'Client Users',
 							'role_resource' => 'view_client_users'
 						]

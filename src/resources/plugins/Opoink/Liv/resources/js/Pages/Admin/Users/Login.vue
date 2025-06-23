@@ -1,6 +1,6 @@
 <script setup>
 	import { Head, Link, useForm } from '@inertiajs/vue3';
-	import { route } from 'ziggy-js';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	const props = defineProps({
 		canResetPassword: {
@@ -18,7 +18,7 @@
 	});
 
 	const submit = () => {
-		form.post(route('admin.login.action'), {
+		form.post(getAdminUrl('/login'), {
 			onFinish: () => form.reset('password'),
 		});
 	};
@@ -53,7 +53,7 @@
 							</div>
 
 							<div class="d-flex align-items-center justify-content-end mt-4">
-								<Link class="btn btn-link" :href="route('admin.forgot-password')">
+								<Link class="btn btn-link" :href="getAdminUrl('/forgot-password')">
 									Forgot your password?
 								</Link >
 								<button class="btn btn-primary">Log in</button>

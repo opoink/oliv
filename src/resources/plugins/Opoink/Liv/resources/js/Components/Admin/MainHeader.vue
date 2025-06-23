@@ -23,7 +23,7 @@
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right" data-v-ref="main-header-profile-dropdown">
 									<li>
-										<Link :href="getAdminUrl('/admins/edit/' + $page.props.auth.admin.id)">
+										<Link :href="getAdminUrl('/users/admins/edit/' + $page.props.auth.admin.id)">
 											<button class="dropdown-item" type="button">Edit Profile</button>
 										</Link>
 									</li>
