@@ -13,12 +13,12 @@ return [
 					'title' => 'Content',
 					'links' => [
 						[
-							'route' => 'admin.cms.block.index',
+							'route' => '/cms/block',
 							'label' => 'Blocks',
 							'role_resource' => 'cms_block'
 						],
 						[
-							'route' => 'admin.cms.pages.index',
+							'route' => '/cms/pages',
 							'label' => 'Pages',
 							'role_resource' => 'cms_pages'
 						]

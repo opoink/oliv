@@ -4,7 +4,6 @@
 	import { adminSideTabs } from '@@Plugins@@/Opoink/Liv/resources/js/States/admin.side.tabs';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
-	// import { route } from 'ziggy-js';
 	import { onBeforeMount, onMounted, ref } from 'vue';
 	import Editor from '@@Plugins@@/Opoink/Cms/resources/js/Components/Editor.vue';
 	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
@@ -25,7 +24,7 @@
 	const editorRef = ref(null);
 
 	onBeforeMount(() => {
-		adminSideTabs.setDefaultTab('block-content').setQueryParam('active-tab');
+		adminSideTabs.setActiveTab('block-content');
 	});
 
 	onMounted(() => {
@@ -127,7 +126,7 @@
 										<Link 
 											href="#" 
 											class="admin-side-tab-item"
-											:class="{'active' : adminSideTabs.isActiveTab('block-content', route())}"
+											:class="{'active' : adminSideTabs.isActiveTab == 'block-content'}"
 										>
 											Block Content
 										</Link>

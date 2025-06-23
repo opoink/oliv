@@ -7,6 +7,7 @@
 	// import ModalConfirmmation from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ModalConfirmmation.vue';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	
 	// const confirmModalOptionElId = 'cms-block-delete-confirm';
@@ -125,7 +126,7 @@
 			<div class="row">
 				<div class="col-6 offset-6">
 					<div class="text-end pt-5 pb-3">
-						<Link :href="route('admin.cms.pages.add')">
+						<Link :href="getAdminUrl('/cms/pages/add')">
 							<button class="btn btn-primary">
 								<i class="fa-solid fa-user-pen"></i><span class="ms-3">Add New CMS page</span> 
 							</button>
@@ -217,7 +218,7 @@
 						</button>
 						<ul class="dropdown-menu">
 							<li>
-								<Link class="dropdown-item" :href="route('admin.cms.pages.edit', {id: item.id})" v-bind:data-id="item.id">
+								<Link class="dropdown-item" :href="getAdminUrl('/cms/pages/edit/'+item.id)" v-bind:data-id="item.id">
 									<i class="fa-solid fa-pencil"></i> <span>Edit</span>
 								</Link>
 							</li>

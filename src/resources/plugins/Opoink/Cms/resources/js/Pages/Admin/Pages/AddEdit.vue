@@ -27,7 +27,7 @@
 	const editorRef = ref(null);
 
 	onBeforeMount(() => {
-		adminSideTabs.setDefaultTab('tab-page-content').setQueryParam('active-tab');
+		adminSideTabs.setActiveTab('tab-page-content');
 	});
 
 	onMounted(() => {
@@ -49,10 +49,11 @@
 				toast.add('Content is required', 'danger');
 			}
 			else {
+				form.content = JSON.parse(form.content);
 				loader.setLoader(true);
 				axios({
 					method: 'post',
-					url: getAdminUrl('/cms/save'),
+					url: getAdminUrl('/cms/pages/save'),
 					data: {
 						id: form.id,
 						name: form.name,
@@ -60,7 +61,7 @@
 						meta_title: form.meta_title,
 						meta_keywords: form.meta_keywords,
 						meta_description: form.meta_description,
-						content: content.content,
+						content: form.content,
 					}
 				})
 				.then(response => {
@@ -94,95 +95,6 @@
 		return parseInt(form.id) > 0;
 	}
 </script>
-
-<script>
-	export default {
-		// data() {
-		// 	return {
-		// 		form: useForm({
-		// 			id: this.propsdata.cms_page ? this.propsdata.cms_page.id : '',
-		// 			name: this.propsdata.cms_page ? this.propsdata.cms_page.name : '',
-		// 			identifier: this.propsdata.cms_page ? this.propsdata.cms_page.identifier : '',
-		// 			meta_title: this.propsdata.cms_page ? this.propsdata.cms_page.meta_title : '',
-		// 			meta_keywords: this.propsdata.cms_page ? this.propsdata.cms_page.meta_keywords : '',
-		// 			meta_description: this.propsdata.cms_page ? this.propsdata.cms_page.meta_description : '',
-		// 			content: this.propsdata.cms_page ? this.propsdata.cms_page.content : '',
-		// 		}),
-		// 		componentName: ''
-		// 	}
-		// },
-		// props: ['propsdata'],
-		// beforeMount: function(){
-		// 	adminSideTabs.setDefaultTab('tab-page-content').setQueryParam('active-tab');
-		// },
-		// methods: {
-		// 	submit() {
-		// 		if(!this.form.content.length){
-		// 			toast.add('Content is required', 'danger');
-		// 		}
-		// 		else {
-		// 			this.form.content = JSON.parse(this.form.content);
-	
-		// 			loader.setLoader(true);
-		// 			axios({
-		// 				method: 'post',
-		// 				url: route('admin.cms.pages.saveaction'),
-		// 				data: {
-		// 					id: this.form.id,
-		// 					name: this.form.name,
-		// 					identifier: this.form.identifier,
-		// 					meta_title: this.form.meta_title,
-		// 					meta_keywords: this.form.meta_keywords,
-		// 					meta_description: this.form.meta_description,
-		// 					content: this.form.content,
-		// 				}
-		// 			})
-		// 			.then(response => {
-		// 				toast.add(response.data.message, 'success');
-		// 				loader.setLoader(false);
-		// 				if(!this.isEdit()){
-		// 					this.$inertia.visit( route('admin.cms.pages.edit', {id: response.data.data.id}) );
-		// 				}
-		// 			})
-		// 			.catch(error => {
-		// 				console.log('error error', error);
-		// 				let errors = error.response.data.errors;
-		// 				if(Array.isArray(errors)){
-		// 					errors.forEach(error => {
-		// 						toast.add(error, 'danger');
-		// 					});
-		// 				}
-		// 				else {
-		// 					Object.keys(errors).forEach((key) => {
-		// 						errors[key].forEach(error => {
-		// 							this.form.setError(key, error);
-		// 						});
-		// 					});
-		// 				}
-		// 				loader.setLoader(false)
-		// 			});
-		// 		}
-		// 	},
-		// 	isEdit(){
-		// 		return parseInt(this.form.id) > 0;
-		// 	}
-		// },
-		// mounted: function(){
-		// 	if(this.propsdata.cms_page){
-		// 		let identifier = this.propsdata.cms_page.identifier;
-		// 		identifier = identifier.split('-');
-
-		// 		for (let i = 0; i < identifier.length; i++) {
-		// 			identifier[i] = identifier[i][0].toUpperCase() + identifier[i].substr(1);
-		// 		}
-		// 		identifier = identifier.join('');
-
-		// 		this.componentName = identifier;
-		// 	}
-		// }
-	}
-</script>
-
 <template>
 	<Head :title="propsdata.page_name" />
 	<Default>
@@ -191,7 +103,7 @@
 			<div class="row">
 				<div class="col-6 offset-6">
 					<div class="text-end pt-5 pb-3">
-						<Link :href="route('admin.cms.pages.index')">
+						<Link :href="getAdminUrl('/cms/pages')">
 							<button class="btn btn-outline-primary">
 								<i class="fa-solid fa-left-long"></i><span class="ms-3">Back</span> 
 							</button>
@@ -213,7 +125,7 @@
 										<Link 
 											href="#" 
 											class="admin-side-tab-item"
-											:class="{'active' : adminSideTabs.isActiveTab('tab-page-content', route())}"
+											:class="{'active' : adminSideTabs.isActiveTab == 'tab-page-content'}"
 										>
 											Page Content
 										</Link>
@@ -225,21 +137,7 @@
 
 
 						<div class="col-9">
-							<!-- <div class="row mb-3" v-if="propsdata.cms_page">
-								<div class="col-12">
-									<p class="mb-0">Use the page by importing it on your Vue Component template</p>
-									<p class="mb-0">
-										<code>
-											import {{componentName}} from '@/Cms/Pages/{{componentName}}/VueComponent.vue';
-											<br>
-											&lt;{{componentName}}/&gt;
-										</code>
-									</p>
-								</div>
-							</div> -->
-
 							<input type="hidden" class="form-control" name="id" v-model="form.id">
-
 							<div class="row mb-3">
 								<div class="col-6">
 									<label for="formdata-name" class="form-label d-block">Name</label>

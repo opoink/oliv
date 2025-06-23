@@ -120,8 +120,8 @@ class UpdatePlugin {
 					$this->config_files[$info['filename']] = include($targetFile);
 				}
 				else {
-					// $this->config_files[$info['filename']] = array_merge_recursive($this->config_files[$info['filename']], include($targetFile));
-					$this->config_files[$info['filename']] = array_replace_recursive($this->config_files[$info['filename']], include($targetFile));		
+					$this->config_files[$info['filename']] = array_merge_recursive($this->config_files[$info['filename']], include($targetFile));
+					// $this->config_files[$info['filename']] = array_replace_recursive($this->config_files[$info['filename']], include($targetFile));		
 				}
 			}
 		}

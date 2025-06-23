@@ -7,7 +7,7 @@
 	import ModalConfirmmation from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ModalConfirmmation.vue';
 	import { loader } from '@@Plugins@@/Opoink/Liv/resources/js/States/loader.js';
 	import { toast } from '@@Plugins@@/Opoink/Liv/resources/js/States/toast.js';
-	import { route } from 'ziggy-js';
+	import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 
 	
 	const confirmModalOptionElId = 'cms-block-delete-confirm';
@@ -37,7 +37,7 @@
 
 		axios({
 			method: 'delete',
-			url: route('admin.cms.block.deleteaction', {id: confirmModalContenData.value.id}),
+			url: getAdminUrl('/cms/block/delete/'+confirmModalContenData.value.id),
 		})
 		.then(response => {
 			toast.add(response.data.message, 'success');
@@ -109,7 +109,7 @@
 		}
 
 		let queryParams = {filters: filters};
-		router.visit( route('admin.cms.block.index', queryParams) );
+		router.visit( getAdminUrl('/cms/block', queryParams) );
 	}
 </script>
 
@@ -126,7 +126,7 @@
 			<div class="row">
 				<div class="col-6 offset-6">
 					<div class="text-end pt-5 pb-3">
-						<Link :href="route('admin.cms.block.add')">
+						<Link :href="getAdminUrl('/cms/block/add')">
 							<button class="btn btn-primary">
 								<i class="fa-solid fa-user-pen"></i><span class="ms-3">Add New CMS Block</span> 
 							</button>
@@ -218,7 +218,7 @@
 						</button>
 						<ul class="dropdown-menu">
 							<li>
-								<Link class="dropdown-item" :href="route('admin.cms.block.edit', {id: item.id})" v-bind:data-id="item.id">
+								<Link class="dropdown-item" :href="getAdminUrl('/cms/block/edit/'+item.id)" v-bind:data-id="item.id">
 									<i class="fa-solid fa-pencil"></i> <span>Edit</span>
 								</Link>
 							</li>
@@ -242,10 +242,6 @@
 		:onconfirm="deleteOnConfirm"
 		:onclose="deleteOnClose"
 	>
-		<p>Do you want to delete the CMS block {{confirmModalContenData?.name}}?</p>
-		<ul class="">
-			<li>You need to remove the imports of this block on Vue Components.</li>
-			<li>You need to make a new build <code>npm run build</code> or <code>npm run build:ssr</code> for this to take effect.</li>
-		</ul>	
+		<p>Do you want to delete the CMS block {{confirmModalContenData?.name}}?</p>	
 	</ModalConfirmmation>
 </template>
