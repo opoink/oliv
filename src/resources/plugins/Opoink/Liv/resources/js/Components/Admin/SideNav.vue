@@ -65,6 +65,8 @@
 		mounted(){
 			adminSideNav.init();
 			this.setScroll();
+
+			console.log(JSON.parse(JSON.stringify(this.page.props.adminmenu)))
 		}
 	}
 </script>
@@ -89,7 +91,7 @@
 						v-bind:class="{'active' : adminSideNav.isMenuActive($page.url.startsWith($getAdminUrl(lv1.is_active_menu_url)), lv1.is_active_menu_name)}"
 						v-if="isAllowed(lv1)"
 					>
-						<a href="javascript:void(0)" class="menu-action" @click.prevent="adminSideNav.showActiveMenu(lv1.is_active_menu_name)">
+						<a href="#" class="menu-action" @click.prevent="adminSideNav.showActiveMenu(lv1.is_active_menu_name)">
 							<span class="icon">
 								<i :class="lv1.fa_icon"></i>
 							</span>
@@ -103,7 +105,7 @@
 								</button>
 							</div>
 							<div class="d-flex">
-								<template v-for="col in lv1.child">
+								<template v-for="col in lv1.children">
 									<div class="snc-body">
 										<div class="links-wrapper" v-for="row in col">
 											<p class="link-title">{{row.title}}</p>

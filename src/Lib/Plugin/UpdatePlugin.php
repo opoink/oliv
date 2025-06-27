@@ -7,6 +7,7 @@ namespace Opoink\Oliv\Lib\Plugin;
 
 use Opoink\Oliv\Lib\Writer as FileWriter;
 use Illuminate\Support\Facades\Cache;
+use Opoink\Oliv\Facades\MergeAdminMenu;
 
 class UpdatePlugin {
 	
@@ -20,6 +21,7 @@ class UpdatePlugin {
 	protected $plugins_admin_css = [];
 	protected $plugins_client_css = [];
 	protected $config_files = [];
+	protected $admin_menus = [];
 	protected $service_providers = [];
 	protected $plugin_events = [];
 
@@ -55,6 +57,7 @@ class UpdatePlugin {
 		}
 
 		$this->saveConfigFiles();
+		$this->saveAdminMenu();
 		$this->saveProviders();
 		$this->compilePluginLayout();
 		$this->compilePluginCss();
@@ -114,14 +117,22 @@ class UpdatePlugin {
 				if($file == '.' || $file == '..'){
 					continue;
 				}
+
 				$targetFile = $configDir . DS . $file;
 				$info = pathinfo($file);
-				if(!isset($this->config_files[$info['filename']])){
-					$this->config_files[$info['filename']] = include($targetFile);
+
+				if($info['filename'] == 'adminmenu'){
+					$this->admin_menus = MergeAdminMenu::mergeMenus($this->admin_menus, include($targetFile));
+					// $this->admin_menus[] = include($targetFile);
 				}
 				else {
-					$this->config_files[$info['filename']] = array_merge_recursive($this->config_files[$info['filename']], include($targetFile));
-					// $this->config_files[$info['filename']] = array_replace_recursive($this->config_files[$info['filename']], include($targetFile));		
+					if(!isset($this->config_files[$info['filename']])){
+						$this->config_files[$info['filename']] = include($targetFile);
+					}
+					else {
+						$this->config_files[$info['filename']] = array_merge_recursive($this->config_files[$info['filename']], include($targetFile));
+						// $this->config_files[$info['filename']] = array_replace_recursive($this->config_files[$info['filename']], include($targetFile));		
+					}
 				}
 			}
 		}
@@ -196,6 +207,18 @@ class UpdatePlugin {
 		$w->setDirPath(ROOT.DS.'config');
 		$w->setData($data);
 		$w->setFilename('plugins');
+		$w->setFileextension('php');
+		$w->write();
+	}
+
+	protected function saveAdminMenu(){
+		$data = '<?php' . PHP_EOL;
+		$data .= 'return ' . var_export($this->admin_menus, true) . PHP_EOL;
+		$data .= '?>';
+		$w = new FileWriter();
+		$w->setDirPath(ROOT.DS.'config');
+		$w->setData($data);
+		$w->setFilename('adminmenus');
 		$w->setFileextension('php');
 		$w->write();
 	}
