@@ -65,8 +65,6 @@
 		mounted(){
 			adminSideNav.init();
 			this.setScroll();
-
-			console.log(JSON.parse(JSON.stringify(this.page.props.adminmenu)))
 		}
 	}
 </script>
