@@ -24,6 +24,7 @@ export default function transformFileImport() {
 	
 					let isExist = await existsSync(themeFilePath);
 					if(isExist){
+						this.addWatchFile(themeFilePath);
 						newSrc = await readFileSync( themeFilePath, 'utf8');
 					}
 				}
