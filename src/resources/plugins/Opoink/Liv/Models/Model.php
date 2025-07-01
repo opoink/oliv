@@ -58,6 +58,52 @@ class Model extends \Illuminate\Database\Eloquent\Model {
 
 		return $saved;
 	}
+
+
+
+	public function beforeDelete(){
+
+	}
+
+	public function afterDelete(){
+		
+	}
+
+    /**
+     * Delete the model from the database without raising any events.
+     * @return bool
+     */
+    public function deleteQuietly()
+    {
+        return static::withoutEvents(fn () => $this->delete());
+    }
+
+	/**
+     * Delete the model from the database.
+     * @return bool|null
+     */
+    public function delete()
+    {
+		DB::beginTransaction();
+		try {
+			$eventName = 'db_' . $this->table . '_delete_';
+
+			$this->beforeDelete();
+			Event::dispatch($eventName . 'before', ['model' => $this]);
+			$model_data = $this->getAttributes();
+			parent::delete();
+			Event::dispatch($eventName . 'after', ['model' => $this]);
+			$this->afterDelete();
+
+			DB::commit();
+			Event::dispatch($eventName . 'commit_after', ['model' => $model_data]);
+			Event::dispatch('db_model_commit_after', ['model' => $model_data]);
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			throw new \Exception($e->getMessage(), 500);
+		}
+	}
 }
 
 ?>
