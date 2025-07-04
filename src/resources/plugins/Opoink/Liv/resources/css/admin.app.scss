@@ -42,6 +42,64 @@ body {
 
 .c-pointer { cursor: pointer; }
 
+.admin-side-tabs-wrapper {
+	padding: 0px;
+	list-style: none;
+	margin: 0;
+
+	> li {
+
+		> p {
+			margin: 0;
+			padding: 15px 40px 15px 10px;
+			border-top: solid 1px #ddd7d7;
+			border-right: solid 1px #ddd7d7;
+			border-left: solid 1px #ddd7d7;
+			background: #ffffff;
+
+			span {
+				margin-right: -24px;
+			}
+
+			// &.collapsed {
+			// 	background: #f1f1f1;
+
+			// 	span {
+			// 		i {
+			// 			&:before {
+			// 				content: "\f0d8";
+			// 			}
+			// 		}
+			// 	}
+			// }
+		}
+
+		&.active {
+			> p {
+				background: #f1f1f1;
+				span {
+					i {
+						&:before {
+							content: "\f0d8";
+						}
+					}
+				}
+			}
+		}
+
+		&:last-child {
+			> p {
+				border-bottom: solid 1px #ddd7d7;
+			}
+		}
+
+		.admin-side-tabs {
+			border-bottom: 0px;
+		}
+	} 
+
+}
+
 .admin-side-tabs {
 	background: #f1f1f1;
   	border: 1px solid #e3e3e3;
