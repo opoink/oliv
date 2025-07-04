@@ -11,6 +11,9 @@ export const toast = reactive({
 	/**
 	 * add a new toast
 	 * @param message str the message to be added
+	 * @param type bootsrap alert primary, secondary, success, danger, warning, info, light, dark
+	 * https://getbootstrap.com/docs/5.0/components/alerts/
+	 * @param timeout int millisec to close the toast message
 	 */
 	add(message, type = 'success', timeout = 8000) {
 		if(message){
