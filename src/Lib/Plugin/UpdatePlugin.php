@@ -136,6 +136,8 @@ class UpdatePlugin {
 				}
 			}
 		}
+
+		$this->admin_menus = MergeAdminMenu::removeMarkedEntries($this->admin_menus);
 	}
 
 	protected function collectProviders($plugin){

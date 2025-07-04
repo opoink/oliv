@@ -85,5 +85,36 @@ class MergeAdminMenu {
 		return array_values($originalLinks);
 	}
 
+	public function removeMarkedEntries(array $array): array {
+		$result = [];
+
+		foreach ($array as $key => $item) {
+			// If it's not an array, keep as-is
+			if (!is_array($item)) {
+				$result[$key] = $item;
+				continue;
+			}
+
+			// Skip this item entirely if 'remove' is true
+			if (isset($item['remove']) && $item['remove'] === true) {
+				continue;
+			}
+
+			// Recursively check 'children'
+			if (isset($item['children']) && is_array($item['children'])) {
+				$item['children'] = array_map([$this, 'removeMarkedEntries'], $item['children']);
+			}
+
+			// Recursively check 'links'
+			if (isset($item['links']) && is_array($item['links'])) {
+				$item['links'] = $this->removeMarkedEntries($item['links']);
+			}
+
+			$result[$key] = $item;
+		}
+
+		return array_values($result); // Reset numeric keys
+	}
+
 }
 ?>
