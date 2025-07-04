@@ -51,7 +51,7 @@ return [
 			]
 		]
 	],
-	'settings' => [
+	[
 		'name' => 'settings',
 		'route' => '/settings',
 		'label' => 'Settings',
