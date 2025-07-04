@@ -97,9 +97,94 @@ const http_build_query = function (obj, num_prefix, temp_key) {
 	return output_string.join('&')
 }
 
+/**
+ * use this to make a Base64 encoded string URL friendly, 
+ * i.e. '+' and '/' are replaced with '-' and '_' also any trailing '=' 
+ * characters are removed
+ */
+const base64EncodeUrl = function(str){
+	str = btoa(str);
+	return str.split('+').join('-').split('/').join('_').split('=').join('');
+}
+
+/**
+ * https://stackoverflow.com/questions/2820249/base64-encoding-and-decoding-in-client-side-javascript
+ */
+const base64DecodeUrl = function(str){
+	var s = str;
+	var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
+	var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	for(i=0;i<64;i++){e[A.charAt(i)]=i;}
+	for(x=0;x<L;x++){
+		c=e[s.charAt(x)];b=(b<<6)+c;l+=6;
+		while(l>=8){((a=(b>>>(l-=8))&0xff)||(x<(L-2)))&&(r+=w(a));}
+	}
+	return r;
+}
+
+/**
+ * https://stackoverflow.com/questions/7013643/urlencode-from-php-in-javascript
+ */
+const urlencode = function(str) {
+	let newStr = '';
+	const len = str.length;
+
+	for (let i = 0; i < len; i++) {
+		let c = str.charAt(i);
+		let code = str.charCodeAt(i);
+
+		// Spaces
+		if (c === ' ') {
+			newStr += '+';
+		}
+		// Non-alphanumeric characters except "-", "_", and "."
+		else if (
+			(code < 48 && code !== 45 && code !== 46) ||
+			(code < 65 && code > 57) ||
+			(code > 90 && code < 97 && code !== 95) ||
+			(code > 122)) 
+		{
+			newStr += '%' + code.toString(16);
+		}
+		// Alphanumeric characters
+		else {
+			newStr += c;
+		}
+	}
+	return newStr;
+}
+
+const urldecode = function(str) {
+	let newStr = '';
+	const len = str.length;
+  
+	for (let i = 0; i < len; i++) {
+		let c = str.charAt(i);
+	
+		if (c === '+') {
+			newStr += ' ';
+		}
+		else if (c === '%') {
+			const hex = str.substr(i + 1, 2);
+			const code = parseInt(hex, 16);
+			newStr += String.fromCharCode(code);
+			i += 2;
+		}
+		else {
+			newStr += c;
+		}
+	}
+	return newStr;
+}
+
 export {
 	debounce,
 	bytesToSize,
 	isRoleAllowed,
-	getAdminUrl
+	getAdminUrl,
+	base64EncodeUrl,
+	base64DecodeUrl,
+	urlencode,
+	urldecode,
+	http_build_query
 }
