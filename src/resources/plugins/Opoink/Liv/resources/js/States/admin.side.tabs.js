@@ -31,11 +31,10 @@ export class AdminSideTabs {
 		}
 	}
 
-	getAdminUrl(path){
-		let params = {};
-
+	getAdminUrl(){
+		const url = new URL(window.location.href);
 		if(this.isActiveTab){
-			params['active_tab'] = this.isActiveTab
+			url.searchParams.set('active_tab', this.isActiveTab);
 		}
 
 		let activeParents = [];
@@ -45,9 +44,10 @@ export class AdminSideTabs {
 			}
 		});
 		if(activeParents.length){
-			params['active_parents'] = base64EncodeUrl(activeParents.join(','));
+			url.searchParams.set('active_parents', base64EncodeUrl(activeParents.join(',')));
 		}
-		return getAdminUrl(path, params);
+
+		return url.pathname + url.search
 	}
 	
 	reset(){
