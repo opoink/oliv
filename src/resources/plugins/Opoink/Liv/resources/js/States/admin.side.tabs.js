@@ -32,10 +32,11 @@ export class AdminSideTabs {
 	}
 
 	getAdminUrl(path){
-		let params = {
-			active_tab: this.isActiveTab,
-			active_parents: ''
-		};
+		let params = {};
+
+		if(this.isActiveTab){
+			params['active_tab'] = this.isActiveTab
+		}
 
 		let activeParents = [];
 		Object.keys(this.activeParents).forEach((val) => {
@@ -43,7 +44,9 @@ export class AdminSideTabs {
 				activeParents.push(val);
 			}
 		});
-		params.active_parents = base64EncodeUrl(activeParents.join(','));
+		if(activeParents.length){
+			params['active_parents'] = base64EncodeUrl(activeParents.join(','));
+		}
 		return getAdminUrl(path, params);
 	}
 	
