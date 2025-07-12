@@ -4,6 +4,9 @@ namespace Plugins\Opoink\Liv\Lib\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @method static \Plugins\Opoink\Liv\Lib\Event getEvents()
+ * @method static \Plugins\Opoink\Liv\Lib\Event dispatch(string $eventName, array $data = [])
+ * 
  * @see Plugins\Opoink\Liv\Lib\Event
  */
 class Event extends Facade {

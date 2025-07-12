@@ -26,7 +26,11 @@ class Event {
 		return $this->events;
 	}
 
-	public function dispatch($eventName, array $data = []) {
+	/**
+	 * @param $eventName string
+	 * @param $data array
+	 */
+	public function dispatch(string $eventName, array $data = []) {
 		$events = $this->getEvents();
 
 		if(isset($events[$eventName])){
