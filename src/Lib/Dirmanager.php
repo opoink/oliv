@@ -7,6 +7,9 @@ namespace Opoink\Oliv\Lib;
 
 class Dirmanager {
 	
+	/**
+	 * @param $path string
+	 */
 	public function create($path){
 		$create = false;
 		if(!is_dir($path)){
@@ -16,11 +19,17 @@ class Dirmanager {
 		}
 		return $create;
 	}
-	
+
+	/**
+	 * @param $path string
+	 */
 	public function createDir($path){
 		return $this->create($path);
 	}
-	
+
+	/**
+	 * @param $dirPath string
+	 */
 	public function deleteDir($dirPath) {
 		if (! is_dir($dirPath)) {
 			return false;
@@ -40,6 +49,11 @@ class Dirmanager {
 		return rmdir($dirPath);
 	}
 	
+	/**
+	 * @param $src string
+	 * @param $dst string
+	 * @param $copyCallback \Closure()
+	 */
 	public function copyDir($src, $dst, $copyCallback = null) { 
 		if(!is_dir($src)){
 			throw new \Exception("The path " . $src . " doesn't exist", 500);
