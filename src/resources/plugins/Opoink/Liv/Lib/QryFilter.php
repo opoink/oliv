@@ -5,14 +5,23 @@ class QryFilter {
 
 	protected $fieldMap = [];
 
-	public function addFieldMap($key, $mapKey){
+	/**
+	 * @param string $key
+	 * @param string $mapKey
+	 */
+	public function addFieldMap(string $key, string $mapKey){
 		$this->fieldMap[$key] = $mapKey;
 	}
-
+	
+	/**
+	 * @param \Illuminate\Http\Request $request
+	 * @param \Illuminate\Database\Eloquent\Builder $qry
+	 * @param array $columns
+	 */
 	public function setFilters(
 		\Illuminate\Http\Request $request, 
 		\Illuminate\Database\Eloquent\Builder $qry, 
-		$columns
+		array $columns
 	){
 		if(is_array($request->filters)){
 			$fieldMap = $this->fieldMap;
@@ -60,10 +69,16 @@ class QryFilter {
 		}
 	}
 
+	
+	/**
+	 * @param \Illuminate\Http\Request $request
+	 * @param \Illuminate\Database\Eloquent\Builder $qry
+	 * @param array $columns
+	 */
 	public function setSortOrder(
 		\Illuminate\Http\Request $request, 
 		\Illuminate\Database\Eloquent\Builder $qry, 
-		$columns
+		array $columns
 	){
 		$fieldMap = $this->fieldMap;
 
