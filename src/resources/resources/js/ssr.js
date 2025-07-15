@@ -4,7 +4,6 @@ import { renderToString } from '@vue/server-renderer'
 import { createSSRApp, h } from 'vue'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import Filters from './Plugins/filters';
-// import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/index';
 import PluginPages from './plugin.pages';
 import { RegVueGlobalComponents } from './vue.global.components';
 
@@ -28,12 +27,25 @@ createServer(page =>
 		setup({ App, props, plugin }) {
 			const app = createSSRApp({ render: () => h(App, props) });
 			app.use(plugin);
-			// app.use(ZiggyVue, {
-			// 	...page.props.ziggy,
-			// 	location: new URL(page.props.ziggy.location),
-			// });
 			app.use(Filters);
 			RegVueGlobalComponents(app);
+			app.mixin({
+				mounted() {
+					const isPage = this.$options.isPage || false;
+					if (isPage && typeof window != 'undefined') {
+						if(typeof window.url_history == 'undefined'){
+							window.url_history = {
+								prev_url: null,
+								current_url: window.location.href
+							}
+						}
+						else {
+							window.url_history.prev_url = window.url_history.current_url + '';
+							window.url_history.current_url = window.location.href;
+						}
+					}
+				}
+			});
 			return app;
 		},
 	}),
