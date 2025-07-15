@@ -186,5 +186,6 @@ export {
 	base64DecodeUrl,
 	urlencode,
 	urldecode,
-	http_build_query
+	http_build_query,
+	getUrl
 }

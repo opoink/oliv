@@ -1,4 +1,4 @@
-import { getAdminUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
+import { getUrl } from '@@Plugins@@/Opoink/Liv/resources/js/Lib/common.js';
 import { router } from '@inertiajs/vue3';
 
 export class ListingFilter {
@@ -59,8 +59,9 @@ export class ListingFilter {
 			sort_order: this.sortOrder,
 			filters: filters
 		};
-		let url = getAdminUrl('/hnd_base/admin-users', queryParams);
 
+		const _url = new URL(window.location.href);
+		let url = getUrl(_url.pathname, queryParams);
 		router.visit( url );
 	}
 
