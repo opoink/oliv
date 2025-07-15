@@ -68,8 +68,8 @@ class QryFilter {
 		$fieldMap = $this->fieldMap;
 
 		$sortOrder = [
-			'key' => 'username',
-			'value' => 'asc'
+			'key' => $qry->getModel()->getKeyName(),
+			'value' => 'desc'
 		];
 		if($request->sort_order){
 			if(in_array($request->sort_order['key'], $columns) && in_array($request->sort_order['value'], ['asc', 'desc'])){
