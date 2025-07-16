@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 
 const debounce = function(func, wait, immediate = false) {
 	var timeout;
@@ -177,6 +177,23 @@ const urldecode = function(str) {
 	return newStr;
 }
 
+/**
+ * 
+ * @param string fallback_url 
+ */
+const backToPrevUrl = function(fallback_url){
+	let url = '/';
+	if(typeof window != 'undefined'){
+		if(!window.url_history.prev_url || window.url_history.prev_url == window.location.href){	
+			url = fallback_url;
+		}
+		else {
+			url = window.url_history.prev_url;
+		}
+	}
+	router.visit(url);
+}
+
 export {
 	debounce,
 	bytesToSize,
@@ -187,5 +204,6 @@ export {
 	urlencode,
 	urldecode,
 	http_build_query,
-	getUrl
+	getUrl,
+	backToPrevUrl
 }
