@@ -106,16 +106,18 @@
 								<template v-for="col in lv1.children">
 									<div class="snc-body">
 										<div class="links-wrapper" v-for="row in col">
-											<p class="link-title">{{row.title}}</p>
-											<ul>
-												<template v-for="link in row.links">
-													<li v-if="isAllowed(link)">
-														<Link :href="getAdminUrl(link.route)" v-bind:class="{'active' : $page.url == getAdminUrl(link.route)}">
-															{{link.label}}
-														</Link>
-													</li>
-												</template>
-											</ul>
+											<template v-if="isAllowed(row)">
+												<p class="link-title">{{row.title}}</p>
+												<ul>
+													<template v-for="link in row.links">
+														<li v-if="isAllowed(link)">
+															<Link :href="getAdminUrl(link.route)" v-bind:class="{'active' : $page.url == getAdminUrl(link.route)}">
+																{{link.label}}
+															</Link>
+														</li>
+													</template>
+												</ul>
+											</template>
 										</div>
 									</div>
 								</template>

@@ -3,7 +3,6 @@ namespace Opoink\Oliv\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-// use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,24 +35,35 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-		$data = [
-			// 'ziggy' => fn () => [
-            //     ...(new Ziggy)->toArray(),
-            //     'location' => $request->url(),
-            // ],
-        ];
+		$data = [];
 
 		$adminUser = auth()->guard('admin')->user();
 		if($adminUser){
 			unset($adminUser->password);
+
+            try {
+                $event = app(\Plugins\Opoink\Liv\Lib\Event::class);
+                $event->dispatch('Opoink_Oliv_Middleware_HandleInertiaRequests', [
+                    'adminUser' => $adminUser
+                ]);
+            } catch (\Throwable $th) {
+                /** do nothing for now */
+            }
 			$adminUser = $adminUser->getAttributes();
 
-			if($adminUser['admin_type'] == 'super_admin'){
-				$adminUser['roles_resource'] = "*";
-			}
-			else {
-				$adminUser['roles_resource'] = getRolesResource($adminUser['admin_user_role_id']);
-			}
+            /**
+             * if the $adminUser['roles_resource'] was already set
+             * means that an event listener already set $adminUser['roles_resource']
+             * so we dont need to set it here again
+             */
+            if(!isset($adminUser['roles_resource'])){
+                if($adminUser['admin_type'] == 'super_admin'){
+                    $adminUser['roles_resource'] = "*";
+                }
+                else {
+                    $adminUser['roles_resource'] = getRolesResource($adminUser['admin_user_role_id']);
+                }
+            }
 		}
 
 		$data['auth'] = [
