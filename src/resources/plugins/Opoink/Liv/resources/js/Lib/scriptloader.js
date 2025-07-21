@@ -2,8 +2,8 @@
 export var scriptloader = {
 	loaderScripts: {},
 	load: function(url, isCss=false) {
-		if(typeof this.loaderScripts[url] == 'undefined'){
-			return new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
+			if(typeof this.loaderScripts[url] == 'undefined'){
 				let elm;
 				const cleanup = () => {
 					if (typeof this.loaderScripts[url] != 'undefined') {
@@ -35,7 +35,10 @@ export var scriptloader = {
 				elm.onload = done;
 				elm.onerror = error;
 				(document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
-			});
-		}
+			}
+			else {
+				resolve();
+			}
+		});
 	}
 }
