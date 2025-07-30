@@ -10,6 +10,7 @@ use Opoink\Oliv\Console\Commands\Install as InstallCommand;
 use Opoink\Oliv\Console\Commands\MigrateCommand;
 use Opoink\Oliv\Console\Commands\PluginsUpdate;
 use Opoink\Oliv\Console\Commands\RollbackCommand;
+use Opoink\Oliv\Console\Scheduling\ScheduleRunCommand;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
 				PluginsUpdate::class,
 				MigrateCommand::class,
 				RollbackCommand::class,
+				ScheduleRunCommand::class
 			]);
 		}
     }
