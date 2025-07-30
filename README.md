@@ -147,6 +147,14 @@ To override the default authentication:
     - email
 6. Finally, if your table already contains admin users, choose one and set its `admin_type` value to `super_admin`.
 
+## Cron Schedule
+While OLIV continues to use Laravel's default `php artisan schedule:run` command to execute scheduled tasks, any tasks defined in `routes/console.php` will still function as expected.
+
+To define scheduled tasks within a plugin, simply create a `routes/console.php` file inside your plugin directory at:
+plugins/<VendorName>/<PluginName>/routes/console.php
+
+Laravel will automatically load and run these tasks when the scheduler is triggered.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
