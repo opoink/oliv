@@ -93,6 +93,13 @@ class Install extends Command
 			copy($resouceDir.$ds.'ecosystem.config.js', base_path().$ds.'ecosystem.config.js');
 			$this->info('ecosystem.config.js copied successfully.');
 
+			$this->info('Copying the jsconfig.json...');
+			if(file_exists(base_path().$ds.'jsconfig.json')){
+				copy(base_path().$ds.'jsconfig.json', base_path().$ds.'jsconfig.json.bak');
+			}
+			copy($resouceDir.$ds.'jsconfig.json', base_path().$ds.'jsconfig.json');
+			$this->info('jsconfig.json copied successfully.');
+
 			$this->info('Copying the public directory...');
 			$dirManager->copyDir($resouceDir.$ds.'public', base_path().$ds.'public');
 			$this->info('Public directory copied successfully.');
@@ -143,6 +150,8 @@ class Install extends Command
 
 			$this->warn('Please update the file vite.config.js with your configuration from vite.config.js.bak.');
 			$this->warn('Please update the file ecosystem.config.js with your configuration from ecosystem.config.js.bak.');
+			$this->warn('Please update the file jsconfig.json with your configuration from jsconfig.json.bak.');
+			
 			if($this->isDumpAutoload == 'no'){
 				$this->warn('Please run composer dump-autoload manually.');
 			}
