@@ -155,6 +155,16 @@ To define scheduled tasks within a plugin, simply create a `routes/console.php` 
 
 Laravel will automatically load and run these tasks when the scheduler is triggered.
 
+	```PHP
+	<?php
+		use Illuminate\Support\Facades\Schedule;
+	
+		Schedule::call(function () {
+			dump('Your logic here');
+		})->everyThreeMinutes();
+	?>
+ 	```
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
