@@ -151,7 +151,7 @@ To override the default authentication:
 While OLIV continues to use Laravel's default `php artisan schedule:run` command to execute scheduled tasks, any tasks defined in `routes/console.php` will still function as expected.
 
 To define scheduled tasks within a plugin, simply create a `routes/console.php` file inside your plugin directory at:
-plugins/<VendorName>/<PluginName>/routes/console.php
+`plugins/<VendorName>/<PluginName>/routes/console.php`
 
 Laravel will automatically load and run these tasks when the scheduler is triggered.
 
