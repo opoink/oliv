@@ -55,7 +55,7 @@ class DataObject {
         foreach ($keys as $key) {
             if ( isset($data[$key]) ) {
                 $data = $data[$key];
-            } elseif ($data instanceof \Of\Std\DataObject) {
+            } elseif ($data instanceof DataObject) {
                 $data = $data->getData($key, $default);
             } else {
                 return $default;
