@@ -46,7 +46,7 @@ export class ListingFilter {
 					});
 				}
 			}
-			else if(typeof value == 'string'){
+			else {
 				if(value){
 					filters.push({"key": key, "value": value});
 				}

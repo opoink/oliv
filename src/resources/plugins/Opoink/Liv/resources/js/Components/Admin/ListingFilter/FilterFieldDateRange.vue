@@ -1,4 +1,4 @@
-<script setup lant="ts">
+<script setup>
 	import { ref } from 'vue';
 
 	/**
@@ -34,14 +34,12 @@
 		<div class="mb-3 row">
 			<label :for="'filter-fields-'+field+'-from'" class="col-sm-2 col-form-label">From</label>
 			<div class="col-sm-10">
-				<!-- <input type="text" class="form-control" :id="'filter-fields-'+field+'-from'" :name="field + '_from'" v-model="fieldModel.from" @input="handleChange" /> -->
 				<Datepicker v-model="from" @selected="handleChangeFrom" :format="'yyyy-MM-dd'" :value="from" :input-class="'h-35-px'"></Datepicker>
 			</div>
 		</div>
 		<div class="mb-3 row">
 			<label for="'filter-fields-'+field+'-to'" class="col-sm-2 col-form-label">To</label>
 			<div class="col-sm-10">
-				<!-- <input type="text" class="form-control" :id="'filter-fields-'+field+'-to'" :name="field + '_to'" v-model="fieldModel.to" @input="handleChange" /> -->
 				<Datepicker v-model="to" @selected="handleChangeTo" :format="'yyyy-MM-dd'" :value="to" :input-class="'h-35-px'"></Datepicker>
 			</div>
 		</div>

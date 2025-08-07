@@ -1,4 +1,4 @@
-<script setup lant="ts">
+<script setup>
 	import { ref } from 'vue';
 
 	const emit = defineEmits(['update:modelValue']);
