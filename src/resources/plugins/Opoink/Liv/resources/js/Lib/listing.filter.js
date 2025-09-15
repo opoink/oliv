@@ -56,6 +56,7 @@ export class ListingFilter {
 
 
 		let queryParams = {
+			apply_filter: 1,
 			sort_order: this.sortOrder,
 			filters: filters
 		};
