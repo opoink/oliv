@@ -17,14 +17,24 @@
 	const to = ref(fieldModel.value.to);
 
 	const handleChangeFrom = function(d){
-		let datetime = d.toJSON().slice(0, 19).replace('T', ' ');
-		datetime = datetime.split(' ')[0];
-		fieldModel.value.from = datetime;
+		if(d){
+			let datetime = d.toJSON().slice(0, 19).replace('T', ' ');
+			datetime = datetime.split(' ')[0];
+			fieldModel.value.from = datetime;
+		}
+		else {
+			fieldModel.value.from = '';
+		}
 	}
 	const handleChangeTo = function(d){
-		let datetime = d.toJSON().slice(0, 19).replace('T', ' ');
-		datetime = datetime.split(' ')[0];
-		fieldModel.value.to = datetime;
+		if(d){
+			let datetime = d.toJSON().slice(0, 19).replace('T', ' ');
+			datetime = datetime.split(' ')[0];
+			fieldModel.value.to = datetime;
+		}
+		else {
+			fieldModel.value.from = '';
+		}
 	}
 </script>
 
