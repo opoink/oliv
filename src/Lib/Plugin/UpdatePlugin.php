@@ -46,7 +46,6 @@ class UpdatePlugin {
 
 	public function executeUpdate() {
 
-
 		$pluginsConfig = getPluginsConfig();
 
 		$this->compiled_config = $pluginsConfig;
@@ -122,7 +121,8 @@ class UpdatePlugin {
 				$info = pathinfo($file);
 
 				if($info['filename'] == 'adminmenu'){
-					$this->admin_menus = MergeAdminMenu::mergeMenus($this->admin_menus, include($targetFile));
+					// $this->admin_menus = MergeAdminMenu::mergeMenus($this->admin_menus, include($targetFile));
+					$this->admin_menus = MergeAdminMenu::mergeByName($this->admin_menus, include($targetFile));
 					// $this->admin_menus[] = include($targetFile);
 				}
 				else {
