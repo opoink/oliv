@@ -47,7 +47,10 @@ export class ListingFilter {
 				}
 			}
 			else {
-				if(value){
+				if (value == null || value === "") {
+					console.log("empty");
+				}
+				else {
 					filters.push({"key": key, "value": value});
 				}
 			}

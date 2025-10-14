@@ -45,13 +45,13 @@ class QryFilter {
 					if(!$condition) {
 						$condition = 'LIKE';
 					}
-					if($value && !$values){
+					if($value !== "" && !$values){
 						if($condition == 'LIKE'){
 							$value = '%'.$value.'%';
 						}
 						$qry->where($key, $condition, $value);
 					}
-					elseif($values && !$value){
+					elseif($values && !$value === ""){
 						$from = $urlParams->getData('values/from');
 						$to = $urlParams->getData('values/to');
 						if($from && $to){
