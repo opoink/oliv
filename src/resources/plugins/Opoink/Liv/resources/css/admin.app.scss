@@ -59,6 +59,13 @@ body {
 
 			span {
 				margin-right: -24px;
+				transform: rotate(180deg);
+			}
+
+			&.collapsed {
+				span {
+					transform: rotate(0deg);
+				}
 			}
 
 			// &.collapsed {
@@ -147,6 +154,33 @@ body {
 					}
 				}
 			}
+		}
+	}
+}
+
+.field_group_wrapper {
+	list-style: none;
+	.field_group {
+		border-bottom: 1px solid #ddd7d7;
+
+		.field_group-title {
+			> p {
+				.fa-caret-down {
+					transform: rotate(180deg);
+				}
+			}
+
+			&.collapsed {
+				> p {
+					.fa-caret-down {
+						transform: rotate(0deg);
+					}
+				}
+			}
+		}
+
+		.field_group-content {
+			border-top: 1px solid #eee;
 		}
 	}
 }

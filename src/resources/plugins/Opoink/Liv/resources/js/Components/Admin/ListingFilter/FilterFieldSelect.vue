@@ -18,7 +18,6 @@
 
 	const handleChange = function(){
 		emit('update:modelValue', fieldModel.value)
-		console.log('handleChange handleChange', fieldModel.value)
 	}
 </script>
 

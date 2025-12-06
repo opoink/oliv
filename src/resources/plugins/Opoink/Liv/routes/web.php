@@ -42,6 +42,7 @@ Route::middleware(['adminauth'])->group(function () use ($router) {
 
 		Route::group(['prefix' => 'settings'], function () use ($router) {
 			Route::get('/', \Plugins\Opoink\Liv\Http\Controllers\Admin\Settings\Settings::class)->name('admin.settings.index');
+			Route::post('/save', [\Plugins\Opoink\Liv\Http\Controllers\Admin\Settings\Settings::class, 'saveSettings'])->name('admin.settings.index');
 		});
 	});
 });

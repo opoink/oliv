@@ -8,7 +8,6 @@
 	const props = defineProps(['propsdata', 'errors']);
 
 	onBeforeMount(() => {
-		console.log(props.errors)
 		try {
 			Object.keys(props.errors).forEach(function(key) {
 				toast.add(props.errors[key], 'danger');

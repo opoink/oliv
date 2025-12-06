@@ -111,7 +111,7 @@
 				toast.add(props.errors[key], 'danger');
 			});
 		} catch (error) {
-			console.log(error)
+			
 		}
 	});
 
@@ -164,7 +164,7 @@
 	}
 
 	function deleteOnClose(){
-		// console.log('deleteOnClose deleteOnClose');
+		
 	}
 </script>
 

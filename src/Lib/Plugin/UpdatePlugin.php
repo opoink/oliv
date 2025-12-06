@@ -38,10 +38,16 @@ class UpdatePlugin {
 		'../../storage/framework/vue/pages/**/*.vue'
 	];
 
+	/**
+	 * @var \Opoink\Oliv\Lib\Plugin\MergeSystemConfig
+	 */
+	protected $mergeSystemConfig;
 
 	public function __construct(
 		protected \Opoink\Oliv\Console\Commands\PluginsUpdate $command
-	){}
+	){
+		$this->mergeSystemConfig = app(\Opoink\Oliv\Lib\Plugin\MergeSystemConfig::class);
+	}
 
 
 	public function executeUpdate() {
@@ -64,6 +70,7 @@ class UpdatePlugin {
 		$this->saveVueGlobalComponents($this->vueGlobalComponents);
 		$this->savePluginRoutes('plugin_web');
 		// $this->savePluginRoutes('plugin_api');
+		$this->mergeSystemConfig->merge();
 
 		$this->saveCollectedEvents();
 	}
@@ -95,6 +102,11 @@ class UpdatePlugin {
 		if(file_exists($pluginCss.'client.app.scss') && is_file($pluginCss.'client.app.scss') ){
 			$clientAppScssCount = count($this->plugins_client_css) + 1;
 			$this->plugins_client_css[] = "@use '".$pluginCss.'client.app'."' as clientapp".$clientAppScssCount.";";
+		}
+
+		$pluginSystemConfig = $pluginDir.DS.'etc'.DS.'admin'.DS.'system.php';
+		if(file_exists($pluginSystemConfig) && is_file($pluginSystemConfig )){
+			$this->mergeSystemConfig->addSystemConfig(include($pluginSystemConfig));
 		}
 
 		$pluginResource = '../../plugins/' . str_replace('_', '/', $plugin) . '/resources/js';
