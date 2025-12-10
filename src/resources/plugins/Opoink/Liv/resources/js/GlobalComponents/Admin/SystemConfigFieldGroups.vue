@@ -74,10 +74,11 @@
 									<template v-if="field.field.type == 'password'">
 										<input type="password" class="form-control" v-bind="field?.html_attributes" v-model="field._value" :disabled="field._is_system_value">
 									</template>
-									<template v-if="field.field.type == 'file'">
+									<!-- we will not support file upload here for now -->
+									<!-- <template v-if="field.field.type == 'file'">
 										<input type="file" class="form-control" v-bind="field?.html_attributes" :disabled="field._is_system_value">
 										<small>{{ field._value }}</small>
-									</template>
+									</template> -->
 									<template v-if="field.field.type == 'textarea'">
 										<textarea class="form-control" rows="3" v-model="field._value" :disabled="field._is_system_value"></textarea>
 									</template>
