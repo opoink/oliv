@@ -130,16 +130,17 @@ return [
 								"value" => "1234",
 								"comment" => "Your field sample comment will be placed <a href='https://opoink.com' target='_blank'>here</a>.",
 							],
-							[
-								"name" => "sample_field_file",
-								"label" => "Sample Field: file",
-								"sort_order" => 50,
-								"html_attributes" => ["data-sample_attr" => "sample_attr field"],
-								"type" => "field",
-								"field" => ["type" => "file"],
-								"value" => "/path/to/your/file", // File value will be the relative of the file
-								"comment" => "Your field sample comment will be placed <a href='https://opoink.com' target='_blank'>here</a>.",
-							],
+							// file is currently not supported
+							// [
+							// 	"name" => "sample_field_file",
+							// 	"label" => "Sample Field: file",
+							// 	"sort_order" => 50,
+							// 	"html_attributes" => ["data-sample_attr" => "sample_attr field"],
+							// 	"type" => "field",
+							// 	"field" => ["type" => "file"],
+							// 	"value" => "/path/to/your/file", // File value will be the relative of the file
+							// 	"comment" => "Your field sample comment will be placed <a href='https://opoink.com' target='_blank'>here</a>.",
+							// ],
 							[
 								"name" => "sample_field_textarea",
 								"label" => "Sample Field: textarea",
