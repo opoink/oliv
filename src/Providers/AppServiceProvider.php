@@ -27,24 +27,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Schema::defaultStringLength(191);
-		// Config::set('database.connections.mysql.engine', 'InnoDB');
+        Schema::defaultStringLength(191);
+		Config::set('database.connections.mysql.engine', 'InnoDB');
 
-		// $this->registerMiddlewareToGroup();
+		$this->registerMiddlewareToGroup();
 
-		// $this->publishes([
-		// 	__DIR__.'/../config/oliv.php' => config_path('oliv.php'),
-		// ]);
+		$this->publishes([
+			__DIR__.'/../config/oliv.php' => config_path('oliv.php'),
+		]);
 
-		// if ($this->app->runningInConsole()) {
-		// 	$this->commands([
-		// 		InstallCommand::class,
-		// 		PluginsUpdate::class,
-		// 		MigrateCommand::class,
-		// 		RollbackCommand::class,
-		// 		ScheduleRunCommand::class
-		// 	]);
-		// }
+		if ($this->app->runningInConsole()) {
+			$this->commands([
+				InstallCommand::class,
+				PluginsUpdate::class,
+				MigrateCommand::class,
+				RollbackCommand::class,
+				ScheduleRunCommand::class
+			]);
+		}
     }
 
 	protected function registerMiddlewareToGroup(){
