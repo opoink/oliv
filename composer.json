@@ -6,8 +6,7 @@
 	"autoload": {
 		"psr-4": {
 			"Opoink\\Oliv\\": "src/"
-		},
-		"files": ["functions.php"]
+		}
 	},
 	"authors": [
 		{
@@ -16,9 +15,7 @@
 		}
 	],
 	"minimum-stability": "dev",
-	"require": {
-
-	},
+	"require": {},
 	"extra": {
 		"laravel": {
 			"providers": [
