@@ -17,10 +17,7 @@
 	],
 	"minimum-stability": "dev",
 	"require": {
-		"inertiajs/inertia-laravel": "^2.0",
-		"laravel/sanctum": "^4.0",
-		"laravel/tinker": "^2.9",
-		"phpmailer/phpmailer": "^6.9.2"
+
 	},
 	"extra": {
 		"laravel": {
