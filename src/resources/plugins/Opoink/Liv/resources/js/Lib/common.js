@@ -194,6 +194,10 @@ const backToPrevUrl = function(fallback_url){
 	router.visit(url);
 }
 
+const cloneObj = function(obj){
+	return JSON.parse(JSON.stringify(obj));
+}
+
 export {
 	debounce,
 	bytesToSize,
@@ -205,5 +209,6 @@ export {
 	urldecode,
 	http_build_query,
 	getUrl,
-	backToPrevUrl
+	backToPrevUrl,
+	cloneObj,
 }
