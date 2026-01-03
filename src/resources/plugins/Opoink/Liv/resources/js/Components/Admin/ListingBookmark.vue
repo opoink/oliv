@@ -12,6 +12,7 @@
 
 	import ActiveFilterFieldText from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ListingFilter/ActiveFilterFieldText.vue';
 	import ActiveFilterFieldRange from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/ListingFilter/ActiveFilterFieldRange.vue';
+	import { toast } from '../../States/toast';
 
 	const props = defineProps([
 		'propsdata',
@@ -64,6 +65,19 @@
 
 	const getComponent = function(name) {
 		return componentMap[name] || null;
+	}
+
+	/**
+	 * @param column string
+	 */
+	const setSortOrder = function(column){
+		let foundItem = props.bm.propsdata.bookmark.config.current.columns[column];
+		if(foundItem.sorting){
+			lf.setSortOrder(column)
+		}
+		else {
+			toast.add('The column ' + props.bm.propsdata.bookmark.config.current.attributes[column] + ' is not sortable', 'danger');
+		}
 	}
 </script>
 
@@ -155,7 +169,7 @@
 	
 	<Listing :propsdata="props.propsdata">
 		<template v-for="column in bm.propsdata.listing.columns" :key="column" v-slot:[`th_${column}`]>
-			<ListingThSort :sortorder="lf.sortOrder" :column_name="column" @click="lf.setSortOrder(column)">
+			<ListingThSort :sortorder="lf.sortOrder" :column_name="column" @click="setSortOrder(column)">
 				{{ bm.getColumnLabel(column) }}
 			</ListingThSort>
 		</template>
