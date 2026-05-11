@@ -1,11 +1,14 @@
-import './bootstrap';
-
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import Filters from './Plugins/filters';
 import PluginPages from './plugin.pages';
 import { RegVueGlobalComponents } from './vue.global.components';
+
+import axios from 'axios';
+window.axios = axios;
+
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 createInertiaApp({
 	title: (title) => `${title}`,
