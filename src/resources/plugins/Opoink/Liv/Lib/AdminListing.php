@@ -61,9 +61,9 @@ class AdminListing {
 
 			$namespace = $this->getNamespace();
 
-			$cacheKey = 'listing_bookmark_'.$namespace.'_' . $user->id;
+			//$cacheKey = 'listing_bookmark_'.$namespace.'_' . $user->id;
 			
-			$bookmark =  Cache::rememberForever($cacheKey, function() use($namespace, $user) {
+			//$bookmark =  Cache::rememberForever($cacheKey, function() use($namespace, $user) {
 
 				$bookmark = ListingBookmark::getBookmark($namespace, function() use($namespace, $user) {
 					$config = Json::encode(Json::decode(file_get_contents($this->defaultBookMarkTargetFile)));
@@ -88,8 +88,8 @@ class AdminListing {
 
 				$config['current']['columns'] = $cols;
 				$bookmark->config = $config;
-				return $bookmark;
-			});
+				//return $bookmark;
+			//});
 
 			$this->bookmark = $bookmark;
 		}
