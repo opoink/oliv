@@ -8,8 +8,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		@if(isAdminRoute())
-			<meta charset="utf-8" />
 			<meta name="viewport" content="width=1400, initial-scale=1.0, maximum-scale=1.0" />
 			
 			<?php
@@ -23,6 +23,7 @@
 			<script src="{{asset('/assets/tinymce/tinymce.min.js')}}"></script>
 			@vite('resources/css/admin.app.scss')
 		@else
+			<meta name="viewport" content="width=device-width, initial-scale=1">
 			@vite('resources/css/client.app.scss')
 		@endif
 
