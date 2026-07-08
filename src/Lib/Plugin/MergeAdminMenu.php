@@ -13,48 +13,49 @@ class MergeAdminMenu {
 	 * @param array $append
 	 * @return array
 	 */
-	function mergeByName(array $base, array $append): array
+	public function mergeByName(array $base, array $append): array
 	{
 		// Build associative lookup by "name"
 		$map = [];
 
 		foreach ($base as $item) {
+			/**
+			 * Required: All items must have a `name` attribute.
+			 */
 			if (isset($item['name'])) {
 				$map[$item['name']] = $item;
-			} else {
-				// unnamed entries get appended with numeric keys
-				$map[] = $item;
 			}
 		}
 
 		foreach ($append as $item) {
 			$name = $item['name'] ?? null;
+			if(!$name){
+				continue;
+			}
 
-			if ($name && isset($map[$name])) {
-				$merged = $map[$name];
+			if(!isset($map[$name])){
+				$map[$name] = $item;
+			}
+			else {
+				foreach($item as $key1 => $val1) {
+					if($key1 == 'name'){
+						continue;
+					}
 
-				foreach ($item as $key => $value) {
-					if ($key === 'children' && is_array($value)) {
-						$baseChildren = $merged['children'] ?? [];
-						$merged['children'] = $this->mergeChildrenRecursively($baseChildren, $value);
-					} else {
-						// override non-array or scalar values
-						$merged[$key] = $value;
+					if($key1 == 'children') {
+						$map[$name][$key1] = $this->mergeChildrenRecursively($map[$name][$key1], $item[$key1]);
+					}
+					elseif($key1 == 'links') {
+						$map[$name][$key1] = $this->mergeByName($map[$name][$key1], $item[$key1]);
+					}
+					else {
+						$map[$name][$key1] = $item[$key1];
 					}
 				}
-
-				$map[$name] = $merged;
-			} else {
-				// new name entirely
-				if ($name) {
-					$map[$name] = $item;
-				} else {
-					$map[] = $item;
-				}
+				// dump($item, $map[$name]);
 			}
 		}
 
-		// preserve consistent output structure
 		return array_values($map);
 	}
 
@@ -67,27 +68,30 @@ class MergeAdminMenu {
 	 * @return array
 	 */
 	public function mergeChildrenRecursively(array $baseChildren, array $appendChildren): array
-	{
-		// Normalize (unwrap [[...]])
-		$normalize = function (array $children): array {
-			$normalized = [];
-			foreach ($children as $child) {
-				if (is_array($child)) {
-					$first = reset($child);
-					$normalized[] = is_array($first) ? $first : $child;
+	{	
+		$normalize = function(array $data){
+			$map0 = [];
+			foreach ($data as $key1 => $value1) {
+				$map1 = [];
+				foreach ($data[$key1] as $key2 => $value2) {
+					if (isset($value2['name'])) {
+						$map1[$value2['name']] = $value2;
+					}
 				}
+
+				$map0[] = $map1;
 			}
-			return $normalized;
+			return $map0;
 		};
 
 		$baseNormalized   = $normalize($baseChildren);
 		$appendNormalized = $normalize($appendChildren);
 
-		// Recursively merge the flattened children
-		$merged = $this->mergeByName($baseNormalized, $appendNormalized);
+		foreach ($baseNormalized as $key => $value) {
+			$baseNormalized[$key] = $this->mergeByName($baseNormalized[$key], $appendNormalized[$key]);
+		}
 
-		// Rewrap to restore the original [[ ... ]] format
-		return array_map(fn($child) => [$child], $merged);
+		return $baseNormalized;
 	}
 
 	public function removeMarkedEntries(array $array): array {
