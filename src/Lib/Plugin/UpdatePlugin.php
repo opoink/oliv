@@ -16,6 +16,9 @@ class UpdatePlugin {
 	 */
 	protected $plugin_web = [];
 	protected $plugin_api = [];
+	protected $plugin_console = [];
+
+
 	protected $compiled_config;
 	protected $plugins_config = [];
 	protected $plugins_admin_css = [];
@@ -70,6 +73,7 @@ class UpdatePlugin {
 		$this->saveVueGlobalComponents($this->vueGlobalComponents);
 		$this->savePluginRoutes('plugin_web');
 		// $this->savePluginRoutes('plugin_api');
+		$this->savePluginRoutes('plugin_console');
 		$this->mergeSystemConfig->merge();
 
 		$this->saveCollectedEvents();
@@ -202,6 +206,7 @@ class UpdatePlugin {
 
 		$web = $targetDir.'web.php';
 		// $api = $targetDir.'api.php';
+		$console = $targetDir.'console.php';
 
 		if(file_exists($web) && is_file($web)){
 			$this->command->info('Web routes: ' . $web);
@@ -211,6 +216,10 @@ class UpdatePlugin {
 		// 	$this->command->info('API routes: ' . $api);
 		// 	$this->plugin_api[] = $api;
 		// }
+		if(file_exists($console) && is_file($console)){
+			$this->command->info('Console routes: ' . $console);
+			$this->plugin_console[] = $console;
+		}
 	}
 
 	protected function saveConfigFiles(){
