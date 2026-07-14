@@ -5,9 +5,12 @@ use Plugins\Opoink\Email\Models\Emails AS EmailsModel;
 use Illuminate\Support\Facades\Blade;
 use Plugins\Opoink\Liv\Lib\Facades\SystemConfig;
 
+use Plugins\Opoink\Email\Lib\Option\EmailQueueOption;
+use Plugins\Opoink\Email\Models\EmailQueue AS EmailQueueModel;
+
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+// use PHPMailer\PHPMailer\SMTP;
+// use PHPMailer\PHPMailer\Exception;
 
 class Mailer {
 
@@ -65,6 +68,36 @@ class Mailer {
 		]);
 
 		return $body;
+	}
+
+	public function sendPending(int $limit = 30){
+		$emails = EmailQueueModel::where('status', EmailQueueOption::PENDING)->limit($limit)->get();
+		
+		foreach ($emails as $key => $email) {
+			try {
+				$this->send(
+					[
+						[
+							"email" => $email->recipient,
+							"name" => ""
+						]
+					], 
+					$email->subject, 
+					$email->body
+				);
+
+				$email->status = EmailQueueOption::SENT;
+				$email->attempts = $email->attempts++;
+				$email->sent_at = date("Y-m-d H:i:s");
+				$email->save();
+				
+			} catch (\Throwable $th) {
+				$email->status = EmailQueueOption::FAILED;
+				$email->attempts = $email->attempts++;
+				$email->fail_message = $th->getMessage();
+				$email->save();
+			}
+		}
 	}
 
 	/**
