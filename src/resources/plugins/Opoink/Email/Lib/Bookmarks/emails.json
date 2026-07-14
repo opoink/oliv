@@ -1,0 +1,63 @@
+{
+    "current": {
+        "filters": [],
+        "paging": {
+            "pageSize": 20,
+            "current": 1,
+            "options": { 
+                "20": { "value": 20, "label": 20 }, 
+                "30": { "value": 30, "label": 30 }, 
+                "50": { "value": 50, "label": 50 }, 
+                "100": { "value": 100, "label": 100 }, 
+                "200": { "value": 200, "label": 200 } 
+            },
+            "value": 20
+        },
+        "columns": {
+            "id": { 
+				"visible": true, 
+				"sorting": true, 
+				"filter": true, 
+				"filter_input": "FilterFieldRange" 
+			},
+			"name": { 
+				"visible": true, 
+				"sorting": true, 
+				"filter": true,
+				"filter_input": "FilterFieldText"
+			},
+			"subject": { 
+				"visible": true, 
+				"sorting": true, 
+				"filter": true,
+				"filter_input": "FilterFieldText"
+			},
+			"created_at": { 
+				"visible": true, 
+				"sorting": true, 
+				"filter": true, 
+				"filter_input": "FilterFieldDateRange"
+			},
+			"updated_at": { 
+				"visible": true, 
+				"sorting": true, 
+				"filter": true, 
+				"filter_input": "FilterFieldDateRange"
+			}
+        },
+        "positions": {
+            "id": 0,
+			"name": 1,
+			"subject": 2,
+            "created_at": 3,
+            "updated_at": 4
+        },
+		"attributes": {
+			"id": "ID",
+			"name": "Name",
+			"subject": "Subject",
+			"created_at": "Created At",
+			"updated_at": "Updated At"
+		}
+    }
+}

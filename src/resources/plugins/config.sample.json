@@ -1,6 +1,7 @@
 {
 	"plugins": [
 		"Opoink_Liv",
-		"Opoink_Cms"
+		"Opoink_Cms",
+		"Opoink_Email"
 	]
 }

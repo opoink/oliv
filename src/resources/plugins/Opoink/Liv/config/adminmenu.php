@@ -53,11 +53,26 @@ return [
 	],
 	[
 		'name' => 'settings',
-		'route' => '/settings',
+		'route' => null,
 		'label' => 'Settings',
 		'fa_icon' => 'fa-solid fa-gears',
 		'role_resource' => 'oliv_settings',
-		'children' => []
+		'children' => [
+			[
+				[
+					'name' => 'settings.settings',
+					'title' => 'Email',
+					'links' => [
+						[
+							'name' => 'settings.settings.settings',
+							'route' => '/settings',
+							'label' => 'Settings',
+							'role_resource' => 'oliv_settings'
+						]
+					],
+				]
+			]
+		]
 	],
 ];
 ?>
