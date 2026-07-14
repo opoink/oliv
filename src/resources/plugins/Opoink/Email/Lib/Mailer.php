@@ -64,7 +64,7 @@ class Mailer {
 			"twitter" => SystemConfig::getValue("opoink_liv__general/website/email/variablevalues/twitter"),
 			"website" => SystemConfig::getValue("opoink_liv__general/website/email/variablevalues/website"),
 			"subject" => "{{ \$subject }}",
-			"content" => "{{ \$content }}",
+			"content" => "{!! \$content !!}",
 		]);
 
 		return $body;
