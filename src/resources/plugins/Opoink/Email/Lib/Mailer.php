@@ -147,6 +147,11 @@ class Mailer {
 			$mail->Body    = $body;
 			// $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
+			// 🟢 Set Priority
+			$mail->Priority = 1; // 1 = High, 3 = Normal, 5 = Low
+			$mail->addCustomHeader('X-MSMail-Priority', 'High');
+			$mail->addCustomHeader('Importance', 'High');
+
 			$mail->send();
 		} catch (\Exception $e) {
 			throw new \Exception("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 500);
