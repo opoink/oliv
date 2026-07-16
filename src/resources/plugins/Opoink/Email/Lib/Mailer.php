@@ -37,7 +37,7 @@ class Mailer {
 	 * @return \Plugins\Opoink\Email\Models\Emails|null
 	 */
 	public function getTemplate(string $name){
-		$content = EmailsModel::getTemplate('ho_pending_status');
+		$content = EmailsModel::getTemplate($name);
 		return $content;
 	}
 
