@@ -70,9 +70,20 @@ class Mailer {
 		return $body;
 	}
 
-	public function sendPending(int $limit = 30){
-		$emails = EmailQueueModel::where('status', EmailQueueOption::PENDING)->limit($limit)->get();
-		
+	/**
+	 * @param int $limit
+	 * @param (\Closure(\Illuminate\Database\Eloquent\Builder): void)|null $beforeFetchQueue
+	 */
+	public function sendPending(int $limit = 30, ?\Closure $beforeFetchQueue = null){
+		$qry = EmailQueueModel::where('status', EmailQueueOption::PENDING);
+		$qry->where('scheduled_at', '<=', now());
+		$qry->limit($limit);
+
+		if($beforeFetchQueue instanceof \Closure){
+			$beforeFetchQueue($qry);
+		}
+
+		$emails = $qry->get();
 		foreach ($emails as $key => $email) {
 			try {
 				$this->send(

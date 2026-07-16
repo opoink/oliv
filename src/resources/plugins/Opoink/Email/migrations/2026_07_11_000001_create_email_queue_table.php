@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('email_queue', function (Blueprint $table) {
             $table->id();
+			$table->string('type', 255);
 			$table->string('recipient', 255);
 			$table->string('subject', 255);
 			$table->longText('body');
@@ -20,6 +21,12 @@ return new class extends Migration
 			$table->timestamp('scheduled_at')->nullable();
 			$table->timestamp('sent_at')->nullable();
 			$table->integer('attempts')->default(0);
+			$table->text('fail_message')->nullable();
+			$table->text('others')->nullable();
+			$table->text('param_a')->nullable();
+			$table->text('param_b')->nullable();
+			$table->text('param_c')->nullable();
+			$table->text('param_d')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
