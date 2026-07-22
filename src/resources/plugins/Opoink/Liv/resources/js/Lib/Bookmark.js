@@ -151,13 +151,18 @@ export default class bookmark {
 	 * @param {*} val 
 	 */
 	getColumnValue(column, val){
-		let col = this.propsdata.bookmark.config.current.columns[column];
-
-		if(typeof col.filter_options != 'undefined'){
-			let foundItem = col.filter_options.find(i => (val + '' == i.value + ''));
-			return foundItem.label;
-		}
-		else {
+		try {
+			let col = this.propsdata.bookmark.config.current.columns[column];
+			if(typeof col.filter_options != 'undefined'){
+				let foundItem = col.filter_options.find(i => (val + '' == i.value + ''));
+				return foundItem.label;
+			}
+			else {
+				return val;
+			}
+		} 
+		catch (error) {
+			console.error(error);
 			return val;
 		}
 	}
