@@ -151,6 +151,86 @@ if (!function_exists('getPluginDir')) {
 
 if (!function_exists('inertiaRender')) {
 	function inertiaRender(string $component, array|\Illuminate\Contracts\Support\Arrayable $props = []){
+		$props = $props instanceof \Illuminate\Contracts\Support\Arrayable ? $props->toArray() : $props;
+
+		if(!array_key_exists('page_assets', $props)){
+			$pageAssets = null;
+			$hotFile = public_path('hot');
+			$manifestPath = public_path('build/manifest.json');
+
+			if(!file_exists($hotFile) && is_readable($manifestPath)){
+				static $cachedManifest = null;
+				static $cachedManifestPath = null;
+				static $cachedManifestModifiedAt = null;
+
+				$manifestModifiedAt = filemtime($manifestPath);
+				if(
+					$cachedManifestPath !== $manifestPath ||
+					$cachedManifestModifiedAt !== $manifestModifiedAt
+				){
+					$manifestContents = file_get_contents($manifestPath);
+					$decodedManifest = is_string($manifestContents)
+						? json_decode($manifestContents, true)
+						: null;
+
+					$cachedManifest = is_array($decodedManifest) ? $decodedManifest : null;
+					$cachedManifestPath = $manifestPath;
+					$cachedManifestModifiedAt = $manifestModifiedAt;
+				}
+
+				if(is_array($cachedManifest)){
+					$normalizedComponent = str_replace('\\', '/', $component);
+					$normalizedComponent = ltrim($normalizedComponent, '/');
+					$normalizedComponent = preg_replace('/\.vue$/i', '', $normalizedComponent);
+					$entryCandidates = [
+						'plugins/' . $normalizedComponent . '.vue',
+						'resources/js/Pages/' . $normalizedComponent . '.vue',
+						'storage/framework/vue/pages/' . $normalizedComponent . '.vue',
+					];
+
+					$entry = null;
+					foreach($entryCandidates as $entryCandidate){
+						if(array_key_exists($entryCandidate, $cachedManifest)){
+							$entry = $entryCandidate;
+							break;
+						}
+					}
+
+					if($entry){
+						$visited = [];
+						$cssFiles = [];
+						$collectCss = function($manifestEntry) use (&$collectCss, &$visited, &$cssFiles, $cachedManifest){
+							if(isset($visited[$manifestEntry]) || !isset($cachedManifest[$manifestEntry])){
+								return;
+							}
+
+							$visited[$manifestEntry] = true;
+							$chunk = $cachedManifest[$manifestEntry];
+							foreach(($chunk['imports'] ?? []) as $import){
+								$collectCss($import);
+							}
+
+							foreach(($chunk['css'] ?? []) as $cssFile){
+								if(is_string($cssFile)){
+									$cssFiles[$cssFile] = true;
+								}
+							}
+						};
+
+						$collectCss($entry);
+						$pageAssets = [
+							'css' => array_map(
+								fn ($file) => '/build/' . ltrim($file, '/'),
+								array_keys($cssFiles)
+							)
+						];
+					}
+				}
+			}
+
+			$props['page_assets'] = $pageAssets;
+		}
+
 		return Inertia::render($component, $props);
 	}
 }
