@@ -200,29 +200,33 @@ if (!function_exists('inertiaRender')) {
 						$visited = [];
 						$cssFiles = [];
 						$collectCss = function($manifestEntry) use (&$collectCss, &$visited, &$cssFiles, $cachedManifest){
-							if(isset($visited[$manifestEntry]) || !isset($cachedManifest[$manifestEntry])){
+							if(!is_string($manifestEntry) || isset($visited[$manifestEntry])){
 								return;
 							}
 
 							$visited[$manifestEntry] = true;
-							$chunk = $cachedManifest[$manifestEntry];
-							foreach(($chunk['imports'] ?? []) as $import){
+							$chunk = $cachedManifest[$manifestEntry] ?? null;
+							if(!is_array($chunk)){
+								return;
+							}
+
+							// Dependencies first, in manifest order, so page CSS can override them.
+							// Only static imports are required; dynamicImports may be unrelated pages.
+							foreach((is_array($chunk['imports'] ?? null) ? $chunk['imports'] : []) as $import){
 								$collectCss($import);
 							}
 
-							foreach(($chunk['css'] ?? []) as $cssFile){
-								if(is_string($cssFile)){
-									$cssFiles[$cssFile] = true;
+							foreach((is_array($chunk['css'] ?? null) ? $chunk['css'] : []) as $cssFile){
+								if(is_string($cssFile) && ltrim($cssFile, '/') !== ''){
+									// Deduplicate by the final URL, including leading-slash variants.
+									$cssFiles['/build/' . ltrim($cssFile, '/')] = true;
 								}
 							}
 						};
 
 						$collectCss($entry);
 						$pageAssets = [
-							'css' => array_map(
-								fn ($file) => '/build/' . ltrim($file, '/'),
-								array_keys($cssFiles)
-							)
+							'css' => array_keys($cssFiles)
 						];
 					}
 				}
