@@ -2,6 +2,7 @@
 	"plugins": [
 		"Opoink_Liv",
 		"Opoink_Cms",
-		"Opoink_Email"
+		"Opoink_Email",
+		"Opoink_Media"
 	]
 }
