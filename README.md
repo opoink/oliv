@@ -175,3 +175,208 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 
 ##  InertiaJS
 Lear more about [inertia](https://inertiajs.com/), [GitHub](https://github.com/inertiajs/inertia/tree/master)
+
+
+## Composing pages with plugin layout arrays
+
+The page layout generator is separate from the older Vite comment injector.
+The Vite injector still reads each plugin's config.json layouts map from
+plugins/compiled.plugins.config.json. Its data-v-ref/position markers continue
+to work unchanged.
+
+The newer generator was introduced in commit e46f652 ("generate page using json
+data"). It reads one JSON file per named route, in the enabled plugin order from
+plugins/config.json:
+
+    plugins/<Vendor>/<Plugin>/resources/layout/<route-name>.json
+
+No PHP return statement, page-name wrapper, components wrapper, or vendor wrapper
+belongs inside this file. No separate layout sort_order is used. The existing
+plugin list order determines contribution order.
+
+The supported array format is:
+
+~~~json
+[
+    {
+        "name": "Header",
+        "component": "@@Plugins@@/Hulmera/Common/resources/js/Components/Header.vue",
+        "attr": {"class": "site-header"},
+        "children": [
+            {
+                "name": "AccountSection",
+                "component": "@@Plugins@@/Hulmera/Common/resources/js/Components/AccountSection.vue"
+            }
+        ]
+    }
+]
+~~~
+
+- name is a nonempty logical identifier, unique across this page, independent of
+  the Vue component identifier. Different instances of the same component need
+  different names.
+- component is a Vite module specifier for a default-exported Vue component.
+  Plugins/ and @@Plugins@@/ retain their existing Vite alias meaning; backslashes
+  are normalized to forward slashes. The aliases normalize to Plugins/ for import
+  deduplication. Use the full .vue filename for plugin files. Other Vite module
+  specifiers are preserved; Vite checks that they resolve.
+- children recursively contains the same node array (or legacy keyed object).
+- attr is an optional key/value object. Later contributions replace individual
+  attribute values. String values are HTML-escaped; Vue bindings such as :title
+  retain expression semantics. Configuration is trusted plugin code, not user
+  input.
+- remove: true removes the node and its entire subtree. false keeps/re-enables it.
+
+Names can be targeted from any depth, including a top-level locator that refers
+to a nested node. A locator omits component and contributes children, attributes,
+or removal. All contributions are collected before resolving the tree, so a
+component can be supplied by a later plugin. A locator that remains unresolved
+is logged and skipped WITH its subtree; it is not a transparent wrapper.
+
+The first component definition wins. Repeating it is harmless; conflicting
+paths/exports are logged and the first is retained. The first nested parent
+assignment wins; conflicting parents and cyclic edges are logged and skipped.
+New siblings retain first-contribution order. Duplicate names represent one
+node, not repeated component instances.
+
+Malformed JSON/nodes, invalid attributes/children, and unresolved locators are
+logged through Laravel's logger rather than throwing for optional configuration.
+Valid contributions still compile. If all present source files are malformed,
+the last generated page is retained. A missing local Vue module is a Vite build
+error; it is not silently substituted with a different component.
+
+### Existing keyed JSON remains supported
+
+The original schema uses names as object keys and complete import statements:
+
+~~~json
+{
+    "Head": {
+        "import": "import { Head } from '@inertiajs/vue3'",
+        "attr": {"title": "Dashboard"}
+    },
+    "Default": {
+        "import": "import Default from '@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue'",
+        "children": {
+            "AdminIndex": {
+                "import": "import AdminIndex from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/Pages/AdminIndex.vue'"
+            }
+        }
+    }
+}
+~~~
+
+Default imports and single named imports (including aliases) are supported.
+Arbitrary JavaScript or imports containing multiple bindings are not layout
+component declarations and are skipped with a warning. The earlier pre-generator
+node_name experiment is not the current schema. Migrate it to name.
+
+The generator emits deterministic JavaScript identifiers prefixed with
+OlivComponent_, derived from the normalized module path and export. Each binding
+is imported once, even when many distinct nodes render that component. Named and
+default exports from the same module are distinct bindings. Wrappers render their
+children recursively; leaves are self-closing. Wrapper Vue components must expose
+a default slot to display nested children.
+
+Compatibility changes: repeated scalar values no longer become arrays;
+names now identify nodes page-wide rather than only within sibling objects;
+remove: false no longer removes a node merely because the key is present.
+Raw legacy imports are converted to generated bindings, so configuration
+expressions must not depend on the old local import variable names.
+
+### Three plugins contributing to one page
+
+Enable these plugins in order in the existing plugins/config.json list:
+Hulmera_Common, Hulmera_Customer, Hulmera_Wallet. Each contributes a
+resources/layout/client.index.json file.
+
+Hulmera_Common:
+
+~~~json
+[
+    {
+        "name": "Header",
+        "component": "Plugins/Hulmera/Common/resources/js/Components/Header.vue",
+        "children": [
+            {
+                "name": "AccountSection",
+                "component": "Plugins/Hulmera/Common/resources/js/Components/AccountSection.vue"
+            }
+        ]
+    }
+]
+~~~
+
+Hulmera_Customer:
+
+~~~json
+[
+    {
+        "name": "AccountSection",
+        "children": [
+            {
+                "name": "CustomerMenu",
+                "component": "Plugins/Hulmera/Customer/resources/js/Components/CustomerMenu.vue"
+            }
+        ]
+    }
+]
+~~~
+
+Hulmera_Wallet:
+
+~~~json
+[
+    {
+        "name": "AccountSection",
+        "children": [
+            {
+                "name": "WalletMenu",
+                "component": "Plugins/Hulmera/Wallet/resources/js/Components/WalletMenu.vue"
+            }
+        ]
+    }
+]
+~~~
+
+Generated ClientIndex.vue (apart from its generated-file ownership comment):
+
+~~~vue
+<script setup>
+import OlivComponent_c43b4d8eb9835dae from "Plugins/Hulmera/Common/resources/js/Components/Header.vue";
+import OlivComponent_f557ad56615411da from "Plugins/Hulmera/Common/resources/js/Components/AccountSection.vue";
+import OlivComponent_7582f44846026a8d from "Plugins/Hulmera/Customer/resources/js/Components/CustomerMenu.vue";
+import OlivComponent_61dbec97c368401a from "Plugins/Hulmera/Wallet/resources/js/Components/WalletMenu.vue";
+</script>
+<template>
+    <OlivComponent_c43b4d8eb9835dae>
+        <OlivComponent_f557ad56615411da>
+            <OlivComponent_7582f44846026a8d />
+            <OlivComponent_61dbec97c368401a />
+        </OlivComponent_f557ad56615411da>
+    </OlivComponent_c43b4d8eb9835dae>
+</template>
+~~~
+
+Use the existing named route client.index and return inertiaRender('ClientIndex',
+$props) from its controller. The existing app.js/ssr.js page resolver already
+searches storage/framework/vue/pages. Layout generation does not automatically
+replace a controller's explicit existing plugin page selection.
+
+Run php artisan oliv:plugins-update before npm run build (or build:ssr). The
+command keeps compiling the legacy plugin configuration and now also calls
+Layout::compileLayouts() before Vite's page import glob is evaluated. Adding a
+plugin on production requires regenerating and rebuilding the assets.
+
+PageLayout still calls createLayoutByPageName() before the controller. The layout
+layer rereads definitions, renders deterministically, and writes only if content
+changed. Unnamed routes and routes without definitions no longer create empty Vue
+pages. Pages generated by this implementation carry an ownership comment; obsolete
+owned pages are removed when their definitions disappear. Unmarked older files
+and hand-written files are not automatically deleted. Existing route-name to
+StudlyCase filename conversion remains unchanged; avoid route names that collapse
+to the same filename.
+
+The implementation lives in Layout; PageLayout only orchestrates requests.
+AppServiceProvider, getPluginsConfig(), getPluginDir(), Writer, UpdatePlugin,
+the Inertia resolver, and the existing Vite aliases retain their roles.

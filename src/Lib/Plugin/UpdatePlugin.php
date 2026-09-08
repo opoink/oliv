@@ -68,6 +68,7 @@ class UpdatePlugin {
 		$this->saveAdminMenu();
 		$this->saveProviders();
 		$this->compilePluginLayout();
+		app(Layout::class)->compileLayouts();
 		$this->compilePluginCss();
 		$this->savePluginVuePages();
 		$this->saveVueGlobalComponents($this->vueGlobalComponents);

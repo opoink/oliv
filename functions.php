@@ -153,6 +153,23 @@ if (!function_exists('inertiaRender')) {
 	function inertiaRender(string $component, array|\Illuminate\Contracts\Support\Arrayable $props = []){
 		$props = $props instanceof \Illuminate\Contracts\Support\Arrayable ? $props->toArray() : $props;
 
+		$request = app(\Illuminate\Http\Request::class);
+
+		if($request->route()) {
+
+		}
+		
+		$routeName = $request->route()->getName();
+		if(!empty($routeName)){
+			$routeName = str_replace(' ', '', ucwords(str_replace('.', ' ', $routeName)));
+			// $targetGeneratedComponent = resource_path('js/Pages/'.$routeName.'.vue');
+			$targetGeneratedComponent = getPath('storage/framework/vue/pages/'.$routeName.'.vue');
+			if(file_exists($targetGeneratedComponent)){
+				$component = $routeName;
+			}
+		}
+		// dd($component);
+
 		if(!array_key_exists('page_assets', $props)){
 			$pageAssets = null;
 			$hotFile = public_path('hot');

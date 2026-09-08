@@ -1,17 +1,22 @@
 import path from 'path';
-import dotenv from 'dotenv';
 import { readFileSync, existsSync } from 'fs';
 
 const DS = path.sep;
 const ROOT = path.dirname(__dirname).split(DS).join('/') + '/';
-const env = dotenv.config().parsed;
 
 /** 
  * transform import @Plugin srouce path 
  */
 export default function transformFileImport() {
+	let theme;
+
 	return {
 		name: 'transform-file-import',
+		configResolved(config) {
+			// Use the same mode-specific and process environment as the application.
+			// Keep this per plugin instance, rather than capturing .env at import time.
+			theme = config.env.VITE_OLIV_THEME;
+		},
 
 		async transform(src, id) {
 
@@ -20,7 +25,7 @@ export default function transformFileImport() {
 				id = id.split('\\').join('/');
 				let paths = id.split(ROOT + 'plugins/');
 				if(paths.length == 2){
-					let themeFilePath = ROOT + 'theme/' + env.VITE_OLIV_THEME + '/' + paths[1];
+					let themeFilePath = ROOT + 'theme/' + theme + '/' + paths[1];
 	
 					let isExist = await existsSync(themeFilePath);
 					if(isExist){

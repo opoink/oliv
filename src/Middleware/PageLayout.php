@@ -10,7 +10,7 @@ class PageLayout
 	public function handle(Request $request, Closure $next): Response
     {
 		$layout = app('Opoink\Oliv\Lib\Plugin\Layout');
-		$layout->createLayoutByPageName($request->route()->getName());
+		$layout->createLayoutByPageName($request->route()?->getName());
 
 		return $next($request);
     }
