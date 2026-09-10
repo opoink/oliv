@@ -22,14 +22,14 @@ if (!function_exists('getPath')) {
 if (!function_exists('getAdminUrl')) {
 	function getAdminUrl(?string $path = null, ?array $params = null){
 		if($path){
-			$url = '/' . config('oliv.vite_admin_url') . $path;
+			$url = '/' . config('oliv.admin_url') . $path;
 			if(is_array($params)){
 				$url .= '?' . http_build_query($params);
 			}
 			return $url;
 		}
 		else {
-			return config('oliv.vite_admin_url');
+			return config('oliv.admin_url');
 		}
 	}
 }
