@@ -140,7 +140,7 @@ class Layout
      * attributes use later values and children retain first-contribution order.
      *
      * @param  array<array-key, mixed>  ...$layouts  Plugin definitions in configured order.
-     * @return list<array{name: string, component: string, export: string, attr: array, children: array}>
+     * @return list<array{name: string, component: string, export: string, attr: array, children: array, slot_name?: string}>
      */
     public function mergeLayouts(array ...$layouts): array
     {
@@ -224,6 +224,13 @@ class Layout
                     $nodes[$name]['attr'] = array_replace($nodes[$name]['attr'], $data['attr']);
                 } else {
                     $this->warning('Layout attributes must be an object.', ['node' => $name]);
+                }
+            }
+            if (array_key_exists('slot_name', $data)) {
+                if (is_string($data['slot_name']) && trim($data['slot_name']) !== '') {
+                    $nodes[$name]['slot_name'] = $data['slot_name'];
+                } elseif ($data['slot_name'] !== null && $data['slot_name'] !== '') {
+                    $this->warning('Layout slot name must be a nonempty string.', ['node' => $name]);
                 }
             }
             if (array_key_exists('children', $data)) {
@@ -313,36 +320,60 @@ class Layout
     private function renderNodes(array $layout, array &$imports, int $level): string
     {
         $content = '';
+        $renderedSlots = [];
         foreach ($layout as $node) {
-            $path = $node['component'];
-            $export = $node['export'];
-            $identifier = 'OlivComponent_'.substr(hash('sha256', $path.'#'.$export), 0, 16);
-            $binding = $export === 'default' ? $identifier : '{ '.$export.' as '.$identifier.' }';
-            $imports[$identifier] = 'import '.$binding.' from '.json_encode($path, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_THROW_ON_ERROR).";\n";
-
-            $attributes = '';
-            foreach ($node['attr'] as $key => $value) {
-                if (! is_string($key) || ! preg_match('/^[^\s"\'<>\/=]+$/Du', $key) || (! is_scalar($value) && $value !== null)) {
-                    $this->warning('Invalid layout attribute skipped.', ['node' => $node['name']]);
-
+            $slotName = $node['slot_name'] ?? null;
+            if (is_string($slotName) && $slotName !== '') {
+                if (isset($renderedSlots[$slotName])) {
                     continue;
                 }
-                $attributes .= ' '.$key.'="'.htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'"';
+
+                $renderedSlots[$slotName] = true;
+                $indent = str_repeat("\t", $level);
+                $content .= $indent.'<template v-slot:'.$slotName.">\n";
+                foreach ($layout as $slottedNode) {
+                    if (($slottedNode['slot_name'] ?? null) === $slotName) {
+                        $content .= $this->renderNode($slottedNode, $imports, $level + 1);
+                    }
+                }
+                $content .= $indent."</template>\n";
+
+                continue;
             }
 
-            $indent = str_repeat("\t", $level);
-            if ($node['children'] === []) {
-                $content .= $indent.'<'.$identifier.$attributes." />\n";
-            } else {
-                $content .= $indent.'<'.$identifier.$attributes.">\n";
-                $content .= $this->renderNodes($node['children'], $imports, $level + 1);
-                $content .= $indent.'</'.$identifier.">\n";
-            }
+            $content .= $this->renderNode($node, $imports, $level);
         }
 
         return $content;
     }
 
+    private function renderNode(array $node, array &$imports, int $level): string
+    {
+        $path = $node['component'];
+        $export = $node['export'];
+        $identifier = 'OlivComponent_'.substr(hash('sha256', $path.'#'.$export), 0, 16);
+        $binding = $export === 'default' ? $identifier : '{ '.$export.' as '.$identifier.' }';
+        $imports[$identifier] = 'import '.$binding.' from '.json_encode($path, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_THROW_ON_ERROR).";\n";
+
+        $attributes = '';
+        foreach ($node['attr'] as $key => $value) {
+            if (! is_string($key) || ! preg_match('/^[^\s"\'<>\/=]+$/Du', $key) || (! is_scalar($value) && $value !== null)) {
+                $this->warning('Invalid layout attribute skipped.', ['node' => $node['name']]);
+
+                continue;
+            }
+            $attributes .= ' '.$key.'="'.htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'"';
+        }
+
+        $indent = str_repeat("\t", $level);
+        if ($node['children'] === []) {
+            return $indent.'<'.$identifier.$attributes." />\n";
+        }
+
+        return $indent.'<'.$identifier.$attributes.">\n"
+            .$this->renderNodes($node['children'], $imports, $level + 1)
+            .$indent.'</'.$identifier.">\n";
+    }
     protected function warning(string $message, array $context = []): void
     {
         logger()->warning('OLIV Layout: '.$message, $context);
