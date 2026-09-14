@@ -7,8 +7,8 @@ Implementation: src/Lib/Plugin/Layout.php, src/Middleware/PageLayout.php, src/Pr
 | Signature on Opoink\Oliv\Lib\Plugin\Layout | Result and side effects |
 | --- | --- |
 | createLayoutByPageName(?string $pageName): void | Validates route name; reads enabled definitions; writes/deletes owned page as applicable |
-| createPageComponent(string $pageName, string $targetDir, string $fileName, string $ext): void | Reads that page's declarations and writes the specified target |
-| compileLayouts(): void | Discovers immediate resources/layout/*.json files; generates pages and removes obsolete owned targets |
+| createPageComponent(string $pageName, string $targetDir, string $fileName, string $ext): void | Resolves hierarchical declarations for that page and writes the specified target |
+| compileLayouts(): void | Discovers resources/layout/*.json handles; generates pages and removes obsolete owned targets |
 | mergeLayouts(array ...$layouts): array | Returns merged recursive tree; logs invalid contributions |
 | toVueComponent(array $layout): string | Renders a normalized merged tree as Vue source; logs invalid attributes |
 
@@ -22,7 +22,7 @@ $merged = $layout->mergeLayouts($baseDefinitions, $pluginDefinitions);
 $vueSource = $layout->toVueComponent($merged);
 ~~~
 
-See [declaration semantics](page-layout.md).
+See [hierarchical declaration semantics, merge rules, and named slots](page-layout.md).
 
 ## Compile-time flow
 

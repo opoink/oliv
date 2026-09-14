@@ -1,112 +1,108 @@
-# Page layout declarations and merge rules
+# Page layout declarations, hierarchy, and composition
 
-Implementation: Opoink\Oliv\Lib\Plugin\Layout in src/Lib/Plugin/Layout.php. Bundled example: src/resources/plugins/Opoink/Liv/resources/layout/admin.index.json.
+Implementation: `src/Lib/Plugin/Layout.php`. OLIV composes generated Vue pages from JSON definitions contributed by enabled plugins. A layout is selected from the Inertia route/page name, so plugins can extend another plugin's component tree without editing that plugin.
 
-Layouts compose a complete Vue page from contributions in enabled-plugin order. After [installation](../getting-started/installation.md), put each definition at:
+## Handles and file names
+
+Put definitions in `plugins/Vendor/Plugin/resources/layout/<handle>.json`. A dotted route name resolves every exact prefix, broadest first. Only files that exist are read.
+
+| Page name | Resolved handles |
+| --- | --- |
+| `client.index` | `client`, `client.index` |
+| `client.catalog.products` | `client`, `client.catalog`, `client.catalog.products` |
+| `admin.catalog.products.edit` | `admin`, `admin.catalog`, `admin.catalog.products`, `admin.catalog.products.edit` |
+
+For `client.catalog.products`, OLIV considers `client.json`, `client.catalog.json`, then `client.catalog.products.json`. Missing intermediate files are normal. Each handle is processed in configured plugin order before the next, more-specific handle is processed. This makes the exact page the final contribution while preserving the existing merge rules below.
+
+The first route-name segment selects a layout family; `client.json`, `admin.json`, `onecol.json`, and `anotherdefaultlayout.json` are equally ordinary broad handles. They are not global magic filenames. For example, `onecol.login` resolves `onecol.json` then `onecol.login.json`.
+
+## Declaration schema
+
+~~~json
+[
+  {
+    "name": "AppHeader",
+    "component": "@@Plugins@@/Vendor/Plugin/resources/js/Components/AppHeader.vue",
+    "attr": {"class": "site-header"},
+    "children": [
+      {
+        "name": "Navigation",
+        "component": "@@Plugins@@/Vendor/Plugin/resources/js/Components/Navigation.vue",
+        "slot_name": "primary_navigation"
+      }
+    ]
+  }
+]
+~~~
+
+| Key | Meaning |
+| --- | --- |
+| `name` | Required stable logical merge key. It is page-global, including across nesting levels. |
+| `component` | Optional module path for the default export. Omit it for a locator-only contribution. |
+| `import` | Legacy single default/named import; used only when `component` is absent. |
+| `attr` | Optional attribute object. Later values replace earlier values by key. |
+| `children` | Recursive array or legacy keyed object. |
+| `slot_name` | Optional nonempty string naming the parent Vue slot for this child. |
+| `remove` | Only literal `true` removes the node/subtree; later non-true values re-enable it. |
+
+## Recursive merge and injection
+
+`name` is the identity used to merge nodes. The first valid component/export and first parent relationship win; later contributions can add children and replace individual attributes. Roots and sibling children retain first-contribution order. A locator-only node such as the following targets an existing component without redefining it:
+
+~~~json
+[{"name":"Homepage","children":[{"name":"AppHeader","children":[{"name":"Categories","component":".../Categories.vue"}]}]}]
+~~~
+
+Core can define `Homepage → AppHeader → AppMain → AppFooter`; Catalog can contribute `Homepage → AppHeader → Categories`. The final tree has one `Homepage` and one `AppHeader`, with the Catalog child injected beneath it. Use distinct names for intentional duplicate component instances. A locator unresolved after all handles/plugins are merged is skipped with its subtree.
+
+Because names are page-global merge keys, use the same logical root and target names throughout one layout family. Do not define the same `AppHeader` name beneath unrelated roots in a single merged page.
+
+## Named Vue slots
+
+A child without `slot_name` remains a normal/default-slot child. A child with `slot_name` is wrapped in Vue's long-form named-slot syntax:
+
+~~~json
+{"name":"Categories","component":".../Categories.vue","slot_name":"primary_navigation"}
+~~~
+
+~~~vue
+<ParentComponent>
+    <template v-slot:primary_navigation>
+        <Categories />
+    </template>
+</ParentComponent>
+~~~
+
+The parent must expose `<slot name="primary_navigation"></slot>`. Multiple siblings for the same slot are grouped into one template in their sibling order. A slotted component may itself have recursive children. Attributes remain on the component inside the slot wrapper.
+
+## HulmeraEcom Catalog example
+
+Catalog puts common header contributions in `resources/layout/client.json`:
+
+~~~json
+[
+  {"name":"Homepage","children":[{"name":"AppHeader","children":[
+    {"name":"AppHeaderCategories","component":"@@Plugins@@/HulmeraEcom/Catalog/resources/js/Components/Client/AppHeader/Categories.vue","slot_name":"primary_navigation"},
+    {"name":"AppHeaderCategoriesMobileNav","component":"@@Plugins@@/HulmeraEcom/Catalog/resources/js/Components/Client/AppHeader/CategoriesMobileNav.vue","slot_name":"mobile_primary_navigation"}
+  ]}]}]
+~~~
+
+Thus both `client.index` (`client`, `client.index`) and `client.catalog.products` (`client`, `client.catalog`, `client.catalog.products`) receive the desktop and mobile navigation. The product-specific file contains only its page component, header locator/component, listing, and footer rather than duplicating those injections.
+
+## Recommended organization
 
 ~~~text
-plugins/Vendor/Plugin/resources/layout/<route-name>.json
+resources/layout/
+├── client.json
+├── client.index.json
+├── client.catalog.json
+├── client.catalog.products.json
+├── onecol.json
+└── onecol.login.json
 ~~~
 
-For route admin.index, the generated target is storage/framework/vue/pages/AdminIndex.vue. Dot-separated words are capitalized and joined; hyphens and underscores are not removed by that conversion. Avoid names that collapse to the same filename.
+Put truly shared contributions in the broadest applicable handle, module-wide contributions in an intermediate handle, and page-only differences in the exact file. Prefer stable descriptive names. Use `slot_name` only when the parent exposes that slot. Multiple enabled plugins can provide the same handle and are merged in configured plugin order.
 
-## Array schema
+Run `php artisan oliv:plugins-update --no-interaction` after layout changes, then rebuild Vite/SSR. Generated Vue files under `storage/framework/vue/pages` are compiler output; edit the JSON sources instead.
 
-~~~json
-[
-  {
-    "name": "Shell",
-    "component": "@@Plugins@@/Opoink/Liv/resources/js/Layouts/Admin/Default.vue",
-    "attr": {"class": "example-page"},
-    "children": [
-      {
-        "name": "Content",
-        "component": "@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/Pages/AdminIndex.vue"
-      }
-    ]
-  }
-]
-~~~
-
-This is the entire file: no page-name, vendor, or components wrapper.
-
-| Key | Contract |
-| --- | --- |
-| name | Nonempty string; logical identity across the entire page |
-| component | Nonempty module specifier for a default export; may be omitted for a locator |
-| import | Legacy single-binding import; only used if component key is absent |
-| attr | Optional object/array of attribute key/value pairs |
-| children | Recursive node list or legacy keyed object |
-| remove | Only literal true removes; a later present non-true value re-enables |
-
-Children can have children without a fixed schema depth limit. Wrapper components need a default slot to render descendants.
-
-## Merging and targeting
-
-All contributions are collected before resolving nodes. Duplicate names mean **one node**, even across depths. To render the same component twice, give its instances distinct names.
-
-- The first valid component/export definition wins. Repeated identical definitions are harmless; conflicts warn and keep the first.
-- The first nested parent assignment wins. Conflicting parents and cyclic edges warn and skip that contribution.
-- New roots and siblings retain first-contribution order. There is no layout sort_order or before/after key.
-- A top-level locator can address an existing nested node without promoting it to root.
-- Later attr values replace individual earlier values via array_replace.
-- remove: true hides a node and its entire subtree. A later remove: false can restore it.
-- A locator still lacking a component after collection is skipped with its subtree.
-
-For example, a later plugin can extend the Content node by name:
-
-~~~json
-[
-  {
-    "name": "Content",
-    "attr": {"class": "updated-content"},
-    "children": [
-      {
-        "name": "Extra",
-        "component": "Plugins/Vendor/Plugin/resources/js/Components/Extra.vue"
-      }
-    ]
-  }
-]
-~~~
-
-This is a schema example; supply the referenced component and a default slot in Content. Adding a child does not insert a slot into an existing component.
-
-## Legacy keyed format
-
-~~~json
-{
-  "Head": {
-    "import": "import { Head } from '@inertiajs/vue3'",
-    "attr": {"title": "Dashboard"}
-  },
-  "Body": {
-    "import": "import Body from '@@Plugins@@/Opoink/Liv/resources/js/Components/Admin/Pages/AdminIndex.vue'"
-  }
-}
-~~~
-
-String object keys supply names when name is absent/null. Default imports or a single named import, optionally aliased, are recognized. Multiple bindings, namespace imports, or arbitrary JavaScript are rejected. The explicit component key takes precedence even if invalid. A direct export key is not consumed; named exports use the legacy import form.
-
-Legacy local binding names are replaced by generated identifiers, so attribute expressions must not depend on them.
-
-## Paths, imports, and attributes
-
-Backslashes in module paths become forward slashes. **The code that normalizes @@Plugins@@/ into Plugins/ is commented out.** Those two spellings remain distinct for conflict detection and import deduplication, even though [Vite aliases](../frontend/asset-resolution.md) point them at the same directory.
-
-Imports are deduplicated by generated identifier: OlivComponent_ plus the first 16 SHA-256 hex characters of path + "#" + export. Default and named exports are distinct.
-
-Attributes require a string key without whitespace, quotes, angle brackets, slash, or equals. Values must be scalar or null. Values are cast to strings and HTML-escaped; false/null become empty strings, true becomes "1". Vue directives such as :title preserve expression semantics, so definitions are trusted source code. They are not a safe user-authored template language.
-
-Leaves are self-closing; wrappers recursively contain rendered children. Unrecognized node keys are ignored.
-
-## Invalid or missing input
-
-Malformed JSON, invalid nodes, attributes, children, paths, conflicts, cycles and unresolved locators generate Laravel warnings. Valid contributions can still compile. Missing local Vue modules are left for Vite to reject; PHP does not check module existence.
-
-If source files exist but none decode to arrays, the previous generated page is retained. A valid empty array can generate an empty page. When all sources disappear, only an owned generated target is deleted.
-
-The system supports both admin and client named pages. Request timing and API details are in [layout generation](layout-middleware.md). Before/after comment injection belongs to the [separate Vite system](../frontend/component-injection.md).
-
----
-[Rendering helper](../helpers/inertia-render.md) · [Documentation index](../README.md)
+See [layout generation and middleware](layout-middleware.md) and the [documentation index](../README.md).

@@ -33,23 +33,25 @@ class Layout
     {
         $layouts = [];
         $hasSource = false;
-        foreach ($this->pluginDirectories() as $directory) {
-            $file = $directory.DS.'resources'.DS.'layout'.DS.$pageName.'.json';
-            if (! is_file($file)) {
-                continue;
-            }
-
-            $hasSource = true;
-            try {
-                $data = json_decode(file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
-                if (! is_array($data)) {
-                    $this->warning('Layout must contain an array or keyed object.', ['file' => $file]);
-
+        foreach ($this->layoutHandles($pageName) as $handle) {
+            foreach ($this->pluginDirectories() as $directory) {
+                $file = $directory.DS.'resources'.DS.'layout'.DS.$handle.'.json';
+                if (! is_file($file)) {
                     continue;
                 }
-                $layouts[] = $data;
-            } catch (JsonException $exception) {
-                $this->warning('Invalid layout JSON.', ['file' => $file, 'error' => $exception->getMessage()]);
+
+                $hasSource = true;
+                try {
+                    $data = json_decode(file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+                    if (! is_array($data)) {
+                        $this->warning('Layout must contain an array or keyed object.', ['file' => $file]);
+
+                        continue;
+                    }
+                    $layouts[] = $data;
+                } catch (JsonException $exception) {
+                    $this->warning('Invalid layout JSON.', ['file' => $file, 'error' => $exception->getMessage()]);
+                }
             }
         }
 
@@ -62,7 +64,14 @@ class Layout
             return;
         }
 
-        $content = self::GENERATED."\n".$this->toVueComponent($this->mergeLayouts(...$layouts));
+        $mergedLayout = $this->mergeLayouts(...$layouts);
+        if ($mergedLayout === []) {
+            $this->removeGeneratedFile($target);
+
+            return;
+        }
+
+        $content = self::GENERATED."\n".$this->toVueComponent($mergedLayout);
         if (is_file($target) && file_get_contents($target) === $content) {
             return;
         }
@@ -78,6 +87,19 @@ class Layout
     /**
      * Generate all declared pages before Vite evaluates its page import glob.
      */
+    /**
+     * @return list<string>
+     */
+    protected function layoutHandles(string $pageName): array
+    {
+        $segments = explode('.', $pageName);
+        $handles = [];
+        for ($index = 1, $count = count($segments); $index <= $count; $index++) {
+            $handles[] = implode('.', array_slice($segments, 0, $index));
+        }
+
+        return $handles;
+    }
     public function compileLayouts(): void
     {
         $pages = [];
