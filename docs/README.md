@@ -35,7 +35,7 @@ These pages describe the inspected package implementation, including unfinished 
 
 ## Layouts and frontend
 
-- [Page layout declarations and merge rules](layouts/page-layout.md)
+- [Page layout declarations, hierarchical handles, merge rules, and named slots](layouts/page-layout.md)
 - [Layout generation API and middleware](layouts/layout-middleware.md)
 - [`inertiaRender()`](helpers/inertia-render.md)
 - [Inertia and shared props](frontend/inertia.md)
